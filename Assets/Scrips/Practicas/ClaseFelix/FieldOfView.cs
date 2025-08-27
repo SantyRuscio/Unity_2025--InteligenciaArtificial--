@@ -24,13 +24,13 @@ public class FieldOfView : MonoBehaviour
 
         float dist = Vector3.SqrMagnitude(dir);//me lo dan al cuadrado... compara un cuadrado * radio
 
-        if (dist < _distMin * _distMin)
+        if (dist < _distMin * _distMin) // al cuadrado 
         {
             print("Dist");
             Vector3 forward = root.forward;
             float angle = Vector3.Angle(forward, dir);
 
-            if (angle < _angleMin * 0.5f)
+            if (angle < _angleMin * 0.5f) // se multiplica por 0.5 o se divide por 2
 
                 print("Angle");
             Ray ray = new Ray(root.position, dir);
@@ -38,9 +38,10 @@ public class FieldOfView : MonoBehaviour
             RaycastHit hit = new RaycastHit();
 
             Physics.Raycast(ray, out hit, dist, toDetect); //out modifica variable real No la copia.
-            { print("Angle");
+            { print("ray");
                 if ((toDetect & 1 << hit.collider.gameObject.layer) != 0)
                 {
+                    print("Lo veo");
                     isFov = true;
                 }
             }
@@ -51,7 +52,7 @@ public class FieldOfView : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(root.position, target.forward);
+        Gizmos.DrawLine(root.position, target.position);
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(root.position, _distMin);
