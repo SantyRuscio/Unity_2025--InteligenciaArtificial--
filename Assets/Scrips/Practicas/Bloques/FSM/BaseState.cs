@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseState
-{  
+public abstract class BaseState
+{
     public BloquesFsm fsm;
 
     public BaseState SetUp(BloquesFsm newFsm)
@@ -11,7 +11,7 @@ public class BaseState
         fsm = newFsm;
         return this;
     }
- 
+
     public virtual void OnEnter(){}
     public virtual void OnUpdate(){}
     public virtual void OnExit(){}

@@ -16,12 +16,7 @@ public class Enemigos : MonoBehaviour
         _bloquesFsm.ChnageState(EnemyStates.Idle);
 
     }
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         _bloquesFsm.OnUpdate();

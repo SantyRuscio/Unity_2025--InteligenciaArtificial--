@@ -14,7 +14,7 @@ public  class BloquesFsm
     }
     public void ChnageState(EnemyStates newState)
     {
-        if(_possibleStates.ContainsKey(newState)) return; 
+        if(_possibleStates.ContainsKey(newState)) return;
 
         _actualState?.OnExit();
         _actualState = _possibleStates[newState];
@@ -27,6 +27,6 @@ public  class BloquesFsm
     {   
         Idle,
         Chase,
-        Patrol
-
+        Patrol,
+        Attack
     }
