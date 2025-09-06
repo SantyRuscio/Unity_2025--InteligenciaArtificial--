@@ -16,8 +16,8 @@ public class ChaseState : BaseState
 
     [SerializeField] float ArrivingDistance = 5f;
 
-    float _atackRange = 2f;
-    float _chaseRange = 4f;
+    float _atackRange = 0.5f;
+    float _chaseRange = 6f;
     float distance = 0f;
 
     public override void OnEnter()
@@ -27,7 +27,7 @@ public class ChaseState : BaseState
 
     public override void OnUpdate() //// perseguir al personaje mediante Pursuit ///
     {
-        if (_myRoot == null) return;  //TIRA ERROR RARO HAY QUE PREFGUNTAR
+        if (_myRoot == null) return;  
 
         // Vector hacia donde estará el target
         dir = (Target.Position + Target.Velocity) - _myRoot.position;
@@ -35,7 +35,7 @@ public class ChaseState : BaseState
 
         // volver a Patrol
         if (distance > _chaseRange)
-        {
+        {   
             Debug.Log("Target fuera de rango, volver a Patrol");
             fsm.ChnageState(EnemyStates.Patrol);
             return;
@@ -46,7 +46,7 @@ public class ChaseState : BaseState
         {
             Debug.Log("En rango de ataque, cambiar a Attack");
             fsm.ChnageState(EnemyStates.Attack);
-            return;
+            return; 
         }
 
         // Pursuit

@@ -24,6 +24,12 @@ public class Rival : MonoBehaviour
         a.SetRoot(transform);
         a.SetWaypoints(_wayPoints);
 
+        ChaseState b = chase as ChaseState;
+        b.SetRoot(transform);
+
+        AttackState c = attack as AttackState;
+        c.SetRoot(transform);
+
 
         fsm._possibleStates.Add(EnemyStates.Idle, idle);
         fsm._possibleStates.Add(EnemyStates.Chase, chase);
