@@ -27,11 +27,9 @@ public class ChaseState : BaseState
 
     public override void OnUpdate() //// perseguir al personaje mediante Pursuit ///
     {
-        if (_myRoot == null) return;  
+        if (_myRoot == null) return;
 
-        // Vector hacia donde estará el target
-        dir = (Target.Position + Target.Velocity) - _myRoot.position;
-        distance = dir.magnitude;
+        PursuitCoutn();
 
         // volver a Patrol
         if (distance > _chaseRange)
@@ -49,8 +47,14 @@ public class ChaseState : BaseState
             return; 
         }
 
-        // Pursuit
-        desired = dir.normalized * movSpeed; 
+    }
+
+    private void PursuitCoutn() //Porsuit Cuentas//
+    {
+        dir = (Target.Position + Target.Velocity) - _myRoot.position;
+        distance = dir.magnitude;
+
+        desired = dir.normalized * movSpeed;
         steering = desired - velocity;
         steering = Vector3.ClampMagnitude(steering, steeringForce);
         velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
@@ -59,7 +63,6 @@ public class ChaseState : BaseState
         if (velocity.sqrMagnitude > 0.001f)
             _myRoot.forward = velocity.normalized;
     }
-
 
     public override void OnExit()
     {

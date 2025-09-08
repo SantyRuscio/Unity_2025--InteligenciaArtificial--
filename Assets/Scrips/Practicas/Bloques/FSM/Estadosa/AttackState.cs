@@ -1,43 +1,105 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AttackState : BaseState
 {
+    // referencias
     public Transform _myRoot;
-    public float _atackRange = 0.5f;
+    private RivalLife _rivalLife;
+
+    [Header("Ranges")]
+    public float _attackRange = 0.5f;
+    [SerializeField] private float _safeDamage = 50f;
+    [SerializeField] private float _chaseRange = 6f; 
+
+    [Header("Evade params")]
+
+    [SerializeField] private float arrivingDistance = 1f;
+    Vector3 desired = Vector3.zero; //vector deseado que apunta el target
+    Vector3 velocity = Vector3.zero; //direccion y Magnitud del vector
+    Vector3 steering = Vector3.zero; // Vector de ajueste/steeroing
+    Vector3 dir = Vector3.zero;
+    [SerializeField] float movSpeed = 5f;
+    [SerializeField] float steeringForce = 0.1f;
+
+    [SerializeField] float ArrivingDistance = 5f;
+
+    float distance = 0f;
 
     public override void OnEnter()
     {
-        Debug.Log("entre a AttackState ");
+        // intentar obtener RivalLife si no está seteado
+        if (_rivalLife == null && _myRoot != null)
+            _rivalLife = _myRoot.GetComponent<RivalLife>();
+
+        Debug.Log("Entered AttackState");
     }
 
     public override void OnUpdate()
     {
-        if (_myRoot == null) return;
+        if (_myRoot == null) return; // seguridad
 
-       float distance = Vector3.Distance(_myRoot.position, Target.Position);
+        float distanceToTarget = Vector3.Distance(_myRoot.position, Target.Position);
 
-        if (distance < _atackRange ) 
+        if (distanceToTarget <= _attackRange)
         {
-            Debug.Log("LOGICA DE ATACK");
+            if (_rivalLife._currentLife < _safeDamage)
+            {
+                Evade(); // evade
+            }
+            else
+            {
+                // lógica de ataque 
+                Debug.Log("Atacando al jugador");
+                _rivalLife.DamageTaken(20f);
+            }
         }
-
-        if (distance > _atackRange)
+        else
         {
-            Debug.Log("Target fuera de rango, volver a Chase");
-            fsm.ChnageState(EnemyStates.Chase);
+            if (distanceToTarget > _chaseRange)
+            {
+                fsm.ChnageState(EnemyStates.Patrol);
+                return;
+            }
         }
-
-        Debug.Log("if lo tengo en rango y no hay vida me escapo UTILIZO EVADE Y un rango que al alejarme cambie de estado // un estado de buscar curacion y ese vuelve a patrol");
-
-        Debug.Log("ELse if se me fue del rango ataque vuevlo a chase"); //fsm.ChnageState(EnemyStates.Chase);
-
     }
 
-    public override void OnExit()
+    private void Evade()
     {
-        Debug.Log("sali de AttackState");
+
+        Debug.Log("EVADE");
+
+        dir = _myRoot.position - (Target.Position + Target.Velocity);
+        distance = dir.magnitude;
+
+
+        if (distance < ArrivingDistance)
+        {
+            desired = dir.normalized * movSpeed * (distance / ArrivingDistance);
+        }
+        else
+        {
+            desired = dir.normalized * movSpeed;
+        }
+
+        steering = desired - velocity;
+
+        steering = Vector3.ClampMagnitude(steering, steeringForce);
+
+        velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
+
+        _myRoot.position += velocity * Time.deltaTime;
+    }
+   
+
+
+    // SETTERS desde Rival
+    public void SetRivalLife(RivalLife life)
+    {
+        _rivalLife = life;
     }
 
     public void SetRoot(Transform newroot)

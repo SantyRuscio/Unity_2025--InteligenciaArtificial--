@@ -15,11 +15,11 @@ public class Wander : MonoBehaviour
 
     [SerializeField] float wanderDistance = 1f;
 
-    [SerializeField] float maxRatioX = 23f;
-    [SerializeField] float minRatioX = -23f;
+    [SerializeField] float maxRatioX = 11f;
+    [SerializeField] float minRatioX = -11f;
 
-    [SerializeField] float maxRatioZ =  23f;
-    [SerializeField] float minRatioZ = -23f;
+    [SerializeField] float maxRatioZ =  11f;
+    [SerializeField] float minRatioZ = -11f;
 
 
     Vector3 targetPos = Vector3.zero;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PatrolState : BaseState
@@ -30,6 +31,25 @@ public class PatrolState : BaseState
     {
         if (_wayPoints.Length == 0) return;
 
+        SeekArriveCount();
+        wayPointsLoop();
+
+        if (Vector3.Distance(Target.Position, _myRoot.position) < _chaseRange)
+        {
+            Debug.Log("cambiando a chase");
+            fsm.ChnageState(EnemyStates.Chase);
+        }
+
+    }
+
+    public override void OnExit()
+    {
+        Debug.Log("Saliendo de Patrol");
+    }
+
+    private void SeekArriveCount()  // Seek + Arrive Cuentas // 
+    {
+        Debug.Log("Entré a Seek");
         Vector3 dir = _wayPoints[currentWaypoint].position - _myRoot.position;
         distance = dir.magnitude;
 
@@ -51,26 +71,16 @@ public class PatrolState : BaseState
         _myRoot.position += velocity * Time.deltaTime
             ;
         _myRoot.forward = velocity;
+    }
 
-        // lOOP DE WAYPOINTS 
+    private void wayPointsLoop() // WayLoops// 
+    {
+        Debug.Log("Entré a LoopWay");
         if (distance < ArrivingDistance)
         {
             currentWaypoint = (currentWaypoint + 1) % _wayPoints.Length;
         }
-
-        if (Vector3.Distance(Target.Position, _myRoot.position) < _chaseRange)
-        {
-            Debug.Log("cambiando a chase");
-            fsm.ChnageState(EnemyStates.Chase);
-        }
-
     }
-
-    public override void OnExit()
-    {
-        Debug.Log("Saliendo de Patrol");
-    }
-
 
     public void SetRoot(Transform newroot)
     {
