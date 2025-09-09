@@ -8,6 +8,7 @@ public class PatrolState : BaseState
     public Transform[] _wayPoints;
     public Transform _myRoot;
 
+    private Animator _animator; 
     private int currentWaypoint = 0;
     private Vector3 desired = Vector3.zero;
     private Vector3 velocity = Vector3.zero;
@@ -21,13 +22,25 @@ public class PatrolState : BaseState
 
     float distance = 0f;
 
-    public override void OnEnter()
+    public void SetRootAndAnimator(Transform root, Animator anim)
     {
-        Debug.Log("Entré a Patrol");
-        currentWaypoint = 0;
+        _myRoot = root;
+        _animator = anim;
     }
 
-    public override void OnUpdate()      ////recorrido de waypoints mediante Seek + Arrive///
+    public override void OnEnter()
+    {
+        Debug.Log("EntrÃ© a Patrol");
+        currentWaypoint = 0;
+
+        if (_myRoot != null)
+            _animator = _myRoot.GetComponentInChildren<Animator>();
+
+        if (_animator != null)
+            _animator.SetBool("isWalking", true);
+    }
+
+    public override void OnUpdate() //// recorrido de waypoints mediante Seek + Arrive ///
     {
         if (_wayPoints.Length == 0) return;
 
@@ -39,17 +52,19 @@ public class PatrolState : BaseState
             Debug.Log("cambiando a chase");
             fsm.ChnageState(EnemyStates.Chase);
         }
-
     }
 
     public override void OnExit()
     {
         Debug.Log("Saliendo de Patrol");
+
+        if (_animator != null)
+            _animator.SetBool("isWalking", false); 
     }
 
     private void SeekArriveCount()  // Seek + Arrive Cuentas // 
     {
-        Debug.Log("Entré a Seek");
+        Debug.Log("EntrÃ© a patrol");
         Vector3 dir = _wayPoints[currentWaypoint].position - _myRoot.position;
         distance = dir.magnitude;
 
@@ -65,17 +80,18 @@ public class PatrolState : BaseState
 
         steering = desired - velocity;
         steering = Vector3.ClampMagnitude(steering, steeringForce);
-
         velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
 
-        _myRoot.position += velocity * Time.deltaTime
-            ;
-        _myRoot.forward = velocity;
+        _myRoot.position += velocity * Time.deltaTime;
+
+        // RotaciÃ³n solo si hay movimiento, igual que en Chase
+        if (velocity.sqrMagnitude > 0.001f)
+            _myRoot.forward = velocity.normalized;
     }
 
-    private void wayPointsLoop() // WayLoops// 
+    private void wayPointsLoop() // WayLoops //
     {
-        Debug.Log("Entré a LoopWay");
+        Debug.Log("EntrÃ© a LoopWay");
         if (distance < ArrivingDistance)
         {
             currentWaypoint = (currentWaypoint + 1) % _wayPoints.Length;
@@ -91,5 +107,4 @@ public class PatrolState : BaseState
     {
         _wayPoints = newroot;
     }
-
 }

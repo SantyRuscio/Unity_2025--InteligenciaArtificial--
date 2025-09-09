@@ -9,8 +9,12 @@ public class Rival : MonoBehaviour
 
     private BloquesFsm fsm;
 
+    private Animator animator;
+
     void Awake()
     {
+        animator = GetComponent<Animator>();
+
         // Crear la FSM
         fsm = new BloquesFsm();
 

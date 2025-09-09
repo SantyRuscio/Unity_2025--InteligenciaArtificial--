@@ -10,6 +10,8 @@ public class AttackState : BaseState
     public Transform _myRoot;
     private RivalLife _rivalLife;
 
+    private Animator _animator;
+
     [Header("Ranges")]
     public float _attackRange = 0.5f;
     [SerializeField] private float _safeDamage = 50f;
@@ -29,9 +31,15 @@ public class AttackState : BaseState
 
     float distance = 0f;
 
+    public void SetRootAndAnimator(Transform root, Animator anim)
+    {
+        _myRoot = root;
+        _animator = anim;
+    }
+
     public override void OnEnter()
     {
-        // intentar obtener RivalLife si no está seteado
+        // intentar obtener RivalLife si no estï¿½ seteado
         if (_rivalLife == null && _myRoot != null)
             _rivalLife = _myRoot.GetComponent<RivalLife>();
 
@@ -52,7 +60,7 @@ public class AttackState : BaseState
             }
             else
             {
-                // lógica de ataque 
+                // lï¿½gica de ataque 
                 Debug.Log("Atacando al jugador");
                 _rivalLife.DamageTaken(20f);
             }

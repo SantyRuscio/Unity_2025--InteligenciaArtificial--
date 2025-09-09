@@ -4,17 +4,29 @@ using UnityEngine;
 
 public class IdleState : BaseState
 {
-    // IDLE LO USAMOS PARA INICIALIZAR PATORL O CHEQUEAR
+    private Animator _animator;
+
+    // le pasamos el Animator desde Rival
+
+    public void SetRootAndAnimator(Transform root, Animator anim)
+    {
+        _animator = anim;
+    }
+    public void SetAnimator(Animator anim)
+    {
+        _animator = anim;
+    }
+
     public override void OnEnter()
     {
         Debug.Log("entre a idle");
+
+        if (_animator != null)
+            _animator.SetBool("Walk", false); // 🔥 se asegura de apagar caminata
+
+        // apenas entra en Idle, cambia a Patrol
         fsm.ChnageState(EnemyStates.Patrol);
     }
-
-        // Si veo un enemigo
-        // Esta lejos? -> cambio a Chase
-        // Esta cerca -> cambio a attack
-    
 
     public override void OnExit()
     {

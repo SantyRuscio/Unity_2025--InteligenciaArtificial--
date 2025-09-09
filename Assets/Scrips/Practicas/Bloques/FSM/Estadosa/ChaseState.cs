@@ -5,10 +5,11 @@ using UnityEngine;
 public class ChaseState : BaseState
 {
     public Transform _myRoot;
+    private Animator _animator; 
 
-    Vector3 desired = Vector3.zero; //vector deseado que apunta el target
-    Vector3 velocity = Vector3.zero; //direccion y Magnitud del vector
-    Vector3 steering = Vector3.zero; // Vector de ajueste/steeroing
+    Vector3 desired = Vector3.zero; // vector deseado que apunta al target
+    Vector3 velocity = Vector3.zero; // direccion y magnitud del vector
+    Vector3 steering = Vector3.zero; // vector de ajuste/steering
 
     Vector3 dir = Vector3.zero;
     [SerializeField] float movSpeed = 5f;
@@ -20,8 +21,20 @@ public class ChaseState : BaseState
     float _chaseRange = 6f;
     float distance = 0f;
 
+    public void SetRootAndAnimator(Transform root, Animator anim)
+    {
+        _myRoot = root;
+        _animator = anim;
+    }
+
     public override void OnEnter()
     {
+        if (_myRoot != null)
+            _animator = _myRoot.GetComponent<Animator>();
+
+        if (_animator != null)
+            _animator.SetBool("isWalking", true); 
+
         Debug.Log("entre a Chase");
     }
 
@@ -29,27 +42,25 @@ public class ChaseState : BaseState
     {
         if (_myRoot == null) return;
 
-        PursuitCoutn();
+        PursuitCoutn(); // Pursuit Cuentas
 
-        // volver a Patrol
+        // volver a Patrol si target fuera de rango
         if (distance > _chaseRange)
-        {   
+        {
             Debug.Log("Target fuera de rango, volver a Patrol");
             fsm.ChnageState(EnemyStates.Patrol);
             return;
         }
 
-        // cambiar a Attack
         if (distance <= _atackRange)
         {
             Debug.Log("En rango de ataque, cambiar a Attack");
             fsm.ChnageState(EnemyStates.Attack);
-            return; 
+            return;
         }
-
     }
 
-    private void PursuitCoutn() //Porsuit Cuentas//
+    private void PursuitCoutn() // Pursuit Cuentas
     {
         dir = (Target.Position + Target.Velocity) - _myRoot.position;
         distance = dir.magnitude;
@@ -60,12 +71,16 @@ public class ChaseState : BaseState
         velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
 
         _myRoot.position += velocity * Time.deltaTime;
+
         if (velocity.sqrMagnitude > 0.001f)
             _myRoot.forward = velocity.normalized;
     }
 
     public override void OnExit()
     {
+        if (_animator != null)
+            _animator.SetBool("isWalking", false);
+
         Debug.Log("sali de Chase");
     }
 
