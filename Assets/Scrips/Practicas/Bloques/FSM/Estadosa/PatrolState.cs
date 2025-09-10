@@ -5,27 +5,29 @@ using UnityEngine;
 
 public class PatrolState : BaseState
 {
+    //Asiganciones
     public Transform[] _wayPoints;
-    public Transform _myRoot;
+    RivalLife _rivalLife;
 
     private Animator _animator; 
     private int currentWaypoint = 0;
-    private Vector3 desired = Vector3.zero;
-    private Vector3 velocity = Vector3.zero;
-    private Vector3 steering = Vector3.zero;
 
+    //Steerings Valores
     private float movSpeed = 3f;
     private float steeringForce = 0.1f;
     private float ArrivingDistance = 1f;
 
+    //Chequeos Para Cambios de Estado
+    private float _safeDamage = 50f;
     private float _chaseRange = 5f;
 
     float distance = 0f;
 
-    public void SetRootAndAnimator(Transform root, Animator anim)
+    public PatrolState(Transform[] _wayPoints, RivalLife _rivalLife, Animator anim)
     {
-        _myRoot = root;
-        _animator = anim;
+        this._wayPoints = _wayPoints;
+        this._rivalLife = _rivalLife;
+        this._animator = anim;
     }
 
     public override void OnEnter()
@@ -47,11 +49,16 @@ public class PatrolState : BaseState
         SeekArriveCount();
         wayPointsLoop();
 
-        if (Vector3.Distance(Target.Position, _myRoot.position) < _chaseRange)
+        if (Vector3.Distance(Target.Position, _myRoot.position) < _chaseRange && _rivalLife._currentLife > _safeDamage)
         {
             Debug.Log("cambiando a chase");
             fsm.ChnageState(EnemyStates.Chase);
         }
+       else if (_rivalLife._currentLife < _safeDamage)
+       {
+           Debug.Log("No tengo vida, Cambio a Evade");
+           fsm.ChnageState(EnemyStates.Evade); 
+       }
     }
 
     public override void OnExit()
@@ -96,15 +103,5 @@ public class PatrolState : BaseState
         {
             currentWaypoint = (currentWaypoint + 1) % _wayPoints.Length;
         }
-    }
-
-    public void SetRoot(Transform newroot)
-    {
-        _myRoot = newroot;
-    }
-
-    public void SetWaypoints(Transform[] newroot)
-    {
-        _wayPoints = newroot;
     }
 }

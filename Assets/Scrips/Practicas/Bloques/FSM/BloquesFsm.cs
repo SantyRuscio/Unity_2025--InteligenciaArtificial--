@@ -28,5 +28,6 @@ public  class BloquesFsm
         Idle,
         Chase,
         Patrol,
-        Attack
+        Attack,
+        Evade
     }

@@ -6,17 +6,6 @@ public class IdleState : BaseState
 {
     private Animator _animator;
 
-    // le pasamos el Animator desde Rival
-
-    public void SetRootAndAnimator(Transform root, Animator anim)
-    {
-        _animator = anim;
-    }
-    public void SetAnimator(Animator anim)
-    {
-        _animator = anim;
-    }
-
     public override void OnEnter()
     {
         Debug.Log("entre a idle");

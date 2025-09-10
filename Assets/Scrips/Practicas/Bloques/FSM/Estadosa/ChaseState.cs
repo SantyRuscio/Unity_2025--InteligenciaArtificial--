@@ -4,12 +4,7 @@ using UnityEngine;
 
 public class ChaseState : BaseState
 {
-    public Transform _myRoot;
     private Animator _animator; 
-
-    Vector3 desired = Vector3.zero; // vector deseado que apunta al target
-    Vector3 velocity = Vector3.zero; // direccion y magnitud del vector
-    Vector3 steering = Vector3.zero; // vector de ajuste/steering
 
     Vector3 dir = Vector3.zero;
     [SerializeField] float movSpeed = 5f;
@@ -17,14 +12,13 @@ public class ChaseState : BaseState
 
     [SerializeField] float ArrivingDistance = 5f;
 
-    float _atackRange = 0.5f;
+    float _atackRange = 2f;
     float _chaseRange = 6f;
     float distance = 0f;
 
-    public void SetRootAndAnimator(Transform root, Animator anim)
+    public ChaseState(Animator _animator)
     {
-        _myRoot = root;
-        _animator = anim;
+        this._animator = _animator; 
     }
 
     public override void OnEnter()

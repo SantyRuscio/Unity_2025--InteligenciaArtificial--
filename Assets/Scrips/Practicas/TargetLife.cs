@@ -1,34 +1,33 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst;
 using UnityEngine;
 
-public class RivalLife : MonoBehaviour
+public class TargetLife : MonoBehaviour
 {
     [SerializeField] private float _maxLife = 100f;
     public float _currentLife { get; private set; }
+    public bool isLive = true;
 
     private void Awake()
     {
-        _currentLife = _maxLife; // inicia con vida máxima
+        _currentLife = _maxLife; // inicia con vida m�xima
     }
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.K))
         {
-            Debug.Log("ESPACIO CLIOCKER");
+            Debug.Log("me sacan vida");
             DamageTaken(20f);
         }
     }
 
     public void DamageTaken(float damage)
     {
-        Debug.Log("DAMAGE");
         _currentLife = Mathf.Clamp(_currentLife - damage, 0, _maxLife);
 
         if (_currentLife <= 0)
         {
-            Debug.Log("Me muero");
+            Debug.Log("ME muero");
             OnDead();
         }
         else
@@ -39,7 +38,7 @@ public class RivalLife : MonoBehaviour
 
     private void OnDead()
     {
+        Debug.Log("Ejecuto muerte");
         Destroy(gameObject);
     }
 }
-

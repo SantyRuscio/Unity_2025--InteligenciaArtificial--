@@ -2,8 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseState 
+public abstract class BaseState
 {
+    protected Transform _myRoot;
+    protected Vector3 desired = Vector3.zero; // vector deseado que apunta al target
+    protected Vector3 velocity = Vector3.zero; // direccion y magnitud del vector
+    protected Vector3 steering = Vector3.zero; // vector de ajuste/steering
+
     public BloquesFsm fsm;
 
     public BaseState SetUp(BloquesFsm newFsm)
@@ -11,6 +16,12 @@ public abstract class BaseState
         fsm = newFsm;
         return this;
     }
+    public BaseState SetRoot(Transform newRoot)
+    {
+        _myRoot = newRoot;
+        return this;
+    }
+
 
     public virtual void OnEnter(){}
     public virtual void OnUpdate(){}

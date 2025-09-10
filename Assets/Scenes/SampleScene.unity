@@ -4404,6 +4404,7 @@ GameObject:
   - component: {fileID: 410129926}
   - component: {fileID: 410129929}
   - component: {fileID: 410129930}
+  - component: {fileID: 410129931}
   m_Layer: 0
   m_Name: Eenemigo
   m_TagString: Untagged
@@ -4427,6 +4428,9 @@ MonoBehaviour:
   - {fileID: 1801020875}
   - {fileID: 63205034}
   - {fileID: 1545238931}
+  _rivalLife: {fileID: 410129929}
+  _targetLife: {fileID: 1451387213}
+  _animator: {fileID: 410129930}
 --- !u!136 &410129927
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4500,6 +4504,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!54 &410129931
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410129925}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 84
+  m_CollisionDetection: 0
 --- !u!1 &413639523
 GameObject:
   m_ObjectHideFlags: 0
@@ -6013,6 +6044,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 590481625}
+  - component: {fileID: 590481626}
   m_Layer: 0
   m_Name: Estructura Cuadrado
   m_TagString: Untagged
@@ -6033,7 +6065,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 875889423}
+  - {fileID: 4588435126556780}
   - {fileID: 354650515}
   - {fileID: 342513622}
   - {fileID: 1522745686}
@@ -6043,6 +6075,33 @@ Transform:
   - {fileID: 1739832966}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &590481626
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590481624}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &593234870
 GameObject:
   m_ObjectHideFlags: 0
@@ -9746,11 +9805,6 @@ Transform:
   - {fileID: 648165391}
   m_Father: {fileID: 359018699}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &875889423 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4588435873696250, guid: effb1b31d7e11a54e9b051312c1a2ee4, type: 3}
-  m_PrefabInstance: {fileID: 932745622}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &876109137
 GameObject:
   m_ObjectHideFlags: 0
@@ -10198,6 +10252,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4588435873696250, guid: effb1b31d7e11a54e9b051312c1a2ee4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64451913729086936, guid: effb1b31d7e11a54e9b051312c1a2ee4, type: 3}
+      propertyPath: m_Convex
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -14548,6 +14606,7 @@ GameObject:
   - component: {fileID: 1451387210}
   - component: {fileID: 1451387212}
   - component: {fileID: 1451387211}
+  - component: {fileID: 1451387213}
   m_Layer: 8
   m_Name: --Player-Felix--
   m_TagString: Untagged
@@ -14607,6 +14666,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
+--- !u!114 &1451387213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451387206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e58267eb0ddbab84b9dedbe759bb1734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxLife: 100
+  isLive: 1
 --- !u!1 &1453708546
 GameObject:
   m_ObjectHideFlags: 0
@@ -21588,6 +21661,11 @@ Transform:
   - {fileID: 1571226947}
   m_Father: {fileID: 1232812332}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4588435126556780 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4588435873696250, guid: effb1b31d7e11a54e9b051312c1a2ee4, type: 3}
+  m_PrefabInstance: {fileID: 932745622}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &57086944334169192
 Transform:
   m_ObjectHideFlags: 0

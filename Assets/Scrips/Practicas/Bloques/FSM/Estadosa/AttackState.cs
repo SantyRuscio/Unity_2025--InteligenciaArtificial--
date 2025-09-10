@@ -6,112 +6,65 @@ using UnityEngine;
 
 public class AttackState : BaseState
 {
-    // referencias
-    public Transform _myRoot;
-    private RivalLife _rivalLife;
-
+    //Asiganciones
     private Animator _animator;
+    private TargetLife _targetLife;
 
-    [Header("Ranges")]
-    public float _attackRange = 0.5f;
-    [SerializeField] private float _safeDamage = 50f;
-    [SerializeField] private float _chaseRange = 6f; 
+    //Chequeos Para Cambios de Estado
+    public float _attackRange = 1f;
+    [SerializeField] private float _chaseRange = 6f;
 
-    [Header("Evade params")]
+    //Variables del estado
+    private float _dmg = 20f;
+    private float _attackCooldown = 1.5f; 
+    private float _lastAttackTime = -999f; 
 
-    [SerializeField] private float arrivingDistance = 1f;
-    Vector3 desired = Vector3.zero; //vector deseado que apunta el target
-    Vector3 velocity = Vector3.zero; //direccion y Magnitud del vector
-    Vector3 steering = Vector3.zero; // Vector de ajueste/steeroing
-    Vector3 dir = Vector3.zero;
-    [SerializeField] float movSpeed = 5f;
-    [SerializeField] float steeringForce = 0.1f;
-
-    [SerializeField] float ArrivingDistance = 5f;
-
-    float distance = 0f;
-
-    public void SetRootAndAnimator(Transform root, Animator anim)
+    public AttackState(TargetLife _targetLife)
     {
-        _myRoot = root;
-        _animator = anim;
+        this._targetLife = _targetLife;
     }
-
     public override void OnEnter()
     {
-        // intentar obtener RivalLife si no est� seteado
-        if (_rivalLife == null && _myRoot != null)
-            _rivalLife = _myRoot.GetComponent<RivalLife>();
-
         Debug.Log("Entered AttackState");
     }
 
     public override void OnUpdate()
     {
-        if (_myRoot == null) return; // seguridad
+        if (_myRoot == null) return;
 
-        float distanceToTarget = Vector3.Distance(_myRoot.position, Target.Position);
+        Vector3 dir = (Target.Position - _myRoot.position).normalized;
+
+        Vector3 stopBeforeTarget = Target.Position - dir * 1f; 
+
+        float distanceToTarget = Vector3.Distance(_myRoot.position, stopBeforeTarget);
 
         if (distanceToTarget <= _attackRange)
         {
-            if (_rivalLife._currentLife < _safeDamage)
+            Debug.Log("Atacando al jugador");
+            AttackCount();
+
+            if (_targetLife._currentLife >= 0)
             {
-                Evade(); // evade
-            }
-            else
-            {
-                // l�gica de ataque 
-                Debug.Log("Atacando al jugador");
-                _rivalLife.DamageTaken(20f);
+                fsm.ChnageState(EnemyStates.Idle);
             }
         }
-        else
+        else if (distanceToTarget <= _chaseRange)
         {
-            if (distanceToTarget > _chaseRange)
-            {
-                fsm.ChnageState(EnemyStates.Patrol);
-                return;
-            }
+            Debug.Log("El jugador se alejó, vuelvo a perseguir");
+            fsm.ChnageState(EnemyStates.Chase);
         }
     }
 
-    private void Evade()
+    private void AttackCount()
     {
-
-        Debug.Log("EVADE");
-
-        dir = _myRoot.position - (Target.Position + Target.Velocity);
-        distance = dir.magnitude;
-
-
-        if (distance < ArrivingDistance)
+        if (Time.time >= _lastAttackTime + _attackCooldown)
         {
-            desired = dir.normalized * movSpeed * (distance / ArrivingDistance);
+            _lastAttackTime = Time.time;
+            Debug.Log("Atacando al jugador");
+
+            _targetLife.DamageTaken(_dmg);
+
         }
-        else
-        {
-            desired = dir.normalized * movSpeed;
-        }
-
-        steering = desired - velocity;
-
-        steering = Vector3.ClampMagnitude(steering, steeringForce);
-
-        velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
-
-        _myRoot.position += velocity * Time.deltaTime;
-    }
-   
-
-
-    // SETTERS desde Rival
-    public void SetRivalLife(RivalLife life)
-    {
-        _rivalLife = life;
     }
 
-    public void SetRoot(Transform newroot)
-    {
-        _myRoot = newroot;
-    }
 }
