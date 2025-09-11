@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EvadeState : BaseState
+public class HunterEvadeState : BaseState
 {
     //Steerings Valores
     Vector3 dir = Vector3.zero;
-    [SerializeField] float movSpeed = 2f;
-    [SerializeField] float steeringForce = 0.1f;
-    [SerializeField] float ArrivingDistance = 7f;
+    [SerializeField] float movSpeed = 3f;
+    [SerializeField] float steeringForce = 1f;
+    [SerializeField] float ArrivingDistance = 5f;
     float distance = 0f;
+
+    //Chequeos Para Cambios de Estado
+    [SerializeField] float EscapeRangeToPatrol = 5f;
 
     public override void OnEnter()
     {   
@@ -20,6 +23,11 @@ public class EvadeState : BaseState
     public override void OnUpdate()
     {
         EvadeCounts();
+        if( distance > EscapeRangeToPatrol)
+        {
+            Debug.Log("me escape");
+            fsm.ChnageState(AgentStates.Patrol);
+        }
     }
 
     public override void OnExit() 

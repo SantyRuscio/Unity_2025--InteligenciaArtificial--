@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChaseState : BaseState
+public class HunterChaseState : BaseState
 {
     private Animator _animator; 
 
@@ -16,7 +16,7 @@ public class ChaseState : BaseState
     float _chaseRange = 6f;
     float distance = 0f;
 
-    public ChaseState(Animator _animator)
+    public HunterChaseState(Animator _animator)
     {
         this._animator = _animator; 
     }
@@ -42,14 +42,14 @@ public class ChaseState : BaseState
         if (distance > _chaseRange)
         {
             Debug.Log("Target fuera de rango, volver a Patrol");
-            fsm.ChnageState(EnemyStates.Patrol);
+            fsm.ChnageState(AgentStates.Patrol);
             return;
         }
 
         if (distance <= _atackRange)
         {
             Debug.Log("En rango de ataque, cambiar a Attack");
-            fsm.ChnageState(EnemyStates.Attack);
+            fsm.ChnageState(AgentStates.Attack);
             return;
         }
     }

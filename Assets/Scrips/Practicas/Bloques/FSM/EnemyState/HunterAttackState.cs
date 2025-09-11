@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class AttackState : BaseState
+public class HunterAttackState : BaseState
 {
     //Asiganciones
     private Animator _animator;
@@ -16,10 +16,10 @@ public class AttackState : BaseState
 
     //Variables del estado
     private float _dmg = 20f;
-    private float _attackCooldown = 1.5f; 
+    private float _attackCooldown = 5f; 
     private float _lastAttackTime = -999f; 
 
-    public AttackState(TargetLife _targetLife)
+    public HunterAttackState(TargetLife _targetLife)
     {
         this._targetLife = _targetLife;
     }
@@ -45,13 +45,13 @@ public class AttackState : BaseState
 
             if (_targetLife._currentLife >= 0)
             {
-                fsm.ChnageState(EnemyStates.Idle);
+                fsm.ChnageState(AgentStates.Idle);
             }
         }
         else if (distanceToTarget <= _chaseRange)
         {
             Debug.Log("El jugador se alejó, vuelvo a perseguir");
-            fsm.ChnageState(EnemyStates.Chase);
+            fsm.ChnageState(AgentStates.Chase);
         }
     }
 

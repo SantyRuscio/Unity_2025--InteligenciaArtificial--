@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : BaseState
+public class HunterIdleState : BaseState
 {
     private Animator _animator;
 
@@ -14,7 +14,7 @@ public class IdleState : BaseState
             _animator.SetBool("Walk", false); // 🔥 se asegura de apagar caminata
 
         // apenas entra en Idle, cambia a Patrol
-        fsm.ChnageState(EnemyStates.Patrol);
+        fsm.ChnageState(AgentStates.Patrol);
     }
 
     public override void OnExit()

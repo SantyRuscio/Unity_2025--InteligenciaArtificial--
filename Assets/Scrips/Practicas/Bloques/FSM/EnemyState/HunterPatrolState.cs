@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PatrolState : BaseState
+public class HunterPatrolState : BaseState
 {
     //Asiganciones
     public Transform[] _wayPoints;
@@ -23,7 +23,7 @@ public class PatrolState : BaseState
 
     float distance = 0f;
 
-    public PatrolState(Transform[] _wayPoints, RivalLife _rivalLife, Animator anim)
+    public HunterPatrolState(Transform[] _wayPoints, RivalLife _rivalLife, Animator anim)
     {
         this._wayPoints = _wayPoints;
         this._rivalLife = _rivalLife;
@@ -52,12 +52,12 @@ public class PatrolState : BaseState
         if (Vector3.Distance(Target.Position, _myRoot.position) < _chaseRange && _rivalLife._currentLife > _safeDamage)
         {
             Debug.Log("cambiando a chase");
-            fsm.ChnageState(EnemyStates.Chase);
+            fsm.ChnageState(AgentStates.Chase);
         }
        else if (_rivalLife._currentLife < _safeDamage)
        {
            Debug.Log("No tengo vida, Cambio a Evade");
-           fsm.ChnageState(EnemyStates.Evade); 
+           fsm.ChnageState(AgentStates.Evade); 
        }
     }
 

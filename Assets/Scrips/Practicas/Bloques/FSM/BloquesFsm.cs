@@ -6,13 +6,13 @@ using UnityEngine;
 public  class BloquesFsm 
 {
     public BaseState _actualState;
-    public Dictionary<EnemyStates, BaseState> _possibleStates = new Dictionary<EnemyStates, BaseState>();
+    public Dictionary<AgentStates, BaseState> _possibleStates = new Dictionary<AgentStates, BaseState>();
 
     public void OnUpdate()
     {
         _actualState.OnUpdate();
     }
-    public void ChnageState(EnemyStates newState)
+    public void ChnageState(AgentStates newState)
     {
         if(!_possibleStates.ContainsKey(newState)) return;
 
@@ -23,11 +23,12 @@ public  class BloquesFsm
 }
 
 
-    public enum EnemyStates
+    public enum AgentStates
     {   
         Idle,
         Chase,
         Patrol,
         Attack,
-        Evade
+        Evade,
+        PickUp
     }

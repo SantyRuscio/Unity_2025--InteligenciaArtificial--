@@ -22,17 +22,17 @@ public class Rival : MonoBehaviour
         fsm = new BloquesFsm();
 
         // Crear estaDOS
-        var idle = new IdleState().SetUp(fsm);
-        var chase = new ChaseState(_animator).SetUp(fsm).SetRoot(transform);
-        var attack = new AttackState(_targetLife).SetUp(fsm).SetRoot(transform);
-        var patrol = new PatrolState(_wayPoints, _rivalLife, _animator).SetUp(fsm).SetRoot(transform);
-        var evade = new EvadeState().SetUp(fsm).SetRoot(transform);
+        var idle = new HunterIdleState().SetUp(fsm);
+        var chase = new HunterChaseState(_animator).SetUp(fsm).SetRoot(transform);
+        var attack = new HunterAttackState(_targetLife).SetUp(fsm).SetRoot(transform);
+        var patrol = new HunterPatrolState(_wayPoints, _rivalLife, _animator).SetUp(fsm).SetRoot(transform);
+        var evade = new HunterEvadeState().SetUp(fsm).SetRoot(transform);
 
-        fsm._possibleStates.Add(EnemyStates.Idle, idle);
-        fsm._possibleStates.Add(EnemyStates.Chase, chase);
-        fsm._possibleStates.Add(EnemyStates.Attack, attack);
-        fsm._possibleStates.Add(EnemyStates.Patrol, patrol);
-        fsm._possibleStates.Add(EnemyStates.Evade, evade);
+        fsm._possibleStates.Add(AgentStates.Idle, idle);
+        fsm._possibleStates.Add(AgentStates.Chase, chase);
+        fsm._possibleStates.Add(AgentStates.Attack, attack);
+        fsm._possibleStates.Add(AgentStates.Patrol, patrol);
+        fsm._possibleStates.Add(AgentStates.Evade, evade);
 
         // Estado inicial
         fsm._actualState = idle;
@@ -45,7 +45,7 @@ public class Rival : MonoBehaviour
         fsm.OnUpdate();
     }
 
-    public void ChangeState(EnemyStates newState)
+    public void ChangeState(AgentStates newState)
     {
         fsm.ChnageState(newState); 
     }

@@ -14,7 +14,7 @@ public class TargetLife : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             Debug.Log("me sacan vida");
             DamageTaken(20f);
