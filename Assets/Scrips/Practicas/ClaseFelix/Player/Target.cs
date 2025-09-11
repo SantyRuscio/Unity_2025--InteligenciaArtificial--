@@ -41,13 +41,13 @@ public class Target : MonoBehaviour
 
         // Crear estaDOS
         var idle = new PreyIdleState().SetUp(fsm);
-        // var pickup = new HunterChaseState(_animator).SetUp(fsm).SetRoot(transform); /cambiar por manzanaPickUp
+        var pickup = new PreyPickUpState(_detectLayers).SetUp(fsm).SetRoot(transform);
         var attack = new PreyAttackState(_rivalLife, _detectLayers).SetUp(fsm).SetRoot(transform);
         var patrol = new PreyPatrolState(_wayPoints, _targetLife, _animator, _detectLayers).SetUp(fsm).SetRoot(transform);
         var evade = new PreyEvadeState(_detectLayers).SetUp(fsm).SetRoot(transform);
 
         fsm._possibleStates.Add(AgentStates.Idle, idle);
-       // fsm._possibleStates.Add(AgentStates.PickUp, pickup); / cuando se habilite manza pick up
+        fsm._possibleStates.Add(AgentStates.PickUp, pickup);
         fsm._possibleStates.Add(AgentStates.Attack, attack);
         fsm._possibleStates.Add(AgentStates.Patrol, patrol);
         fsm._possibleStates.Add(AgentStates.Evade, evade);

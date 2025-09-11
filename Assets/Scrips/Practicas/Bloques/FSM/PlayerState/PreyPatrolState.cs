@@ -57,7 +57,7 @@ public class PreyPatrolState : BaseState
         if (_currentApple != null)  // manzana cerca
         {
             Debug.Log("Prey: Voy a la manzana");
-           // fsm.ChnageState(AgentStates.ChaseApple);
+            fsm.ChnageState(AgentStates.PickUp);
             return;
         }
 

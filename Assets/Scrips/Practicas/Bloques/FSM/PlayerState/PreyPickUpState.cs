@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PreyPickUpState : BaseState
 {
-
-    private TargetLife _targetLife;
     private Animator _animator;
 
     //Para Obtener Transforms
@@ -22,6 +20,10 @@ public class PreyPickUpState : BaseState
     //Chequeos Para Cambios de Estado
     private float _applePickUpRange = 5f;
 
+    public PreyPickUpState(LayerMask _detectLayers)
+    {
+        this._detectLayers = _detectLayers; 
+    }
 
     public override void OnEnter()
     {
@@ -42,7 +44,7 @@ public class PreyPickUpState : BaseState
         {
             SeekArriveCount();
 
-            float distToApple = Vector3.Distance(_myRoot.position, _currentApple.position); //TODAVIA NO PUSE LA APPLE
+            float distToApple = Vector3.Distance(_myRoot.position, _currentApple.position); 
             if (distToApple <= ArrivingDistance)
             {
                 Debug.Log("Prey: Manzana recogida, volvemos a Patrol");
@@ -94,18 +96,28 @@ public class PreyPickUpState : BaseState
     // Detectar manzanas cercanas
     private void DetectThings()
     {
+        Debug.Log("Prey: Entré a Buscar Manzanas ");
+
         Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+        Debug.Log("Cantidad de objetos detectados: " + hits.Length);
+
 
         float minAppleDist = Mathf.Infinity;
         Transform closestApple = null;
 
         foreach (Collider hit in hits)
         {
+            Debug.Log("entre a reccorer el campo");
+
             if (hit.CompareTag("Apple"))
             {
+                Debug.Log("ya casi tengo la manzana");
+
                 float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
                 if (dist < _applePickUpRange && dist < minAppleDist)
                 {
+                    Debug.Log("tengo la manzana y sus cordenadas");
+
                     minAppleDist = dist;
                     closestApple = hit.transform;
                 }
@@ -114,5 +126,4 @@ public class PreyPickUpState : BaseState
 
         _currentApple = closestApple;
     }
-
 }
