@@ -9,6 +9,7 @@ public class Rival : MonoBehaviour
     [SerializeField] RivalLife _rivalLife;
     [SerializeField] TargetLife _targetLife;
     [SerializeField] Animator _animator;
+    [SerializeField] LayerMask _layerMask;
 
     private BloquesFsm fsm;
 
@@ -23,9 +24,9 @@ public class Rival : MonoBehaviour
 
         // Crear estaDOS
         var idle = new HunterIdleState().SetUp(fsm);
-        var chase = new HunterChaseState(_animator).SetUp(fsm).SetRoot(transform);
-        var attack = new HunterAttackState(_targetLife).SetUp(fsm).SetRoot(transform);
-        var patrol = new HunterPatrolState(_wayPoints, _rivalLife, _animator).SetUp(fsm).SetRoot(transform);
+        var chase = new HunterChaseState(_animator, _layerMask).SetUp(fsm).SetRoot(transform);
+        var attack = new HunterAttackState(_targetLife, _layerMask).SetUp(fsm).SetRoot(transform);
+        var patrol = new HunterPatrolState(_wayPoints, _rivalLife, _animator, _layerMask).SetUp(fsm).SetRoot(transform);
         var evade = new HunterEvadeState().SetUp(fsm).SetRoot(transform);
 
         fsm._possibleStates.Add(AgentStates.Idle, idle);

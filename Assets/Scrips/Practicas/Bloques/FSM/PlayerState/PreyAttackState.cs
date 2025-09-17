@@ -66,7 +66,7 @@ public class PreyAttackState : BaseState
         else if (distanceToTarget > _chaseRange)
         {
             // Si se escapa Patrol
-            Debug.Log("Prey : Rival se escapó, cambio a Chase");
+            Debug.Log("Prey : Rival se escapó");
             fsm.ChnageState(AgentStates.Patrol);
         }
     }

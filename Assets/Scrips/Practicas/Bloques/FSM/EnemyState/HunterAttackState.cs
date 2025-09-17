@@ -9,19 +9,23 @@ public class HunterAttackState : BaseState
     //Asiganciones
     private Animator _animator;
     private TargetLife _targetLife;
+    private LayerMask _detectLayers;
+    private Transform _currentRival;
 
     //Chequeos Para Cambios de Estado
-    public float _attackRange = 1f;
+    public float _attackRange = 4f;
     [SerializeField] private float _chaseRange = 6f;
+    private float detectRadius = 15f;
 
     //Variables del estado
     private float _dmg = 20f;
     private float _attackCooldown = 5f; 
     private float _lastAttackTime = -999f; 
 
-    public HunterAttackState(TargetLife _targetLife)
+    public HunterAttackState(TargetLife _targetLife, LayerMask _detectLayers)
     {
         this._targetLife = _targetLife;
+        this._detectLayers = _detectLayers;
     }
     public override void OnEnter()
     {
@@ -32,9 +36,11 @@ public class HunterAttackState : BaseState
     {
         if (_myRoot == null) return;
 
-        Vector3 dir = (Target.Position - _myRoot.position).normalized;
+        DetectThing();
 
-        Vector3 stopBeforeTarget = Target.Position - dir * 1f; 
+        Vector3 dir = (_currentRival.position - _myRoot.position).normalized;
+
+        Vector3 stopBeforeTarget = _currentRival.position - dir * 1f; 
 
         float distanceToTarget = Vector3.Distance(_myRoot.position, stopBeforeTarget);
 
@@ -65,6 +71,29 @@ public class HunterAttackState : BaseState
             _targetLife.DamageTaken(_dmg);
 
         }
+    }
+
+    private void DetectThing()
+    {
+        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+
+        float minRivalDist = Mathf.Infinity;
+        Transform closestRival = null;
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.CompareTag("Player"))
+            {
+                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
+                if (dist < minRivalDist)
+                {
+                    minRivalDist = dist;
+                    closestRival = hit.transform;
+                }
+            }
+        }
+
+        _currentRival = closestRival;
     }
 
 }

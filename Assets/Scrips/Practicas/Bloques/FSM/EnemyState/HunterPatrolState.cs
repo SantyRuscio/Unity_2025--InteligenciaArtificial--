@@ -8,6 +8,8 @@ public class HunterPatrolState : BaseState
     //Asiganciones
     public Transform[] _wayPoints;
     RivalLife _rivalLife;
+    private Transform _currentRival;
+    private LayerMask _detectLayers;
 
     private Animator _animator; 
     private int currentWaypoint = 0;
@@ -19,15 +21,17 @@ public class HunterPatrolState : BaseState
 
     //Chequeos Para Cambios de Estado
     private float _safeDamage = 50f;
+    private float detectRadius = 15f;
     private float _chaseRange = 5f;
 
     float distance = 0f;
 
-    public HunterPatrolState(Transform[] _wayPoints, RivalLife _rivalLife, Animator anim)
+    public HunterPatrolState(Transform[] _wayPoints, RivalLife _rivalLife, Animator anim, LayerMask detectLayers)
     {
         this._wayPoints = _wayPoints;
         this._rivalLife = _rivalLife;
         this._animator = anim;
+        this._detectLayers = detectLayers;  
     }
 
     public override void OnEnter()
@@ -45,20 +49,24 @@ public class HunterPatrolState : BaseState
     public override void OnUpdate() //// recorrido de waypoints mediante Seek + Arrive ///
     {
         if (_wayPoints.Length == 0) return;
+        DetectThing();
 
         SeekArriveCount();
         wayPointsLoop();
 
-        if (Vector3.Distance(Target.Position, _myRoot.position) < _chaseRange && _rivalLife._currentLife > _safeDamage)
+        if (_currentRival != null && _rivalLife._currentLife > _safeDamage)
         {
-            Debug.Log("cambiando a chase");
-            fsm.ChnageState(AgentStates.Chase);
+            if (Vector3.Distance(_currentRival.position, _myRoot.position) < _chaseRange)
+            {
+                Debug.Log("cambiando a chase");
+                fsm.ChnageState(AgentStates.Chase);
+            }
         }
-       else if (_rivalLife._currentLife < _safeDamage)
-       {
-           Debug.Log("No tengo vida, Cambio a Evade");
-           fsm.ChnageState(AgentStates.Evade); 
-       }
+        else if (_rivalLife._currentLife < _safeDamage)
+        {
+            Debug.Log("No tengo vida, Cambio a Evade");
+            fsm.ChnageState(AgentStates.Evade);
+        }
     }
 
     public override void OnExit()
@@ -103,5 +111,28 @@ public class HunterPatrolState : BaseState
         {
             currentWaypoint = (currentWaypoint + 1) % _wayPoints.Length;
         }
+    }
+
+    private void DetectThing()
+    {
+        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+
+        float minRivalDist = Mathf.Infinity;
+        Transform closestRival = null;
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.CompareTag("Player"))
+            {
+                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
+                if (dist < minRivalDist)
+                {
+                    minRivalDist = dist;
+                    closestRival = hit.transform;
+                }
+            }
+        }
+
+        _currentRival = closestRival;
     }
 }

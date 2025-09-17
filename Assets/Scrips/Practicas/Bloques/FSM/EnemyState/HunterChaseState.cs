@@ -9,16 +9,20 @@ public class HunterChaseState : BaseState
     Vector3 dir = Vector3.zero;
     [SerializeField] float movSpeed = 5f;
     [SerializeField] float steeringForce = 0.1f;
-
     [SerializeField] float ArrivingDistance = 5f;
+
+    private float detectRadius = 15f;
+    private Transform _currentRival;
+    private LayerMask _detectLayers;
 
     float _atackRange = 2f;
     float _chaseRange = 6f;
     float distance = 0f;
 
-    public HunterChaseState(Animator _animator)
+    public HunterChaseState(Animator _animator, LayerMask _detectLayers)
     {
         this._animator = _animator; 
+        this._detectLayers = _detectLayers; 
     }
 
     public override void OnEnter()
@@ -35,8 +39,8 @@ public class HunterChaseState : BaseState
     public override void OnUpdate() //// perseguir al personaje mediante Pursuit ///
     {
         if (_myRoot == null) return;
-
-        PursuitCoutn(); // Pursuit Cuentas
+        DetectThing();
+        PursuitCount(); // Pursuit Cuentas
 
         // volver a Patrol si target fuera de rango
         if (distance > _chaseRange)
@@ -54,14 +58,18 @@ public class HunterChaseState : BaseState
         }
     }
 
-    private void PursuitCoutn() // Pursuit Cuentas
+    private void PursuitCount() // Pursuit Cuentas
     {
-        dir = (Target.Position + Target.Velocity) - _myRoot.position;
+        if (_currentRival == null) return;
+
+        dir = _currentRival.position - _myRoot.position;
         distance = dir.magnitude;
 
         desired = dir.normalized * movSpeed;
+
         steering = desired - velocity;
         steering = Vector3.ClampMagnitude(steering, steeringForce);
+
         velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
 
         _myRoot.position += velocity * Time.deltaTime;
@@ -78,8 +86,26 @@ public class HunterChaseState : BaseState
         Debug.Log("sali de Chase");
     }
 
-    public void SetRoot(Transform newroot)
+    private void DetectThing()
     {
-        _myRoot = newroot;
+        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+
+        float minRivalDist = Mathf.Infinity;
+        Transform closestRival = null;
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.CompareTag("Player"))
+            {
+                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
+                if (dist < minRivalDist)
+                {
+                    minRivalDist = dist;
+                    closestRival = hit.transform;
+                }
+            }
+        }
+
+        _currentRival = closestRival;
     }
 }

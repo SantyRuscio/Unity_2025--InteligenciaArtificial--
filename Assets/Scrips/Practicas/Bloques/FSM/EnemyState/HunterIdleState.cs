@@ -11,9 +11,8 @@ public class HunterIdleState : BaseState
         Debug.Log("entre a idle");
 
         if (_animator != null)
-            _animator.SetBool("Walk", false); // 🔥 se asegura de apagar caminata
+            _animator.SetBool("Walk", false);
 
-        // apenas entra en Idle, cambia a Patrol
         fsm.ChnageState(AgentStates.Patrol);
     }
 
