@@ -20,13 +20,13 @@ public class SteeringTest : MonoBehaviour
     private void Update()
     {
 
-        dir = Target.Position - transform.position;
+        //dir = Target.Position - transform.position;
         distance = dir.magnitude;
 
 
         if (distance > PursuitMinDistance)
         {
-            dir = (Target.Position + Target.Velocity) - transform.position; //Pusuit
+            //dir = (Target.Position + Target.Velocity) - transform.position; //Pusuit
             desired = dir.normalized * movSpeed;
         }
         else

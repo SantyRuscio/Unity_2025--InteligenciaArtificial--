@@ -7,9 +7,8 @@ public class HunterPatrolState : BaseState
 {
     //Asiganciones
     public Transform[] _wayPoints;
-    RivalLife _rivalLife;
+    HunterlLife _rivalLife;
     private Transform _currentRival;
-    private LayerMask _detectLayers;
 
     private Animator _animator; 
     private int currentWaypoint = 0;
@@ -21,17 +20,15 @@ public class HunterPatrolState : BaseState
 
     //Chequeos Para Cambios de Estado
     private float _safeDamage = 50f;
-    private float detectRadius = 15f;
     private float _chaseRange = 5f;
 
     float distance = 0f;
 
-    public HunterPatrolState(Transform[] _wayPoints, RivalLife _rivalLife, Animator anim, LayerMask detectLayers)
+    public HunterPatrolState(Transform[] _wayPoints, HunterlLife _rivalLife, Animator anim)
     {
         this._wayPoints = _wayPoints;
         this._rivalLife = _rivalLife;
         this._animator = anim;
-        this._detectLayers = detectLayers;  
     }
 
     public override void OnEnter()
@@ -115,24 +112,11 @@ public class HunterPatrolState : BaseState
 
     private void DetectThing()
     {
-        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+        _currentRival = BoidsManager.Instance.GetClosestTarget(_myRoot.position);
 
-        float minRivalDist = Mathf.Infinity;
-        Transform closestRival = null;
-
-        foreach (Collider hit in hits)
-        {
-            if (hit.CompareTag("Player"))
-            {
-                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
-                if (dist < minRivalDist)
-                {
-                    minRivalDist = dist;
-                    closestRival = hit.transform;
-                }
-            }
-        }
-
-        _currentRival = closestRival;
+        if (_currentRival != null)
+            distance = Vector3.Distance(_myRoot.position, _currentRival.position);
+        else
+            distance = Mathf.Infinity;
     }
 }

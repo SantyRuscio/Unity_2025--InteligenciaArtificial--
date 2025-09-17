@@ -18,7 +18,7 @@ public class Pursuit : MonoBehaviour
 
     private void Update()
     {
-        dir = (Target.Position + Target.Velocity) - transform.position; //Predecir si no funca bien cambiar velocity por forward
+    //    dir = (Target.Position + Target.Velocity) - transform.position; //Predecir si no funca bien cambiar velocity por forward
         distance = dir.magnitude;
 
 
@@ -56,7 +56,7 @@ public class Pursuit : MonoBehaviour
 
 
         Gizmos.color = Color.yellow; //Pursuit - Prediccion
-        if(Target.instance) Gizmos.DrawLine(transform.position, transform.position + Target.Position + Target.Velocity);
+       // if(Target.instance) Gizmos.DrawLine(transform.position, transform.position + Target.Position + Target.Velocity);
     }
 
 }

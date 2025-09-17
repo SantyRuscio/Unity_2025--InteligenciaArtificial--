@@ -18,7 +18,7 @@ public class Evade : MonoBehaviour
 
     private void Update()
     {
-        dir = transform.position - (Target.Position + Target.Velocity);
+     //   dir = transform.position - (Target.Position + Target.Velocity);
         distance = dir.magnitude;
 
 

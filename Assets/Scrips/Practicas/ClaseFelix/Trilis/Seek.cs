@@ -13,7 +13,7 @@ public class Seek : MonoBehaviour
     [SerializeField] float steeringForce = 0.1f;
     private void Update()
     {
-        dir = Target.Position - transform.position;
+    //    dir = Target.Position - transform.position;
 
         desired = dir.normalized * movSpeed;
 

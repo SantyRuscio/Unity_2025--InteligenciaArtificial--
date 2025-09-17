@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PreyPickUpState : BaseState
+public class BoidsPickUpState : BaseState
 {
     private Animator _animator;
 
@@ -20,7 +20,7 @@ public class PreyPickUpState : BaseState
     //Chequeos Para Cambios de Estado
     private float _applePickUpRange = 5f;
 
-    public PreyPickUpState(LayerMask _detectLayers)
+    public BoidsPickUpState(LayerMask _detectLayers)
     {
         this._detectLayers = _detectLayers; 
     }

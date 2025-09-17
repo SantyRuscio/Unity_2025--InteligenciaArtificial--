@@ -50,7 +50,7 @@ public class Flocker : MonoBehaviour
     {
         if (leader)
         {
-            desired += Seek(Target.Position);
+          //  desired += Seek(Target.Position);
         }
         else
         {

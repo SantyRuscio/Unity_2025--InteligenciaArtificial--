@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PreyPatrolState : BaseState
+public class BoidsPatrolState : BaseState
 {
     //Asiganciones
     private Transform[] _wayPoints;
-    private TargetLife _targetLife;
+    private BoidsLife _targetLife;
     private Animator _animator;
 
     //Para Obtener Transforms
@@ -19,8 +19,8 @@ public class PreyPatrolState : BaseState
 
     //Steerings Valores
     private float movSpeed = 3f;
-    private float steeringForce = 0.1f;
-    private float ArrivingDistance = 1f;
+    private float steeringForce = 2f;
+    private float ArrivingDistance = 0.5f;
     private int currentWaypoint = 0;
 
     //Chequeos Para Cambios de Estado
@@ -30,7 +30,7 @@ public class PreyPatrolState : BaseState
 
     float distance = 0f;
 
-    public PreyPatrolState(Transform[] _wayPoints, TargetLife _targetLife, Animator anim, LayerMask _detectLayers )
+    public BoidsPatrolState(Transform[] _wayPoints, BoidsLife _targetLife, Animator anim, LayerMask _detectLayers )
     {
         this._wayPoints = _wayPoints;
         this._targetLife = _targetLife;
@@ -92,20 +92,16 @@ public class PreyPatrolState : BaseState
             _animator.SetBool("isWalking", false);
     }
 
-    private void SeekArriveCount()  // Seek + Arrive Cuentas // 
+    private void SeekArriveCount()
     {
         Vector3 dir = _wayPoints[currentWaypoint].position - _myRoot.position;
         distance = dir.magnitude;
 
         // Seek + Arrive
         if (distance < ArrivingDistance)
-        {
             desired = dir.normalized * movSpeed * (distance / ArrivingDistance);
-        }
         else
-        {
             desired = dir.normalized * movSpeed;
-        }
 
         steering = desired - velocity;
         steering = Vector3.ClampMagnitude(steering, steeringForce);
@@ -113,9 +109,12 @@ public class PreyPatrolState : BaseState
 
         _myRoot.position += velocity * Time.deltaTime;
 
-        // Rotación solo si hay movimiento, igual que en Chase
+        // Rotación suave
         if (velocity.sqrMagnitude > 0.001f)
-            _myRoot.forward = velocity.normalized;
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized);
+            _myRoot.rotation = Quaternion.Slerp(_myRoot.rotation, targetRotation, Time.deltaTime * 5f);
+        }
     }
 
     private void wayPointsLoop() // WayLoops //

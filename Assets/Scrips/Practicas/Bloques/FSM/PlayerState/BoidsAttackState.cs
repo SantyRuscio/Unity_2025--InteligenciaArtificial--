@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PreyAttackState : BaseState
+public class BoidsAttackState : BaseState
 {
     //Asignaciones
     private Animator _animator;
-    private RivalLife _rivalLife;
+    private HunterlLife _rivalLife;
 
     //Para Obtener Transforms
     private float detectRadius = 15f;
@@ -18,11 +18,11 @@ public class PreyAttackState : BaseState
     [SerializeField] private float _chaseRange = 6f;
 
     //Variables del estado
-    private float _dmg = 20f;
-    private float _attackCooldown = 1.5f;
+    private float _dmg = 10f;
+    private float _attackCooldown = 4f;
     private float _lastAttackTime = -999f;
 
-    public PreyAttackState(RivalLife rivalLife, LayerMask detectLayers)
+    public BoidsAttackState(HunterlLife rivalLife, LayerMask detectLayers)
     {
         this._rivalLife = rivalLife;
         this._detectLayers = detectLayers;

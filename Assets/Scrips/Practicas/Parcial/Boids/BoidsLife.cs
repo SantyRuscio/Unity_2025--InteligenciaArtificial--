@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetLife : MonoBehaviour
+public class BoidsLife : MonoBehaviour
 {
     [SerializeField] private float _maxLife = 100f;
     public float _currentLife { get; private set; }

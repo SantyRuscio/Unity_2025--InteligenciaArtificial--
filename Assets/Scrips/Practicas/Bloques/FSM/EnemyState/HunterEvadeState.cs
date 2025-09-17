@@ -16,7 +16,6 @@ public class HunterEvadeState : BaseState
 
     float distance = 0f;
 
-    private TargetLife _targetLife;
     private LayerMask _detectLayers;
     private Transform _currentRival;
     private float detectRadius = 15f;
@@ -71,31 +70,19 @@ public class HunterEvadeState : BaseState
 
     private void DetectThing()
     {
-        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+        _currentRival = BoidsManager.Instance.GetClosestTarget(_myRoot.position);
 
-        float minRivalDist = Mathf.Infinity;
-        Transform closestRival = null;
-
-        foreach (Collider hit in hits)
+        if (_currentRival != null)
         {
-            if (hit.CompareTag("Player"))
-            {
-                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
-                if (dist < minRivalDist)
-                {
-                    minRivalDist = dist;
-                    closestRival = hit.transform;
-                }
-            }
+            rivalVelocity = (_currentRival.position - lastRivalPos) / Time.deltaTime;
+            lastRivalPos = _currentRival.position;
+
+            distance = Vector3.Distance(_myRoot.position, _currentRival.position);
         }
-
-        if (closestRival != null)
+        else
         {
-            rivalVelocity = (closestRival.position - lastRivalPos) / Time.deltaTime;
-            lastRivalPos = closestRival.position;
-
-            _currentRival = closestRival;
+            rivalVelocity = Vector3.zero;
+            distance = Mathf.Infinity;
         }
     }
-
 }

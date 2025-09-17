@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Burst;
 using UnityEngine;
 
-public class RivalLife : MonoBehaviour
+public class HunterlLife : MonoBehaviour
 {
     [SerializeField] private float _maxLife = 100f;
     public float _currentLife { get; private set; }

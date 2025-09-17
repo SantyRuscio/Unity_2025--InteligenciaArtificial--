@@ -9,7 +9,7 @@ public class SimpleFollower : MonoBehaviour
 
     private void Update()
     {
-        dir = Target.Position - transform.position;
+      //  dir = Target.Position - transform.position;
 
         transform.position = transform.position + dir.normalized * Time.deltaTime;
     }

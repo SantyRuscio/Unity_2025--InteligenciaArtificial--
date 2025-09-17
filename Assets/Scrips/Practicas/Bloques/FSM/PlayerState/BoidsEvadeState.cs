@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PreyEvadeState : BaseState
+public class BoidsEvadeState : BaseState
 {
     //Steerings Valores
     Vector3 dir = Vector3.zero;
@@ -21,7 +21,7 @@ public class PreyEvadeState : BaseState
     //Chequeos Para Cambios de Estado
     [SerializeField] float EscapeRangeToPatrol = 5f;
 
-    public PreyEvadeState(LayerMask _detectLayers)
+    public BoidsEvadeState(LayerMask _detectLayers)
     {
         this._detectLayers = _detectLayers;
     }

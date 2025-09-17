@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rival : MonoBehaviour
+public class Hunter : MonoBehaviour
 {
     [Header("Waypoints para Patrol")]
     [SerializeField] private Transform[] _wayPoints;
-    [SerializeField] RivalLife _rivalLife;
-    [SerializeField] TargetLife _targetLife;
+    [SerializeField] HunterlLife _myLife;
+    [SerializeField] BoidsLife _targetLife;
     [SerializeField] Animator _animator;
-    [SerializeField] LayerMask _layerMask;
 
     private BloquesFsm fsm;
 
@@ -24,9 +23,9 @@ public class Rival : MonoBehaviour
 
         // Crear estaDOS
         var idle = new HunterIdleState().SetUp(fsm);
-        var chase = new HunterChaseState(_animator, _layerMask).SetUp(fsm).SetRoot(transform);
-        var attack = new HunterAttackState(_targetLife, _layerMask).SetUp(fsm).SetRoot(transform);
-        var patrol = new HunterPatrolState(_wayPoints, _rivalLife, _animator, _layerMask).SetUp(fsm).SetRoot(transform);
+        var chase = new HunterChaseState(_animator).SetUp(fsm).SetRoot(transform);
+        var attack = new HunterAttackState(_targetLife).SetUp(fsm).SetRoot(transform);
+        var patrol = new HunterPatrolState(_wayPoints, _myLife, _animator).SetUp(fsm).SetRoot(transform);
         var evade = new HunterEvadeState().SetUp(fsm).SetRoot(transform);
 
         fsm._possibleStates.Add(AgentStates.Idle, idle);
@@ -44,6 +43,20 @@ public class Rival : MonoBehaviour
     {
         // Delegar update a la FSM
         fsm.OnUpdate();
+    }
+    private void OnEnable()
+    {
+        HunterManager.Instance?.RegisterTarget(transform); //NOS REGISTRAMOS AL MANAGER
+    }
+
+    private void OnDisable()
+    {
+        HunterManager.Instance?.UnregisterTarget(transform); //NOS SACAMOS DEL MANAGER
+    }
+
+    private void OnDestroy()
+    {
+        OnDisable();
     }
 
     public void ChangeState(AgentStates newState)

@@ -18,7 +18,7 @@ public class SeekArrive : MonoBehaviour
 
     private void Update()
     {
-        dir = Target.Position - transform.position;
+      //  dir = Target.Position - transform.position;
         distance = dir.magnitude;
 
         if (distance < ArrivingDistance)

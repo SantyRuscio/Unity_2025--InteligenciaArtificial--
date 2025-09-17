@@ -13,7 +13,7 @@ public class Flee : MonoBehaviour
     [SerializeField] float steeringForce = 0.1f;
     private void Update()
     {
-        dir = transform.position - Target.Position ; //ESCAPA 
+     //   dir = transform.position - Target.Position ; //ESCAPA 
 
         desired = dir.normalized * movSpeed;
 

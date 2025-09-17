@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class HunterChaseState : BaseState
 {
-    private Animator _animator; 
+    private Animator _animator;
 
     Vector3 dir = Vector3.zero;
     [SerializeField] float movSpeed = 5f;
     [SerializeField] float steeringForce = 0.1f;
     [SerializeField] float ArrivingDistance = 5f;
 
-    private float detectRadius = 15f;
     private Transform _currentRival;
-    private LayerMask _detectLayers;
 
-    float _atackRange = 2f;
-    float _chaseRange = 6f;
-    float distance = 0f;
+    private float _atackRange = 2f;
+    private float _chaseRange = 10f; // lo aumenté para pruebas
+    private float distance = 0f;
 
-    public HunterChaseState(Animator _animator, LayerMask _detectLayers)
+    private Vector3 lastRivalPos;
+    private Vector3 rivalVelocity;
+
+    public HunterChaseState(Animator _animator)
     {
-        this._animator = _animator; 
-        this._detectLayers = _detectLayers; 
+        this._animator = _animator;
     }
 
     public override void OnEnter()
@@ -31,18 +31,19 @@ public class HunterChaseState : BaseState
             _animator = _myRoot.GetComponent<Animator>();
 
         if (_animator != null)
-            _animator.SetBool("isWalking", true); 
+            _animator.SetBool("isWalking", true);
 
-        Debug.Log("entre a Chase");
+        Debug.Log("Entre a Chase");
     }
 
-    public override void OnUpdate() //// perseguir al personaje mediante Pursuit ///
+    public override void OnUpdate()
     {
         if (_myRoot == null) return;
-        DetectThing();
-        PursuitCount(); // Pursuit Cuentas
 
-        // volver a Patrol si target fuera de rango
+        DetectThing();
+        PursuitCount();
+
+        // Volver a Patrol si target fuera de rango
         if (distance > _chaseRange)
         {
             Debug.Log("Target fuera de rango, volver a Patrol");
@@ -58,18 +59,21 @@ public class HunterChaseState : BaseState
         }
     }
 
-    private void PursuitCount() // Pursuit Cuentas
+    private void PursuitCount()
     {
         if (_currentRival == null) return;
 
-        dir = _currentRival.position - _myRoot.position;
+        //Pursuit: anticipa
+        rivalVelocity = (_currentRival.position - lastRivalPos) / Time.deltaTime;
+        lastRivalPos = _currentRival.position;
+
+        Vector3 predictedPos = _currentRival.position + rivalVelocity; // prediccion
+        dir = predictedPos - _myRoot.position;
         distance = dir.magnitude;
 
-        desired = dir.normalized * movSpeed;
-
-        steering = desired - velocity;
-        steering = Vector3.ClampMagnitude(steering, steeringForce);
-
+        // Seek + Steering
+        Vector3 desired = dir.normalized * movSpeed;
+        Vector3 steering = Vector3.ClampMagnitude(desired - velocity, steeringForce);
         velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
 
         _myRoot.position += velocity * Time.deltaTime;
@@ -83,29 +87,20 @@ public class HunterChaseState : BaseState
         if (_animator != null)
             _animator.SetBool("isWalking", false);
 
-        Debug.Log("sali de Chase");
+        Debug.Log("Salí de Chase");
     }
 
     private void DetectThing()
     {
-        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+        _currentRival = BoidsManager.Instance.GetClosestTarget(_myRoot.position);
 
-        float minRivalDist = Mathf.Infinity;
-        Transform closestRival = null;
-
-        foreach (Collider hit in hits)
+        if (_currentRival != null)
         {
-            if (hit.CompareTag("Player"))
-            {
-                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
-                if (dist < minRivalDist)
-                {
-                    minRivalDist = dist;
-                    closestRival = hit.transform;
-                }
-            }
+            distance = Vector3.Distance(_myRoot.position, _currentRival.position);
         }
-
-        _currentRival = closestRival;
+        else
+        {
+            distance = Mathf.Infinity;
+        }
     }
 }
