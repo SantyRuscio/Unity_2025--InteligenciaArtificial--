@@ -16,7 +16,6 @@ public class HunterEvadeState : BaseState
 
     float distance = 0f;
 
-    private LayerMask _detectLayers;
     private Boids _currentRivalBoid;
     private Transform _currentRival;
     private float detectRadius = 15f;

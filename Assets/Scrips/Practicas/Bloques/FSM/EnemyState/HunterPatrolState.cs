@@ -16,8 +16,9 @@ public class HunterPatrolState : BaseState
 
     //Steerings Valores
     private float movSpeed = 3f;
-    private float steeringForce = 0.1f;
+    private float steeringForce = 0.01f;
     private float ArrivingDistance = 1f;
+    private float CurveSpeed = 6f;
 
     //Chequeos Para Cambios de Estado
     private float _safeDamage = 50f;
@@ -100,9 +101,11 @@ public class HunterPatrolState : BaseState
 
         _myRoot.position += velocity * Time.deltaTime;
 
-        // Rotación solo si hay movimiento, igual que en Chase
         if (velocity.sqrMagnitude > 0.001f)
-            _myRoot.forward = velocity.normalized;
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized);
+            _myRoot.rotation = Quaternion.Slerp(_myRoot.rotation, targetRotation, Time.deltaTime * CurveSpeed);
+        }
     }
 
     private void wayPointsLoop() // WayLoops //

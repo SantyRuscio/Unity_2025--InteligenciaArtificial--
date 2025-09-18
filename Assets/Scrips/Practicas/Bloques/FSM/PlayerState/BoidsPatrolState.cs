@@ -83,17 +83,10 @@ public class BoidsPatrolState : BaseState
                 }
                 else
                 {
-                    // si todavía no está lo bastante cerca como para atacar
                     if (_targetLife._currentLife < _safeDamage)
                     {
                         Debug.Log("Prey: Evade");
                         fsm.ChnageState(AgentStates.Evade);
-                    }
-                    else
-                    {
-                        // lo ves, pero todavía está lejos: empezá a seguirlo
-                        Debug.Log("Prey: Chasing enemy...");
-                        fsm.ChnageState(AgentStates.Chase);
                     }
                     return;
                 }
