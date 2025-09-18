@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class Hunter : MonoBehaviour
 {
     [Header("Waypoints para Patrol")]
     [SerializeField] private Transform[] _wayPoints;
     [SerializeField] HunterlLife _myLife;
-    [SerializeField] BoidsLife _targetLife;
     [SerializeField] Animator _animator;
 
     private BloquesFsm fsm;
@@ -24,7 +24,7 @@ public class Hunter : MonoBehaviour
         // Crear estaDOS
         var idle = new HunterIdleState().SetUp(fsm);
         var chase = new HunterChaseState(_animator).SetUp(fsm).SetRoot(transform);
-        var attack = new HunterAttackState(_targetLife).SetUp(fsm).SetRoot(transform);
+        var attack = new HunterAttackState().SetUp(fsm).SetRoot(transform);
         var patrol = new HunterPatrolState(_wayPoints, _myLife, _animator).SetUp(fsm).SetRoot(transform);
         var evade = new HunterEvadeState().SetUp(fsm).SetRoot(transform);
 
@@ -46,12 +46,12 @@ public class Hunter : MonoBehaviour
     }
     private void OnEnable()
     {
-        HunterManager.Instance?.RegisterTarget(transform); //NOS REGISTRAMOS AL MANAGER
+        HunterManager.Instance?.RegisterHunter(this); //NOS REGISTRAMOS AL MANAGER
     }
 
     private void OnDisable()
     {
-        HunterManager.Instance?.UnregisterTarget(transform); //NOS SACAMOS DEL MANAGER
+        HunterManager.Instance?.UnregisterHunter(this); //NOS SACAMOS DEL MANAGER
     }
 
     private void OnDestroy()

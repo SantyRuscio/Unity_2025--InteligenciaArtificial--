@@ -7,23 +7,19 @@ public class BoidsPickUpState : BaseState
 {
     private Animator _animator;
 
-    //Para Obtener Transforms
+    // Parámetros de búsqueda
     private float detectRadius = 10f;
-    private LayerMask _detectLayers;
     private Transform _currentApple;
 
-    //Steerings Valores
+    // Steerings Valores
     private float movSpeed = 3f;
     private float steeringForce = 0.1f;
     private float ArrivingDistance = 1f;
 
-    //Chequeos Para Cambios de Estado
+    // Chequeos Para Cambios de Estado
     private float _applePickUpRange = 5f;
 
-    public BoidsPickUpState(LayerMask _detectLayers)
-    {
-        this._detectLayers = _detectLayers; 
-    }
+    public BoidsPickUpState() { }
 
     public override void OnEnter()
     {
@@ -31,9 +27,6 @@ public class BoidsPickUpState : BaseState
 
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
-
-        // if (_animator != null)
-        //     _animator.SetBool("isWalking", true);
     }
 
     public override void OnUpdate()
@@ -44,7 +37,7 @@ public class BoidsPickUpState : BaseState
         {
             SeekArriveCount();
 
-            float distToApple = Vector3.Distance(_myRoot.position, _currentApple.position); 
+            float distToApple = Vector3.Distance(_myRoot.position, _currentApple.position);
             if (distToApple <= ArrivingDistance)
             {
                 Debug.Log("Prey: Manzana recogida, volvemos a Patrol");
@@ -57,7 +50,6 @@ public class BoidsPickUpState : BaseState
         }
     }
 
-
     public override void OnExit()
     {
         Debug.Log("PRAY : sali de PreyPickUpState");
@@ -66,7 +58,7 @@ public class BoidsPickUpState : BaseState
     // Seek + Arrive usando la manzana detectada
     private void SeekArriveCount()
     {
-        if (_currentApple == null) return; // Protección extra
+        if (_currentApple == null) return;
 
         Vector3 dir = _currentApple.position - _myRoot.position;
         float distance = dir.magnitude;
@@ -93,37 +85,18 @@ public class BoidsPickUpState : BaseState
             _myRoot.forward = velocity.normalized;
     }
 
-    // Detectar manzanas cercanas
     private void DetectThings()
     {
-        Debug.Log("Prey: Entré a Buscar Manzanas ");
+        Debug.Log("Prey: Buscando manzanas con AppleManager");
 
-        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
-        Debug.Log("Cantidad de objetos detectados: " + hits.Length);
+        _currentApple = AppleManager.instance.GetClosestApple(_myRoot.position, detectRadius);
 
-
-        float minAppleDist = Mathf.Infinity;
-        Transform closestApple = null;
-
-        foreach (Collider hit in hits)
+        if (_currentApple != null)
         {
-            Debug.Log("entre a reccorer el campo");
-
-            if (hit.CompareTag("Apple"))
-            {
-                Debug.Log("ya casi tengo la manzana");
-
-                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
-                if (dist < _applePickUpRange && dist < minAppleDist)
-                {
-                    Debug.Log("tengo la manzana y sus cordenadas");
-
-                    minAppleDist = dist;
-                    closestApple = hit.transform;
-                }
-            }
+            float dist = Vector3.Distance(_myRoot.position, _currentApple.position);
+            if (dist > detectRadius) 
+                _currentApple = null;
         }
-
-        _currentApple = closestApple;
     }
 }
+

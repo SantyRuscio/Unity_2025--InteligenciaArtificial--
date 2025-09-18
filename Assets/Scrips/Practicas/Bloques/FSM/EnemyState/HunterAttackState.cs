@@ -6,25 +6,21 @@ using UnityEngine;
 
 public class HunterAttackState : BaseState
 {
-    //Asiganciones
     private Animator _animator;
-    private BoidsLife _targetLife;
-    private LayerMask _detectLayers;
-    private Transform _currentRival;
+    private Boids _currentRivalBoid; 
+    private Transform _currentRivalTransform; 
 
-    //Chequeos Para Cambios de Estado
+    // Rango de ataque y persecución
     public float _attackRange = 4f;
     [SerializeField] private float _chaseRange = 6f;
 
-    //Variables del estado
+    // Variables de ataque
     private float _dmg = 25f;
-    private float _attackCooldown = 2f; 
-    private float _lastAttackTime = -999f; 
+    private float _attackCooldown = 2f;
+    private float _lastAttackTime = -999f;
 
-    public HunterAttackState(BoidsLife _targetLife)
-    {
-        this._targetLife = _targetLife;
-    }
+    public HunterAttackState() { }
+
     public override void OnEnter()
     {
         Debug.Log("Entered AttackState");
@@ -36,48 +32,68 @@ public class HunterAttackState : BaseState
 
         DetectThing();
 
-        Vector3 dir = (_currentRival.position - _myRoot.position).normalized;
+        if (_currentRivalTransform == null) return;
 
-        Vector3 stopBeforeTarget = _currentRival.position - dir * 1f; 
-
+        Vector3 dir = (_currentRivalTransform.position - _myRoot.position).normalized;
+        Vector3 stopBeforeTarget = _currentRivalTransform.position - dir * 1f;
         float distanceToTarget = Vector3.Distance(_myRoot.position, stopBeforeTarget);
 
         if (distanceToTarget <= _attackRange)
         {
-            Debug.Log("Atacando al jugador");
             AttackCount();
-
-            if (_targetLife._currentLife >= 0)
-            {
-                fsm.ChnageState(AgentStates.Idle);
-            }
         }
         else if (distanceToTarget <= _chaseRange)
         {
-            Debug.Log("El jugador se alejó, vuelvo a perseguir");
+            Debug.Log("El Boid se alejó, vuelvo a perseguir");
             fsm.ChnageState(AgentStates.Chase);
+        }
+        else
+        {
+            // Si se aleja demasiado, limpiamos la referencia
+            _currentRivalBoid = null;
+            _currentRivalTransform = null;
+            fsm.ChnageState(AgentStates.Idle);
         }
     }
 
     private void AttackCount()
     {
+        if (_currentRivalBoid == null) return;
+
         if (Time.time >= _lastAttackTime + _attackCooldown)
         {
             _lastAttackTime = Time.time;
-            Debug.Log("Atacando al jugador");
 
-            _targetLife.DamageTaken(_dmg);
+            BoidsLife rivalLife = _currentRivalBoid.CurrentLife;
+            if (rivalLife != null)
+            {
+                rivalLife.DamageTaken(_dmg);
+                Debug.Log("Atacando al Boid: " + _currentRivalBoid.name);
+            }
 
+            // Limpiar referencia si muere
+            if (rivalLife != null && rivalLife._currentLife <= 0)
+            {
+                _currentRivalBoid = null;
+                _currentRivalTransform = null;
+                fsm.ChnageState(AgentStates.Idle);
+            }
         }
     }
+
 
     private void DetectThing()
     {
-        _currentRival = BoidsManager.Instance.GetClosestTarget(_myRoot.position);
+        _currentRivalBoid = BoidsManager.Instance.GetClosestBoid(_myRoot.position);
 
-        if (_currentRival != null)
+        if (_currentRivalBoid != null)
         {
-            float distanceToRival = Vector3.Distance(_myRoot.position, _currentRival.position);
+            _currentRivalTransform = _currentRivalBoid.transform;
+        }
+        else
+        {
+            _currentRivalTransform = null;
         }
     }
 }
+

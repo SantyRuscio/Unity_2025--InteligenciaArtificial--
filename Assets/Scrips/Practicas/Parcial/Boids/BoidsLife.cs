@@ -16,7 +16,7 @@ public class BoidsLife : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            Debug.Log("me sacan vida");
+            Debug.Log("Prey : me sacan vida");
             DamageTaken(20f);
         }
     }
@@ -27,12 +27,12 @@ public class BoidsLife : MonoBehaviour
 
         if (_currentLife <= 0)
         {
-            Debug.Log("ME muero");
+            Debug.Log("Prey :  ME muero");
             OnDead();
         }
         else
         {
-            Debug.Log("Sigo vivo. Vida actual: " + _currentLife);
+            Debug.Log("Prey : Sigo vivo. Vida actual: " + _currentLife);
         }
     }
 

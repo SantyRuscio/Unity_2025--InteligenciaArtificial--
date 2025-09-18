@@ -17,6 +17,7 @@ public class HunterEvadeState : BaseState
     float distance = 0f;
 
     private LayerMask _detectLayers;
+    private Boids _currentRivalBoid;
     private Transform _currentRival;
     private float detectRadius = 15f;
 
@@ -70,14 +71,14 @@ public class HunterEvadeState : BaseState
 
     private void DetectThing()
     {
-        _currentRival = BoidsManager.Instance.GetClosestTarget(_myRoot.position);
+        _currentRivalBoid = BoidsManager.Instance.GetClosestBoid(_myRoot.position);
 
         if (_currentRival != null)
         {
-            rivalVelocity = (_currentRival.position - lastRivalPos) / Time.deltaTime;
-            lastRivalPos = _currentRival.position;
+            rivalVelocity = (_currentRivalBoid.transform.position - lastRivalPos) / Time.deltaTime;
+            lastRivalPos = _currentRivalBoid.transform.position;
 
-            distance = Vector3.Distance(_myRoot.position, _currentRival.position);
+            distance = Vector3.Distance(_myRoot.position, _currentRivalBoid.transform.position);
         }
         else
         {

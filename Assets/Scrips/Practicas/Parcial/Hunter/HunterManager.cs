@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class HunterManager : MonoBehaviour
 {
     public static HunterManager Instance { get; private set; }
-    private List<Transform> _targets = new List<Transform>();
+
+    private List<Hunter> _hunters = new List<Hunter>();
 
     private void Awake()
     {
@@ -13,33 +15,34 @@ public class HunterManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void RegisterTarget(Transform target)
+    public void RegisterHunter(Hunter hunter)
     {
-        if (!_targets.Contains(target))
-            _targets.Add(target);
+        if (!_hunters.Contains(hunter))
+            _hunters.Add(hunter);
     }
 
-    public void UnregisterTarget(Transform target)
+    public void UnregisterHunter(Hunter hunter)
     {
-        _targets.Remove(target);
+        _hunters.Remove(hunter);
     }
 
-    public Transform GetClosestTarget(Vector3 fromPos)
+    public Hunter GetClosestHunter(Vector3 fromPos)
     {
-        Transform closest = null;
+        Hunter closest = null;
         float minDist = Mathf.Infinity;
 
-        foreach (var t in _targets)
+        foreach (var h in _hunters)
         {
-            if (t == null) continue;
+            if (h == null) continue;
 
-            float dist = Vector3.Distance(fromPos, t.position);
+            float dist = Vector3.Distance(fromPos, h.transform.position);
             if (dist < minDist)
             {
                 minDist = dist;
-                closest = t;
+                closest = h;
             }
         }
         return closest;
     }
 }
+

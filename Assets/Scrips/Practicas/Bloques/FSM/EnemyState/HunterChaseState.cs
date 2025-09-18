@@ -11,7 +11,7 @@ public class HunterChaseState : BaseState
     [SerializeField] float steeringForce = 0.1f;
     [SerializeField] float ArrivingDistance = 5f;
 
-    private Transform _currentRival;
+    private Boids _currentRivalBoid;
 
     private float _atackRange = 2f;
     private float _chaseRange = 10f; // lo aumenté para pruebas
@@ -61,14 +61,9 @@ public class HunterChaseState : BaseState
 
     private void PursuitCount()
     {
-        if (_currentRival == null) return;
+        if (_currentRivalBoid == null) return;
 
-        //Pursuit: anticipa
-        rivalVelocity = (_currentRival.position - lastRivalPos) / Time.deltaTime;
-        lastRivalPos = _currentRival.position;
-
-        Vector3 predictedPos = _currentRival.position + rivalVelocity; // prediccion
-        dir = predictedPos - _myRoot.position;
+        Vector3 dir = _currentRivalBoid.transform.position - _myRoot.position;
         distance = dir.magnitude;
 
         // Seek + Steering
@@ -82,6 +77,7 @@ public class HunterChaseState : BaseState
             _myRoot.forward = velocity.normalized;
     }
 
+
     public override void OnExit()
     {
         if (_animator != null)
@@ -92,15 +88,17 @@ public class HunterChaseState : BaseState
 
     private void DetectThing()
     {
-        _currentRival = BoidsManager.Instance.GetClosestTarget(_myRoot.position);
+        _currentRivalBoid = BoidsManager.Instance.GetClosestBoid(_myRoot.position);
 
-        if (_currentRival != null)
+        if (_currentRivalBoid != null)
         {
-            distance = Vector3.Distance(_myRoot.position, _currentRival.position);
+            distance = Vector3.Distance(_myRoot.position, _currentRivalBoid.transform.position);
         }
         else
         {
+            _currentRivalBoid = null;
             distance = Mathf.Infinity;
         }
     }
+
 }

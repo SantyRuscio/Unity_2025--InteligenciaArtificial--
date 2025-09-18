@@ -20,6 +20,11 @@ public class Boids : MonoBehaviour
 
     public Vector3 Velocity => velocity;
 
+    public BoidsLife CurrentLife
+    {
+        get { return _targetLife; }
+    }
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -29,10 +34,10 @@ public class Boids : MonoBehaviour
 
         // Estados
         var idle = new BoidsIdle().SetUp(fsm);
-        var pickup = new BoidsPickUpState(_detectLayers).SetUp(fsm).SetRoot(transform);
-        var attack = new BoidsAttackState(_rivalLife, _detectLayers).SetUp(fsm).SetRoot(transform);
-        var patrol = new BoidsPatrolState(_wayPoints, _targetLife, _animator, _detectLayers).SetUp(fsm).SetRoot(transform);
-        var evade = new BoidsEvadeState(_detectLayers).SetUp(fsm).SetRoot(transform);
+        var pickup = new BoidsPickUpState().SetUp(fsm).SetRoot(transform);
+        var attack = new BoidsAttackState(_rivalLife).SetUp(fsm).SetRoot(transform);
+        var patrol = new BoidsPatrolState(_wayPoints, _targetLife, _animator).SetUp(fsm).SetRoot(transform);
+        var evade = new BoidsEvadeState().SetUp(fsm).SetRoot(transform);
 
         fsm._possibleStates.Add(AgentStates.Idle, idle);
         fsm._possibleStates.Add(AgentStates.PickUp, pickup);
@@ -47,12 +52,12 @@ public class Boids : MonoBehaviour
 
     private void OnEnable()
     {
-        BoidsManager.Instance?.RegisterTarget(transform); //NOS REGISTRAMOS AL MANAGER
+        BoidsManager.Instance?.RegisterBoid(this); //NOS REGISTRAMOS AL MANAGER
     }
 
     private void OnDisable()
     {
-        BoidsManager.Instance?.UnregisterTarget(transform); //NOS SACAMOS DEL MANAGER
+        BoidsManager.Instance?.UnregisterBoid(this); //NOS SACAMOS DEL MANAGER
     }
 
     private void Update()

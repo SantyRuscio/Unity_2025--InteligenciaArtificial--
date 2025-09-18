@@ -9,28 +9,27 @@ public class BoidsAttackState : BaseState
     private HunterlLife _rivalLife;
 
     //Para Obtener Transforms
-    private float detectRadius = 15f;
-    private LayerMask _detectLayers;
-    private Transform _currentRival;
+    private float detectRadius = 10f; // lo subí un poco
+    private Hunter _currentRivalHunter;
 
     //Chequeos Para Cambios de Estado
-    public float _attackRange = 1f;
-    [SerializeField] private float _chaseRange = 6f;
+    public float _attackRange = 0.5f;      // rango para pegar
+    [SerializeField] private float _chaseSpeed = 3f; // velocidad de persecución
+    [SerializeField] private float _chaseRange = 12f; // hasta dónde persigue
 
     //Variables del estado
     private float _dmg = 10f;
-    private float _attackCooldown = 4f;
+    private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 
-    public BoidsAttackState(HunterlLife rivalLife, LayerMask detectLayers)
+    public BoidsAttackState(HunterlLife rivalLife)
     {
         this._rivalLife = rivalLife;
-        this._detectLayers = detectLayers;
     }
 
     public override void OnEnter()
     {
-        Debug.Log("Prey : Entre AttackState");
+        Debug.Log("Prey : Entré a AttackState");
     }
 
     public override void OnUpdate()
@@ -39,24 +38,32 @@ public class BoidsAttackState : BaseState
 
         DetectThing();
 
-        // vuelvo a patrullar
-        if (_currentRival == null)
+        // Si no hay enemigo -> vuelvo a patrullar
+        if (_currentRivalHunter == null)
         {
             fsm.ChnageState(AgentStates.Patrol);
             return;
         }
 
-        // Calcular dirección y distancia al rival
-        Vector3 dir = (_currentRival.position - _myRoot.position).normalized;
-        Vector3 stopBeforeTarget = _currentRival.position - dir * 1f;
-        float distanceToTarget = Vector3.Distance(_myRoot.position, stopBeforeTarget);
+        Vector3 dir = (_currentRivalHunter.transform.position - _myRoot.position).normalized;
+        float distanceToTarget = Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position);
 
-        //rango de ataque
+        if (distanceToTarget > _attackRange)
+        {
+            _myRoot.position += dir * Time.deltaTime * _chaseSpeed;
+
+            if (dir.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                _myRoot.rotation = Quaternion.Slerp(_myRoot.rotation, targetRot, Time.deltaTime * 5f);
+            }
+        }
+
+        // --- Si está a rango, ataco ---
         if (distanceToTarget <= _attackRange)
         {
             AttackCount();
 
-            // Si el rival muere → patrulla
             if (_rivalLife._currentLife <= 0)
             {
                 Debug.Log("Prey : Rival muerto, vuelvo a patrulla");
@@ -65,7 +72,6 @@ public class BoidsAttackState : BaseState
         }
         else if (distanceToTarget > _chaseRange)
         {
-            // Si se escapa Patrol
             Debug.Log("Prey : Rival se escapó");
             fsm.ChnageState(AgentStates.Patrol);
         }
@@ -83,24 +89,14 @@ public class BoidsAttackState : BaseState
 
     private void DetectThing()
     {
-        Collider[] hits = Physics.OverlapSphere(_myRoot.position, detectRadius, _detectLayers);
+        _currentRivalHunter = HunterManager.Instance.GetClosestHunter(_myRoot.position);
 
-        float minRivalDist = Mathf.Infinity;
-        Transform closestRival = null;
-
-        foreach (Collider hit in hits)
+        if (_currentRivalHunter != null)
         {
-            if (hit.CompareTag("Rival"))
+            if (Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position) > detectRadius)
             {
-                float dist = Vector3.Distance(_myRoot.position, hit.transform.position);
-                if (dist < minRivalDist)
-                {
-                    minRivalDist = dist;
-                    closestRival = hit.transform;
-                }
+                _currentRivalHunter = null;
             }
         }
-        _currentRival = closestRival;
     }
 }
-

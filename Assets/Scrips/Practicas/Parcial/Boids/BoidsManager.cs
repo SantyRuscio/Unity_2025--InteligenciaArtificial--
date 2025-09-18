@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class BoidsManager : MonoBehaviour
 {
     public static BoidsManager Instance { get; private set; }
-    private List<Transform> _targets = new List<Transform>();
+    private List<Boids> _boids = new List<Boids>();
 
     private void Awake()
     {
@@ -12,31 +13,34 @@ public class BoidsManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void RegisterTarget(Transform target)
+    // Registro de un boid
+    public void RegisterBoid(Boids boid)
     {
-        if (!_targets.Contains(target))
-            _targets.Add(target);
+        if (!_boids.Contains(boid))
+            _boids.Add(boid);
     }
 
-    public void UnregisterTarget(Transform target)
+    // Desregistro de un boid
+    public void UnregisterBoid(Boids boid)
     {
-        _targets.Remove(target);
+        _boids.Remove(boid);
     }
 
-    public Transform GetClosestTarget(Vector3 fromPos)
+    // Devuelve el Boid más cercano a una posición
+    public Boids GetClosestBoid(Vector3 fromPos)
     {
-        Transform closest = null;
+        Boids closest = null;
         float minDist = Mathf.Infinity;
 
-        foreach (var t in _targets)
+        foreach (var boid in _boids)
         {
-            if (t == null) continue;
+            if (boid == null) continue;
 
-            float dist = Vector3.Distance(fromPos, t.position);
+            float dist = Vector3.Distance(fromPos, boid.transform.position);
             if (dist < minDist)
             {
                 minDist = dist;
-                closest = t;
+                closest = boid;
             }
         }
         return closest;

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -11,11 +11,25 @@ public class Apples : MonoBehaviour
 
     private void Awake()
     {
-        // Busca la Factory autom�ticamente
+        // Busca la Factory automáticamente
         _factoryGeneric = FindAnyObjectByType<FactoryGeneric<Apples>>();
     }
 
-    // Se usa para colocar la manzana en cualquier posici�n
+    private void OnEnable()
+    {
+        // Cuando la manzana aparece en escena → la registramos en el Manager
+        if (AppleManager.instance != null)
+            AppleManager.instance.RegisterApple(transform);
+    }
+
+    private void OnDisable()
+    {
+        // Cuando la manzana desaparece → la quitamos del Manager
+        if (AppleManager.instance != null)
+            AppleManager.instance.UnregisterApple(transform);
+    }
+
+    // Se usa para colocar la manzana en cualquier posición
     public void SetPosition(Vector3 newPos)
     {
         transform.position = newPos;
@@ -55,3 +69,4 @@ public class Apples : MonoBehaviour
         }
     }
 }
+

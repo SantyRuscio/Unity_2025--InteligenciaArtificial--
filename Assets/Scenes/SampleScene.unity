@@ -4731,7 +4731,6 @@ MonoBehaviour:
   - {fileID: 63205034}
   - {fileID: 1545238931}
   _myLife: {fileID: 410129931}
-  _targetLife: {fileID: 783405777}
   _animator: {fileID: 410129930}
 --- !u!136 &410129927
 CapsuleCollider:
@@ -10183,13 +10182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e980570d43aec4f8dc001f790a70fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direccion: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  _actualDirSpeed: {x: 0, y: 0, z: 0}
-  aceleration: 0
-  _maxSpeed: 0
-  _actualVelocity: 0
-  _rb: {fileID: 795859111}
 --- !u!54 &795859111
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10421,11 +10413,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4588435873696250, guid: effb1b31d7e11a54e9b051312c1a2ee4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 11.745551
+      value: 12.028618
       objectReference: {fileID: 0}
     - target: {fileID: 4588435873696250, guid: effb1b31d7e11a54e9b051312c1a2ee4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.430437
+      value: -6.9935
       objectReference: {fileID: 0}
     - target: {fileID: 4588435873696250, guid: effb1b31d7e11a54e9b051312c1a2ee4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12359,13 +12351,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7103389, z: 0, w: 0.7038598}
-  m_LocalPosition: {x: 0.00000014667198, y: 2.72, z: 0.54}
+  m_LocalRotation: {x: 0.2199198, y: -0, z: -0, w: 0.9755179}
+  m_LocalPosition: {x: -0.15, y: 10.6, z: -19.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90.525, z: 0}
+  m_LocalEulerAnglesHint: {x: 25.409, y: 0, z: 0}
 --- !u!1 &966038029
 GameObject:
   m_ObjectHideFlags: 0

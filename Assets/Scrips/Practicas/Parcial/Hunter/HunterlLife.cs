@@ -12,14 +12,6 @@ public class HunterlLife : MonoBehaviour
     {
         _currentLife = _maxLife; // inicia con vida máxima
     }
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Debug.Log("ESPACIO CLIOCKER");
-            DamageTaken(20f);
-        }
-    }
 
     public void DamageTaken(float damage)
     {

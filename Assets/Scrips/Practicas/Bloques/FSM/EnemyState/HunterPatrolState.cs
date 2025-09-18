@@ -8,7 +8,8 @@ public class HunterPatrolState : BaseState
     //Asiganciones
     public Transform[] _wayPoints;
     HunterlLife _rivalLife;
-    private Transform _currentRival;
+
+    private Boids _currentRivalBoid;
 
     private Animator _animator; 
     private int currentWaypoint = 0;
@@ -51,18 +52,21 @@ public class HunterPatrolState : BaseState
         SeekArriveCount();
         wayPointsLoop();
 
-        if (_currentRival != null && _rivalLife._currentLife > _safeDamage)
+        if (_currentRivalBoid != null)
         {
-            if (Vector3.Distance(_currentRival.position, _myRoot.position) < _chaseRange)
-            {
-                Debug.Log("cambiando a chase");
-                fsm.ChnageState(AgentStates.Chase);
-            }
+            // if(_rivalLife._currentLife < _safeDamage)
+            // {
+            //    Debug.Log("No tengo vida, Cambio a Evade");
+            //    fsm.ChnageState(AgentStates.Evade);
+            //
+            // }
+
+             Debug.Log("cambiando a chase");
+             fsm.ChnageState(AgentStates.Chase);
+            
         }
         else if (_rivalLife._currentLife < _safeDamage)
         {
-            Debug.Log("No tengo vida, Cambio a Evade");
-            fsm.ChnageState(AgentStates.Evade);
         }
     }
 
@@ -112,10 +116,18 @@ public class HunterPatrolState : BaseState
 
     private void DetectThing()
     {
-        _currentRival = BoidsManager.Instance.GetClosestTarget(_myRoot.position);
+        _currentRivalBoid = BoidsManager.Instance.GetClosestBoid(_myRoot.position);
 
-        if (_currentRival != null)
-            distance = Vector3.Distance(_myRoot.position, _currentRival.position);
+        if (_currentRivalBoid != null)
+        {
+            distance = Vector3.Distance(_myRoot.position, _currentRivalBoid.transform.position);
+
+            if (distance >_chaseRange)
+            {
+                distance = Mathf.Infinity;
+                _currentRivalBoid = null;
+            }
+        }
         else
             distance = Mathf.Infinity;
     }
