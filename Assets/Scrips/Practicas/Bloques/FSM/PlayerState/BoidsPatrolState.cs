@@ -27,7 +27,8 @@ public class BoidsPatrolState : BaseState
     private float _safeDamage = 50f;
     private float _applePickUpRange = 5f;
 
-    float distance = 0f;
+    // Variables internas
+    private float distance = 0f;
 
     public BoidsPatrolState(Transform[] _wayPoints, BoidsLife _targetLife, Animator anim)
     {
@@ -38,29 +39,35 @@ public class BoidsPatrolState : BaseState
 
     public override void OnEnter()
     {
-        Debug.Log("Prey: Entré a Patrol");
+        Debug.Log("Prey: EntrÃ© a Patrol");
         currentWaypoint = 0;
 
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
 
-        // if (_animator != null)
-        //     _animator.SetBool("isWalking", true);
+        // Apenas entra a Patrol, pasa a caminata
+        if (_animator != null)
+            _animator.SetBool("isWalking", true);
     }
 
     public override void OnUpdate()
     {
         DetectThings();
 
-        // Si hay manzana cerca
+        // --- Si hay manzana cerca ---
         if (_currentApple != null)
         {
             Debug.Log("Prey: Voy a la manzana");
+
+            // Deja de caminar antes de cambiar de estado
+            if (_animator != null)
+                _animator.SetBool("isWalking", false);
+
             fsm.ChnageState(AgentStates.PickUp);
             return;
         }
 
-        // Si hay hunter a la vista
+        // --- Si hay hunter a la vista ---
         if (_currentRivalHunter != null)
         {
             float distToRival = Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position);
@@ -72,12 +79,13 @@ public class BoidsPatrolState : BaseState
             }
             else
             {
-                // está dentro del rango de detección
                 Debug.Log("Prey: ENEMIGO A LA VISTA");
 
                 if (distToRival <= _attackRange)
                 {
                     Debug.Log("Prey: Attack");
+                    if (_animator != null)
+                        _animator.SetBool("isWalking", false);
                     fsm.ChnageState(AgentStates.Attack);
                     return;
                 }
@@ -86,6 +94,8 @@ public class BoidsPatrolState : BaseState
                     if (_targetLife._currentLife < _safeDamage)
                     {
                         Debug.Log("Prey: Evade");
+                        if (_animator != null)
+                            _animator.SetBool("isWalking", false);
                         fsm.ChnageState(AgentStates.Evade);
                     }
                     return;
@@ -93,7 +103,7 @@ public class BoidsPatrolState : BaseState
             }
         }
 
-        // Si no hay nada patrullo
+        // --- Si no hay nada, patrullo ---
         SeekArriveCount();
         WayPointsLoop();
     }
@@ -102,6 +112,7 @@ public class BoidsPatrolState : BaseState
     {
         Debug.Log("Prey: Saliendo de Patrol");
 
+        // Cuando sale del estado Patrol vuelve a idle
         if (_animator != null)
             _animator.SetBool("isWalking", false);
     }
@@ -124,7 +135,7 @@ public class BoidsPatrolState : BaseState
 
         _myRoot.position += velocity * Time.deltaTime;
 
-        // Rotación suave
+        // RotaciÃ³n suave
         if (velocity.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized);
@@ -143,7 +154,6 @@ public class BoidsPatrolState : BaseState
     private void DetectThings()
     {
         _currentApple = AppleManager.instance.GetClosestApple(_myRoot.position, _applePickUpRange);
-
         _currentRivalHunter = HunterManager.Instance.GetClosestHunter(_myRoot.position);
 
         if (_currentRivalHunter != null)
