@@ -13,7 +13,7 @@ public class BoidsPickUpState : BaseState
 
     // Steerings Valores
     private float movSpeed = 3f;
-    private float steeringForce = 0.1f;
+    private float steeringForce = 0.3f;
     private float ArrivingDistance = 1f;
 
     // Chequeos Para Cambios de Estado
@@ -27,6 +27,9 @@ public class BoidsPickUpState : BaseState
 
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
+
+        if (_animator != null)
+            _animator.SetBool("isWalking", true);
     }
 
     public override void OnUpdate()

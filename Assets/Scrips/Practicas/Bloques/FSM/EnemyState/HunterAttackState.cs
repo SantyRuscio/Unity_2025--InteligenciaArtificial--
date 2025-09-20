@@ -24,6 +24,12 @@ public class HunterAttackState : BaseState
     public override void OnEnter()
     {
         Debug.Log("Entered AttackState");
+
+        if (_myRoot != null)
+            _animator = _myRoot.GetComponentInChildren<Animator>();
+
+        if (_animator != null)
+            _animator.SetBool("isAttack", true);
     }
 
     public override void OnUpdate()
@@ -45,6 +51,9 @@ public class HunterAttackState : BaseState
         else if (distanceToTarget <= _chaseRange)
         {
             Debug.Log("El Boid se alejó, vuelvo a perseguir");
+            if (_animator != null)
+                _animator.SetBool("isAttack", false);
+
             fsm.ChnageState(AgentStates.Chase);
         }
         else
@@ -52,6 +61,9 @@ public class HunterAttackState : BaseState
             // Si se aleja demasiado, limpiamos la referencia
             _currentRivalBoid = null;
             _currentRivalTransform = null;
+
+            if (_animator != null)
+                _animator.SetBool("isAttack", false);
             fsm.ChnageState(AgentStates.Idle);
         }
     }
@@ -76,6 +88,10 @@ public class HunterAttackState : BaseState
             {
                 _currentRivalBoid = null;
                 _currentRivalTransform = null;
+
+                if (_animator != null)
+                    _animator.SetBool("isAttack", false);
+
                 fsm.ChnageState(AgentStates.Idle);
             }
         }

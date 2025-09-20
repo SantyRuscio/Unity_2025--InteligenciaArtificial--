@@ -30,6 +30,14 @@ public class BoidsAttackState : BaseState
     public override void OnEnter()
     {
         Debug.Log("Prey : Entré a AttackState");
+
+        Debug.Log("Entered AttackState");
+
+        if (_myRoot != null)
+            _animator = _myRoot.GetComponentInChildren<Animator>();
+
+        if (_animator != null)
+            _animator.SetBool("isAttack", true);
     }
 
     public override void OnUpdate()
@@ -67,12 +75,19 @@ public class BoidsAttackState : BaseState
             if (_rivalLife._currentLife <= 0)
             {
                 Debug.Log("Prey : Rival muerto, vuelvo a patrulla");
+
+                if (_animator != null)
+                    _animator.SetBool("isAttack", false);
+
                 fsm.ChnageState(AgentStates.Patrol);
             }
         }
         else if (distanceToTarget > _chaseRange)
         {
             Debug.Log("Prey : Rival se escapó");
+
+            if (_animator != null)
+                _animator.SetBool("isAttack", false);
             fsm.ChnageState(AgentStates.Patrol);
         }
     }

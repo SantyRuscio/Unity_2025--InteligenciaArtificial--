@@ -20,7 +20,7 @@ public class BoidsPatrolState : BaseState
     // Steerings Valores
     private float movSpeed = 3f;
     private float steeringForce = 2f;
-    private float ArrivingDistance = 0.5f;
+    private float ArrivingDistance = 1.5f;
     private int currentWaypoint = 0;
 
     // Flocking
@@ -86,6 +86,7 @@ public class BoidsPatrolState : BaseState
                     Debug.Log("Prey: Attack");
                     if (_animator != null)
                         _animator.SetBool("isWalking", false);
+
                     fsm.ChnageState(AgentStates.Attack);
                     return;
                 }
