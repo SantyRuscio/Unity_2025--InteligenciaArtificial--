@@ -7,26 +7,42 @@ public class BoidsManager : MonoBehaviour
     public static BoidsManager Instance { get; private set; }
     private List<Boids> _boids = new List<Boids>();
 
+    public Vector3 velocity;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    // Registro de un boid
     public void RegisterBoid(Boids boid)
     {
         if (!_boids.Contains(boid))
             _boids.Add(boid);
     }
 
-    // Desregistro de un boid
     public void UnregisterBoid(Boids boid)
     {
         _boids.Remove(boid);
     }
 
-    // Devuelve el Boid más cercano a una posición
+
+    public List<Boids> GetNeighbors(Vector3 fromPos, float radius)
+    {
+        List<Boids> neighbors = new List<Boids>();
+
+        foreach (var boid in _boids)
+        {
+            if (boid == null) continue;
+
+            float dist = Vector3.Distance(fromPos, boid.transform.position);
+            if (dist < radius)
+                neighbors.Add(boid);
+        }
+        return neighbors;
+    }
+
+    //Boid más cercano a una posición
     public Boids GetClosestBoid(Vector3 fromPos)
     {
         Boids closest = null;

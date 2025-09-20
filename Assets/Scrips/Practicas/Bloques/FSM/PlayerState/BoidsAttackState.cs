@@ -18,7 +18,7 @@ public class BoidsAttackState : BaseState
     [SerializeField] private float _chaseRange = 12f; // hasta dónde persigue
 
     //Variables del estado
-    private float _dmg = 10f;
+    private float _dmg = 16f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 

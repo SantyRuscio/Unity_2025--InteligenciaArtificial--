@@ -15,7 +15,7 @@ public class HunterAttackState : BaseState
     [SerializeField] private float _chaseRange = 6f;
 
     // Variables de ataque
-    private float _dmg = 25f;
+    private float _dmg = 30f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 

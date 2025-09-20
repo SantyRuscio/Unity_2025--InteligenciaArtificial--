@@ -13,7 +13,7 @@ public class BoidsPatrolState : BaseState
 
     // Para Obtener Transforms
     private float detectRadius = 2f;
-    private float _attackRange = 1.5f;
+    private float _attackRange = 4f;
     private Hunter _currentRivalHunter;
     private Transform _currentApple;
 
@@ -22,6 +22,11 @@ public class BoidsPatrolState : BaseState
     private float steeringForce = 2f;
     private float ArrivingDistance = 0.5f;
     private int currentWaypoint = 0;
+
+    // Flocking
+    private float _flockingRadius = 5f;   // radio de percepción
+    private float _flockingForce = 2f;    // fuerza máxima de steer
+    private bool _isFlocking = false;     // flag para saber si estoy flockeando
 
     // Chequeos Para Cambios de Estado
     private float _safeDamage = 50f;
@@ -45,7 +50,6 @@ public class BoidsPatrolState : BaseState
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
 
-        // Apenas entra a Patrol, pasa a caminata
         if (_animator != null)
             _animator.SetBool("isWalking", true);
     }
@@ -54,12 +58,10 @@ public class BoidsPatrolState : BaseState
     {
         DetectThings();
 
-        // --- Si hay manzana cerca ---
         if (_currentApple != null)
         {
             Debug.Log("Prey: Voy a la manzana");
 
-            // Deja de caminar antes de cambiar de estado
             if (_animator != null)
                 _animator.SetBool("isWalking", false);
 
@@ -67,14 +69,12 @@ public class BoidsPatrolState : BaseState
             return;
         }
 
-        // --- Si hay hunter a la vista ---
         if (_currentRivalHunter != null)
         {
             float distToRival = Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position);
 
             if (distToRival > detectRadius)
             {
-                // demasiado lejos, lo descarto
                 _currentRivalHunter = null;
             }
             else
@@ -89,30 +89,29 @@ public class BoidsPatrolState : BaseState
                     fsm.ChnageState(AgentStates.Attack);
                     return;
                 }
-                else
+                else if (_targetLife._currentLife < _safeDamage)
                 {
-                    if (_targetLife._currentLife < _safeDamage)
-                    {
-                        Debug.Log("Prey: Evade");
-                        if (_animator != null)
-                            _animator.SetBool("isWalking", false);
-                        fsm.ChnageState(AgentStates.Evade);
-                    }
+                    Debug.Log("Prey: Evade");
+                    if (_animator != null)
+                        _animator.SetBool("isWalking", false);
+                    fsm.ChnageState(AgentStates.Evade);
                     return;
                 }
             }
         }
 
-        // --- Si no hay nada, patrullo ---
-        SeekArriveCount();
-        WayPointsLoop();
+        // --- Movimiento ---
+        if (!_isFlocking)   // si no está flockeando, patrulla
+        {
+            SeekArriveCount();
+            WayPointsLoop();
+        }
     }
 
     public override void OnExit()
     {
         Debug.Log("Prey: Saliendo de Patrol");
 
-        // Cuando sale del estado Patrol vuelve a idle
         if (_animator != null)
             _animator.SetBool("isWalking", false);
     }
@@ -122,7 +121,6 @@ public class BoidsPatrolState : BaseState
         Vector3 dir = _wayPoints[currentWaypoint].position - _myRoot.position;
         distance = dir.magnitude;
 
-        // Seek + Arrive
         Vector3 desired;
         if (distance < ArrivingDistance)
             desired = dir.normalized * movSpeed * (distance / ArrivingDistance);
@@ -135,7 +133,6 @@ public class BoidsPatrolState : BaseState
 
         _myRoot.position += velocity * Time.deltaTime;
 
-        // Rotación suave
         if (velocity.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized);
@@ -151,19 +148,71 @@ public class BoidsPatrolState : BaseState
         }
     }
 
+    private void FlockingMove(List<Boids> neighbors)
+    {
+        Vector3 separation = Vector3.zero;
+        Vector3 alignment = Vector3.zero;
+        Vector3 cohesion = Vector3.zero;
+
+        int count = 0;
+
+        foreach (var boid in neighbors)
+        {
+            if (boid == null || boid.transform == _myRoot) continue;
+
+            float dist = Vector3.Distance(_myRoot.position, boid.transform.position);
+
+            if (dist < _flockingRadius)
+            {
+                if (dist < 1.5f)
+                    separation += (_myRoot.position - boid.transform.position).normalized / dist;
+
+                alignment += boid.Velocity; // ⚠️ tu clase Boids debe tener public Vector3 velocity
+                cohesion += boid.transform.position;
+
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            separation /= count;
+            alignment /= count;
+            cohesion = ((cohesion / count) - _myRoot.position).normalized;
+
+            Vector3 flockingForce =
+                  separation * 1.5f
+                + alignment.normalized * 1.0f
+                + cohesion * 1.0f;
+
+            Vector3 desired = flockingForce.normalized * movSpeed;
+            Vector3 steering = desired - velocity;
+            steering = Vector3.ClampMagnitude(steering, _flockingForce);
+
+            velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
+            _myRoot.position += velocity * Time.deltaTime;
+
+            if (velocity.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized);
+                _myRoot.rotation = Quaternion.Slerp(_myRoot.rotation, targetRotation, Time.deltaTime * 5f);
+            }
+
+            _isFlocking = true;
+            Debug.Log("Prey: Flockeando con " + count + " vecinos 🕊️");
+        }
+        else
+        {
+            _isFlocking = false;
+        }
+    }
+
     private void DetectThings()
     {
         _currentApple = AppleManager.instance.GetClosestApple(_myRoot.position, _applePickUpRange);
         _currentRivalHunter = HunterManager.Instance.GetClosestHunter(_myRoot.position);
 
-        if (_currentRivalHunter != null)
-        {
-            float dist = Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position);
-        }
-        else
-        {
-            Debug.Log("No hay hunter cerca");
-        }
+        List<Boids> neighbors = BoidsManager.Instance.GetNeighbors(_myRoot.position, _flockingRadius);
+        FlockingMove(neighbors);
     }
 }
-
