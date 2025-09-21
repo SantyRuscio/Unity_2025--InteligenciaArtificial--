@@ -24,7 +24,7 @@ public class BoidsAttackState : BaseState
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 
-    private float _topVertical = 5f; // factor de rotación máxima
+    private float _topVertical = 1.3f; // factor de rotación máxima
 
     public BoidsAttackState(HunterlLife rivalLife, BoidsLife _targetLife)
     {
