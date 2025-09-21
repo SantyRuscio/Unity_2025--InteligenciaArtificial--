@@ -11,11 +11,11 @@ public class HunterAttackState : BaseState
     private Transform _currentRivalTransform; 
 
     // Rango de ataque y persecución
-    public float _attackRange = 4f;
-    [SerializeField] private float _chaseRange = 6f;
+    public float _attackRange = 2f;
+    [SerializeField] private float _chaseRange = 5f;
 
     // Variables de ataque
-    private float _dmg = 30f;
+    private float _dmg = 20f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 
@@ -51,21 +51,21 @@ public class HunterAttackState : BaseState
         else if (distanceToTarget <= _chaseRange)
         {
             Debug.Log("El Boid se alejó, vuelvo a perseguir");
-            if (_animator != null)
-                _animator.SetBool("isAttack", false);
-
             fsm.ChnageState(AgentStates.Chase);
         }
         else
         {
-            // Si se aleja demasiado, limpiamos la referencia
             _currentRivalBoid = null;
             _currentRivalTransform = null;
 
-            if (_animator != null)
-                _animator.SetBool("isAttack", false);
             fsm.ChnageState(AgentStates.Idle);
         }
+    }
+
+    public override void OnExit()
+    {
+        if (_animator != null)
+            _animator.SetBool("isAttack", false);
     }
 
     private void AttackCount()
@@ -88,9 +88,6 @@ public class HunterAttackState : BaseState
             {
                 _currentRivalBoid = null;
                 _currentRivalTransform = null;
-
-                if (_animator != null)
-                    _animator.SetBool("isAttack", false);
 
                 fsm.ChnageState(AgentStates.Idle);
             }

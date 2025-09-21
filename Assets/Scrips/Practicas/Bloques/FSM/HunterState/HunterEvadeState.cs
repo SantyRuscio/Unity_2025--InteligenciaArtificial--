@@ -16,6 +16,7 @@ public class HunterEvadeState : BaseState
 
     float distance = 0f;
 
+    private Animator _animator;
     private Boids _currentRivalBoid;
     private Transform _currentRival;
     private float detectRadius = 15f;
@@ -40,9 +41,12 @@ public class HunterEvadeState : BaseState
         }
     }
 
-    public override void OnExit() 
+    public override void OnExit()
     {
-        Debug.Log("sali de EvadeState");
+        Debug.Log("Saliendo de HunterEvadeState");
+
+        if (_animator != null)
+            _animator.SetBool("isWalking", false);
     }
 
     private void EvadeCounts()

@@ -7,14 +7,14 @@ public class HunterChaseState : BaseState
     private Animator _animator;
 
     Vector3 dir = Vector3.zero;
-    [SerializeField] float movSpeed = 5f;
+    [SerializeField] float movSpeed = 2.6f;
     [SerializeField] float steeringForce = 0.01f;
     [SerializeField] float ArrivingDistance = 5f;
 
     private Boids _currentRivalBoid;
 
     private float _atackRange = 2f;
-    private float _chaseRange = 10f; // lo aumenté para pruebas
+    private float _chaseRange = 5f; // lo aumenté para pruebas
     private float distance = 0f;
 
     private Vector3 lastRivalPos;

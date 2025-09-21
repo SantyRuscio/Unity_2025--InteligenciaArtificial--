@@ -35,7 +35,7 @@ public class Boids : MonoBehaviour
         // Estados
         var idle = new BoidsIdle().SetUp(fsm);
         var pickup = new BoidsPickUpState().SetUp(fsm).SetRoot(transform);
-        var attack = new BoidsAttackState(_rivalLife).SetUp(fsm).SetRoot(transform);
+        var attack = new BoidsAttackState(_rivalLife, _targetLife).SetUp(fsm).SetRoot(transform);   
         var patrol = new BoidsPatrolState(_wayPoints, _targetLife, _animator).SetUp(fsm).SetRoot(transform);
         var evade = new BoidsEvadeState().SetUp(fsm).SetRoot(transform);
 

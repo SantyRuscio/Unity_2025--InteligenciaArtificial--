@@ -56,6 +56,9 @@ public class BoidsPickUpState : BaseState
     public override void OnExit()
     {
         Debug.Log("PRAY : sali de PreyPickUpState");
+
+        if (_animator != null)
+            _animator.SetBool("isWalking", false);
     }
 
     // Seek + Arrive usando la manzana detectada

@@ -61,10 +61,6 @@ public class BoidsPatrolState : BaseState
         if (_currentApple != null)
         {
             Debug.Log("Prey: Voy a la manzana");
-
-            if (_animator != null)
-                _animator.SetBool("isWalking", false);
-
             fsm.ChnageState(AgentStates.PickUp);
             return;
         }
@@ -84,17 +80,12 @@ public class BoidsPatrolState : BaseState
                 if (distToRival <= _attackRange)
                 {
                     Debug.Log("Prey: Attack");
-                    if (_animator != null)
-                        _animator.SetBool("isWalking", false);
-
                     fsm.ChnageState(AgentStates.Attack);
                     return;
                 }
                 else if (_targetLife._currentLife < _safeDamage)
                 {
                     Debug.Log("Prey: Evade");
-                    if (_animator != null)
-                        _animator.SetBool("isWalking", false);
                     fsm.ChnageState(AgentStates.Evade);
                     return;
                 }

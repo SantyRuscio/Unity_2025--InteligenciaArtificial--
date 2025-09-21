@@ -7,6 +7,8 @@ public class BoidsAttackState : BaseState
     //Asignaciones
     private Animator _animator;
     private HunterlLife _rivalLife;
+    private BoidsLife _targetLife;
+
 
     //Para Obtener Transforms
     private float detectRadius = 10f; // lo subí un poco
@@ -16,15 +18,17 @@ public class BoidsAttackState : BaseState
     public float _attackRange = 0.5f;      // rango para pegar
     [SerializeField] private float _chaseSpeed = 3f; // velocidad de persecución
     [SerializeField] private float _chaseRange = 12f; // hasta dónde persigue
+    private float _safeDamage = 50f;
 
     //Variables del estado
-    private float _dmg = 16f;
+    private float _dmg = 10f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 
-    public BoidsAttackState(HunterlLife rivalLife)
+    public BoidsAttackState(HunterlLife rivalLife, BoidsLife _targetLife)
     {
         this._rivalLife = rivalLife;
+        this._targetLife = _targetLife;
     }
 
     public override void OnEnter()
@@ -46,7 +50,6 @@ public class BoidsAttackState : BaseState
 
         DetectThing();
 
-        // Si no hay enemigo -> vuelvo a patrullar
         if (_currentRivalHunter == null)
         {
             fsm.ChnageState(AgentStates.Patrol);
@@ -75,21 +78,24 @@ public class BoidsAttackState : BaseState
             if (_rivalLife._currentLife <= 0)
             {
                 Debug.Log("Prey : Rival muerto, vuelvo a patrulla");
-
-                if (_animator != null)
-                    _animator.SetBool("isAttack", false);
-
                 fsm.ChnageState(AgentStates.Patrol);
             }
-        }
-        else if (distanceToTarget > _chaseRange)
-        {
-            Debug.Log("Prey : Rival se escapó");
+            else if (_targetLife._currentLife < _safeDamage)
+            {
+                Debug.Log("Prey: Evade");
+                fsm.ChnageState(AgentStates.Evade);
+                return;
+            }
 
-            if (_animator != null)
-                _animator.SetBool("isAttack", false);
-            fsm.ChnageState(AgentStates.Patrol);
         }
+    }
+
+    public override void OnExit()
+    {
+        Debug.Log("Saliendo de HunterEvadeState");
+
+        if (_animator != null)
+            _animator.SetBool("isAttack", false);
     }
 
     private void AttackCount()
