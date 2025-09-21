@@ -33,7 +33,7 @@ public class BoidsEvadeState : BaseState
 
     public override void OnEnter()
     {
-        Debug.Log("PRAY : entre a EvadeState");
+        Debug.Log("PRAY : entre a EvadeState"); 
 
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
