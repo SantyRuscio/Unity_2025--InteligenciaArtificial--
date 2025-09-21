@@ -38,12 +38,14 @@ public class Boids : MonoBehaviour
         var attack = new BoidsAttackState(_rivalLife, _targetLife).SetUp(fsm).SetRoot(transform);   
         var patrol = new BoidsPatrolState(_wayPoints, _targetLife, _animator).SetUp(fsm).SetRoot(transform);
         var evade = new BoidsEvadeState().SetUp(fsm).SetRoot(transform);
+        var flocking = new BoidsFlocking().SetUp(fsm).SetRoot(transform);
 
         fsm._possibleStates.Add(AgentStates.Idle, idle);
         fsm._possibleStates.Add(AgentStates.PickUp, pickup);
         fsm._possibleStates.Add(AgentStates.Attack, attack);
         fsm._possibleStates.Add(AgentStates.Patrol, patrol);
         fsm._possibleStates.Add(AgentStates.Evade, evade);
+        fsm._possibleStates.Add(AgentStates.Flocking, flocking);
 
         // Estado inicial
         fsm._actualState = idle;

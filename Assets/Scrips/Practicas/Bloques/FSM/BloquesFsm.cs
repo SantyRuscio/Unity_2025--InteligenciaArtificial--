@@ -30,5 +30,6 @@ public  class BloquesFsm
         Patrol,
         Attack,
         Evade,
-        PickUp
+        PickUp,
+        Flocking
     }

@@ -27,13 +27,15 @@ public class BoidsManager : MonoBehaviour
     }
 
 
-    public List<Boids> GetNeighbors(Vector3 fromPos, float radius)
+    public List<Boids> GetNeighbors(Vector3 fromPos, float radius, Boids self = null)
     {
         List<Boids> neighbors = new List<Boids>();
 
         foreach (var boid in _boids)
         {
             if (boid == null) continue;
+
+            if (self != null && boid == self) continue;
 
             float dist = Vector3.Distance(fromPos, boid.transform.position);
             if (dist < radius)
