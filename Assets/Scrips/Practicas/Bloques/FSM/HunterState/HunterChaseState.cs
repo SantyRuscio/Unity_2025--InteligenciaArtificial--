@@ -7,9 +7,9 @@ public class HunterChaseState : BaseState
     private Animator _animator;
 
     Vector3 dir = Vector3.zero;
-    [SerializeField] float movSpeed = 2.6f;
+    [SerializeField] float movSpeed = 2.4f;
     [SerializeField] float steeringForce = 0.01f;
-    [SerializeField] float ArrivingDistance = 5f;
+    [SerializeField] float ArrivingDistance = 4f;
 
     private Boids _currentRivalBoid;
 

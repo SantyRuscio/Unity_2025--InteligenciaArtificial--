@@ -9,21 +9,22 @@ public class BoidsAttackState : BaseState
     private HunterlLife _rivalLife;
     private BoidsLife _targetLife;
 
-
     //Para Obtener Transforms
-    private float detectRadius = 10f; // lo subí un poco
+    private float detectRadius = 10f;
     private Hunter _currentRivalHunter;
 
     //Chequeos Para Cambios de Estado
-    public float _attackRange = 0.5f;      // rango para pegar
-    [SerializeField] private float _chaseSpeed = 3f; // velocidad de persecución
-    [SerializeField] private float _chaseRange = 12f; // hasta dónde persigue
+    public float _attackRange = 0.5f;
+    [SerializeField] private float _chaseSpeed = 3f;
+    [SerializeField] private float _chaseRange = 12f;
     private float _safeDamage = 50f;
 
     //Variables del estado
     private float _dmg = 10f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
+
+    private float _topVertical = 5f; // factor de rotación máxima
 
     public BoidsAttackState(HunterlLife rivalLife, BoidsLife _targetLife)
     {
@@ -34,8 +35,6 @@ public class BoidsAttackState : BaseState
     public override void OnEnter()
     {
         Debug.Log("Prey : Entré a AttackState");
-
-        Debug.Log("Entered AttackState");
 
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
@@ -66,7 +65,8 @@ public class BoidsAttackState : BaseState
             if (dir.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRot = Quaternion.LookRotation(dir);
-                _myRoot.rotation = Quaternion.Slerp(_myRoot.rotation, targetRot, Time.deltaTime * 5f);
+                // 🔥 Rotación suave con límite
+                _myRoot.rotation = Quaternion.Slerp(_myRoot.rotation, targetRot, Time.deltaTime * _topVertical);
             }
         }
 
@@ -86,13 +86,12 @@ public class BoidsAttackState : BaseState
                 fsm.ChnageState(AgentStates.Evade);
                 return;
             }
-
         }
     }
 
     public override void OnExit()
     {
-        Debug.Log("Saliendo de HunterEvadeState");
+        Debug.Log("Prey Saliendo de BoidsAttackState");
 
         if (_animator != null)
             _animator.SetBool("isAttack", false);

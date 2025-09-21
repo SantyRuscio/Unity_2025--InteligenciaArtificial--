@@ -18,22 +18,26 @@ public class BoidsPatrolState : BaseState
     private Transform _currentApple;
 
     // Steerings Valores
-    private float movSpeed = 3f;
-    private float steeringForce = 2f;
-    private float ArrivingDistance = 1.5f;
-    private int currentWaypoint = 0;
+    private float _movSpeed = 3f;
+    private float _steeringForce = 2f;
+    private float _arrivingDistance = 1.5f;
+    private int _currentWaypoint = 0;
 
     // Flocking
-    private float _flockingRadius = 5f;   // radio de percepción
-    private float _flockingForce = 2f;    // fuerza máxima de steer
-    private bool _isFlocking = false;     // flag para saber si estoy flockeando
+    private float _flockingRadius = 5f;
+    private float _flockingForce = 2f;
+    private bool _isFlocking = false;
 
     // Chequeos Para Cambios de Estado
     private float _safeDamage = 50f;
     private float _applePickUpRange = 5f;
 
     // Variables internas
-    private float distance = 0f;
+    private float _distance = 0f;
+
+    // Límites verticales
+    [SerializeField] private float _minVertical = 0f;
+    [SerializeField] private float _topVertical = 1.3f;
 
     public BoidsPatrolState(Transform[] _wayPoints, BoidsLife _targetLife, Animator anim)
     {
@@ -45,7 +49,7 @@ public class BoidsPatrolState : BaseState
     public override void OnEnter()
     {
         Debug.Log("Prey: Entré a Patrol");
-        currentWaypoint = 0;
+        _currentWaypoint = 0;
 
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
@@ -92,8 +96,7 @@ public class BoidsPatrolState : BaseState
             }
         }
 
-        // --- Movimiento ---
-        if (!_isFlocking)   // si no está flockeando, patrulla
+        if (!_isFlocking)
         {
             SeekArriveCount();
             WayPointsLoop();
@@ -110,20 +113,27 @@ public class BoidsPatrolState : BaseState
 
     private void SeekArriveCount()
     {
-        Vector3 dir = _wayPoints[currentWaypoint].position - _myRoot.position;
-        distance = dir.magnitude;
+        Vector3 dir = _wayPoints[_currentWaypoint].position - _myRoot.position;
+        _distance = dir.magnitude;
 
         Vector3 desired;
-        if (distance < ArrivingDistance)
-            desired = dir.normalized * movSpeed * (distance / ArrivingDistance);
+        if (_distance < _arrivingDistance)
+            desired = dir.normalized * _movSpeed * (_distance / _arrivingDistance);
         else
-            desired = dir.normalized * movSpeed;
+            desired = dir.normalized * _movSpeed;
 
         Vector3 steering = desired - velocity;
-        steering = Vector3.ClampMagnitude(steering, steeringForce);
-        velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
+        steering = Vector3.ClampMagnitude(steering, _steeringForce);
+        velocity = Vector3.ClampMagnitude(velocity + steering, _movSpeed);
 
         _myRoot.position += velocity * Time.deltaTime;
+
+        // 🔒 Clamp en Y
+        _myRoot.position = new Vector3(
+            _myRoot.position.x,
+            Mathf.Clamp(_myRoot.position.y, _minVertical, _topVertical),
+            _myRoot.position.z
+        );
 
         if (velocity.sqrMagnitude > 0.001f)
         {
@@ -134,9 +144,9 @@ public class BoidsPatrolState : BaseState
 
     private void WayPointsLoop()
     {
-        if (distance < ArrivingDistance)
+        if (_distance < _arrivingDistance)
         {
-            currentWaypoint = (currentWaypoint + 1) % _wayPoints.Length;
+            _currentWaypoint = (_currentWaypoint + 1) % _wayPoints.Length;
         }
     }
 
@@ -145,7 +155,6 @@ public class BoidsPatrolState : BaseState
         Vector3 separation = Vector3.zero;
         Vector3 alignment = Vector3.zero;
         Vector3 cohesion = Vector3.zero;
-
         int count = 0;
 
         foreach (var boid in neighbors)
@@ -159,9 +168,8 @@ public class BoidsPatrolState : BaseState
                 if (dist < 1.5f)
                     separation += (_myRoot.position - boid.transform.position).normalized / dist;
 
-                alignment += boid.Velocity; // ⚠️ tu clase Boids debe tener public Vector3 velocity
+                alignment += boid.Velocity;
                 cohesion += boid.transform.position;
-
                 count++;
             }
         }
@@ -177,12 +185,19 @@ public class BoidsPatrolState : BaseState
                 + alignment.normalized * 1.0f
                 + cohesion * 1.0f;
 
-            Vector3 desired = flockingForce.normalized * movSpeed;
+            Vector3 desired = flockingForce.normalized * _movSpeed;
             Vector3 steering = desired - velocity;
             steering = Vector3.ClampMagnitude(steering, _flockingForce);
 
-            velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
+            velocity = Vector3.ClampMagnitude(velocity + steering, _movSpeed);
             _myRoot.position += velocity * Time.deltaTime;
+
+            // 🔒 Clamp en Y
+            _myRoot.position = new Vector3(
+                _myRoot.position.x,
+                Mathf.Clamp(_myRoot.position.y, _minVertical, _topVertical),
+                _myRoot.position.z
+            );
 
             if (velocity.sqrMagnitude > 0.001f)
             {
