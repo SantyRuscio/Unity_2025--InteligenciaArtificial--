@@ -7,14 +7,13 @@ public class BoidsPickUpState : BaseState
 {
     private Animator _animator;
 
-    // Parámetros de búsqueda
     private float detectRadius = 10f;
     private Transform _currentApple;
 
     // Steerings Valores
     private float movSpeed = 3f;
     private float steeringForce = 0.3f;
-    private float ArrivingDistance = 1f;
+    private float ArrivingDistance = 1.2f;
 
     // Chequeos Para Cambios de Estado
     private float _applePickUpRange = 5f;
@@ -23,7 +22,7 @@ public class BoidsPickUpState : BaseState
 
     public override void OnEnter()
     {
-        Debug.Log("Prey: Entré a PreyPickUpState");
+        Debug.Log("Prey: Entrï¿½ a PreyPickUpState");
 
         if (_myRoot != null)
             _animator = _myRoot.GetComponentInChildren<Animator>();
@@ -86,7 +85,7 @@ public class BoidsPickUpState : BaseState
 
         _myRoot.position += velocity * Time.deltaTime;
 
-        // Rotación solo si hay movimiento
+        // Rotaciï¿½n solo si hay movimiento
         if (velocity.sqrMagnitude > 0.001f)
             _myRoot.forward = velocity.normalized;
     }

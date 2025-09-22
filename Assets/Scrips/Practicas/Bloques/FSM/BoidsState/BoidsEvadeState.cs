@@ -24,11 +24,17 @@ public class BoidsEvadeState : BaseState
     // Chequeos Para Cambios de Estado
     [SerializeField] float EscapeRangeToPatrol = 7f;
 
+    private HunterlLife _rivalLife;
 
     // Topes
-    [SerializeField] private Vector3 minBounds = new Vector3(-12f, 0f, -12f);
-    [SerializeField] private Vector3 maxBounds = new Vector3(12f, 0f, 12f);
+    [SerializeField] private Vector3 minBounds = new Vector3(-11f, 0f, -11f);
+    [SerializeField] private Vector3 maxBounds = new Vector3(11f, 0f, 11f);
     private float VerticalBounds = 1.3f;
+
+    public BoidsEvadeState(HunterlLife rivalLife)
+    {
+        this._rivalLife = rivalLife;
+    }
 
 
     public override void OnEnter()
@@ -47,7 +53,7 @@ public class BoidsEvadeState : BaseState
         DetectThing();
         EvadeCounts();
 
-        if (_distance > EscapeRangeToPatrol)
+        if (_distance > EscapeRangeToPatrol || (_rivalLife._currentLife <= 0))
         {
             Debug.Log("PRAY me escape");
             fsm.ChnageState(AgentStates.Patrol);

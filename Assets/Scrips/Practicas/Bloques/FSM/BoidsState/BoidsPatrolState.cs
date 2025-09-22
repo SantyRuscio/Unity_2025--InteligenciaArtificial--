@@ -24,9 +24,9 @@ public class BoidsPatrolState : BaseState
     private int _currentWaypoint = 0;
 
     // Flocking
-    private float _flockingRadius = 1f;
+    private float _flockingRadius = 3f;       
     private float _flockingForce = 2f;
-    private bool _isFlocking = false;
+    private float _distanceToFlock = 2f;      
 
     // Chequeos Para Cambios de Estado
     private float _safeDamage = 50f;
@@ -62,6 +62,7 @@ public class BoidsPatrolState : BaseState
     {
         DetectThings();
 
+        // Manzana
         if (_currentApple != null)
         {
             Debug.Log("Prey: Voy a la manzana");
@@ -69,6 +70,7 @@ public class BoidsPatrolState : BaseState
             return;
         }
 
+        // Cazador enemigo
         if (_currentRivalHunter != null)
         {
             float distToRival = Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position);
@@ -96,17 +98,28 @@ public class BoidsPatrolState : BaseState
             }
         }
 
-      // List<Boids> neighbors = BoidsManager.Instance.GetNeighbors(_myRoot.position, _flockingRadius);
-      // if (neighbors.Count > 1)
-      // {
-      //     Debug.Log("Prey: Detecté boids paso a Flocking");
-      //     fsm.ChnageState(AgentStates.Flocking);
-      //     return;
-      // }
-      
-       SeekArriveCount();
-       WayPointsLoop();
-        
+        List<Boids> neighbors = BoidsManager.Instance.GetNeighbors(_myRoot.position, _flockingRadius);
+
+        if (neighbors.Count > 1)
+        {
+            float nearestDist = float.MaxValue;
+
+            foreach (var boid in neighbors)
+            {
+                float dist = Vector3.Distance(_myRoot.position, boid.transform.position);
+                if (dist < nearestDist)
+                    nearestDist = dist;
+            }
+
+            if (nearestDist <= _distanceToFlock)
+            {
+                Debug.Log("Prey: Detecté boids paso a Flocking");
+                fsm.ChnageState(AgentStates.Flocking);
+                return;
+            }
+        }
+        SeekArriveCount();
+        WayPointsLoop();
     }
 
     public override void OnExit()
@@ -119,6 +132,11 @@ public class BoidsPatrolState : BaseState
 
     private void SeekArriveCount()
     {
+        if (_distance < _arrivingDistance)
+        {
+            _currentWaypoint = (_currentWaypoint + 1) % _wayPoints.Length;
+        }
+
         Vector3 dir = _wayPoints[_currentWaypoint].position - _myRoot.position;
         _distance = dir.magnitude;
 
@@ -149,6 +167,7 @@ public class BoidsPatrolState : BaseState
 
     private void WayPointsLoop()
     {
+        // Esto queda como refuerzo (por si _distance es chico)
         if (_distance < _arrivingDistance)
         {
             _currentWaypoint = (_currentWaypoint + 1) % _wayPoints.Length;

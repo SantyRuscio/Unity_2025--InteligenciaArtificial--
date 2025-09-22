@@ -20,7 +20,7 @@ public class BoidsAttackState : BaseState
     private float _safeDamage = 50f;
 
     //Variables del estado
-    private float _dmg = 10f;
+    private float _dmg = 6f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 
@@ -65,12 +65,10 @@ public class BoidsAttackState : BaseState
             if (dir.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRot = Quaternion.LookRotation(dir);
-                // 🔥 Rotación suave con límite
                 _myRoot.rotation = Quaternion.Slerp(_myRoot.rotation, targetRot, Time.deltaTime * _topVertical);
             }
         }
 
-        // --- Si está a rango, ataco ---
         if (distanceToTarget <= _attackRange)
         {
             AttackCount();

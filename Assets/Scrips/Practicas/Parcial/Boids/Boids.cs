@@ -37,8 +37,8 @@ public class Boids : MonoBehaviour
         var pickup = new BoidsPickUpState().SetUp(fsm).SetRoot(transform);
         var attack = new BoidsAttackState(_rivalLife, _targetLife).SetUp(fsm).SetRoot(transform);   
         var patrol = new BoidsPatrolState(_wayPoints, _targetLife, _animator).SetUp(fsm).SetRoot(transform);
-        var evade = new BoidsEvadeState().SetUp(fsm).SetRoot(transform);
-        var flocking = new BoidsFlocking().SetUp(fsm).SetRoot(transform);
+        var evade = new BoidsEvadeState(_rivalLife).SetUp(fsm).SetRoot(transform);
+        var flocking = new BoidsFlocking(_wayPoints, _targetLife, _animator).SetUp(fsm).SetRoot(transform);
 
         fsm._possibleStates.Add(AgentStates.Idle, idle);
         fsm._possibleStates.Add(AgentStates.PickUp, pickup);

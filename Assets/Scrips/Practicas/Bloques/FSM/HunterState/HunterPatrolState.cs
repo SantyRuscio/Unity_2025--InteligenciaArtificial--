@@ -125,6 +125,8 @@ public class HunterPatrolState : BaseState
         {
             distance = Vector3.Distance(_myRoot.position, _currentRivalBoid.transform.position);
 
+            Debug.Log("Detecté un Boid");
+
             if (distance >_chaseRange)
             {
                 distance = Mathf.Infinity;
