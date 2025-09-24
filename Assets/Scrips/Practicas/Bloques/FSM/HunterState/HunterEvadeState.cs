@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class HunterEvadeState : BaseState
 {
-    //Steerings Valores
     Vector3 dir = Vector3.zero;
     [SerializeField] float movSpeed = 3f;
     [SerializeField] float steeringForce = 1f;
@@ -22,7 +21,6 @@ public class HunterEvadeState : BaseState
     private float detectRadius = 15f;
 
 
-    //Chequeos Para Cambios de Estado
     [SerializeField] float EscapeRangeToPatrol = 5f;
 
     public override void OnEnter()

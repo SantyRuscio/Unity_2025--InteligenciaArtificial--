@@ -5,9 +5,9 @@ using UnityEngine;
 public abstract class BaseState
 {
     protected Transform _myRoot;
-    protected Vector3 desired = Vector3.zero; // vector deseado que apunta al target
-    protected Vector3 velocity = Vector3.zero; // direccion y magnitud del vector
-    protected Vector3 steering = Vector3.zero; // vector de ajuste/steering
+    protected Vector3 desired = Vector3.zero; 
+    protected Vector3 velocity = Vector3.zero;
+    protected Vector3 steering = Vector3.zero;
 
     public BloquesFsm fsm;
 

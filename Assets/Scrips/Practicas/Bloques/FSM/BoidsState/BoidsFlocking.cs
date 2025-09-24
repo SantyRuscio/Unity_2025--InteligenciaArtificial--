@@ -3,39 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 public class BoidsFlocking : BaseState
 {
-    // Asignaciones
     private Transform[] _wayPoints;
     private BoidsLife _targetLife;
     private Animator _animator;
 
-    // Parámetros de percepción
     private float _detectRadius = 2f;
     private float _attackRange = 4f;
     private Hunter _currentRivalHunter;
     private Transform _currentApple;
 
-    // Steerings Valores
+
     private float _movSpeed = 3f;
     private float _steeringForce = 2f;
 
-    // Flocking
+
     private float _flockingRadius = 5f;
     private float _flockingForce = 2f;
     private bool _isFlocking = false;
 
-    // Chequeos
+
     private float _safeDamage = 50f;
     private float _applePickUpRange = 5f;
 
-    // Límites verticales
     [SerializeField] private float _minVertical = 0f;
     [SerializeField] private float _topVertical = 1.3f;
 
-    // Topes del mapa
     [SerializeField] private Vector3 minBounds = new Vector3(-12f, 0f, -12f);
     [SerializeField] private Vector3 maxBounds = new Vector3(12f, 0f, 12f);
 
-    // Variables internas
     private Vector3 velocity = Vector3.zero;
     private int _currentWaypoint = 0;
 
@@ -113,29 +108,26 @@ public class BoidsFlocking : BaseState
             flockingForce = Vector3.ClampMagnitude(flockingForce, _flockingForce);
         }
 
-        // 🔹 Seek hacia waypoint
         Transform currentWaypointTransform = _wayPoints[_currentWaypoint];
         Vector3 dirToWaypoint = currentWaypointTransform.position - _myRoot.position;
         Vector3 desiredWaypoint = dirToWaypoint.normalized * _movSpeed;
         Vector3 steeringWaypoint = desiredWaypoint - velocity;
         steeringWaypoint = Vector3.ClampMagnitude(steeringWaypoint, _steeringForce);
 
-        // 🔹 Combinar ambas fuerzas
         velocity = Vector3.ClampMagnitude(velocity + flockingForce + steeringWaypoint, _movSpeed);
         _myRoot.position += velocity * Time.deltaTime;
 
-        // 🔹 Avanzar waypoint si llega
-        if (dirToWaypoint.magnitude < 1.5f) // distancia de llegada al waypoint
+
+        if (dirToWaypoint.magnitude < 1.5f) 
             _currentWaypoint = (_currentWaypoint + 1) % _wayPoints.Length;
 
-        // 🔹 Limites mapa
+
         _myRoot.position = new Vector3(
             Mathf.Clamp(_myRoot.position.x, minBounds.x, maxBounds.x),
             Mathf.Clamp(_myRoot.position.y, _minVertical, _topVertical),
             Mathf.Clamp(_myRoot.position.z, minBounds.z, maxBounds.z)
         );
 
-        // Rotación
         if (velocity.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized);
@@ -147,14 +139,11 @@ public class BoidsFlocking : BaseState
 
     private void DetectThings()
     {
-        // Buscar vecinos
         List<Boids> neighbors = BoidsManager.Instance.GetNeighbors(_myRoot.position, _flockingRadius);
 
-        // Buscar apple y hunter
         _currentApple = AppleManager.instance.GetClosestApple(_myRoot.position, _applePickUpRange);
         _currentRivalHunter = HunterManager.Instance.GetClosestHunter(_myRoot.position);
 
-        // Chequeos de ataque / pickup
         if (_currentRivalHunter != null && Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position) <= _attackRange)
         {
             Debug.Log("Prey: Detecté enemigo, paso a Attack");

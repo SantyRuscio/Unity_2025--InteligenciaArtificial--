@@ -10,11 +10,9 @@ public class HunterAttackState : BaseState
     private Boids _currentRivalBoid; 
     private Transform _currentRivalTransform; 
 
-    // Rango de ataque y persecución
     public float _attackRange = 2f;
     [SerializeField] private float _chaseRange = 5f;
 
-    // Variables de ataque
     private float _dmg = 20f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
@@ -83,7 +81,6 @@ public class HunterAttackState : BaseState
                 Debug.Log("Atacando al Boid: " + _currentRivalBoid.name);
             }
 
-            // Limpiar referencia si muere
             if (rivalLife != null && rivalLife._currentLife <= 0)
             {
                 _currentRivalBoid = null;

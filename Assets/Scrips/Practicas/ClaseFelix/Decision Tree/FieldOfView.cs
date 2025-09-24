@@ -17,27 +17,23 @@ public class FieldOfView : MonoBehaviour
     {
         Vector3 dir = target.position - root.position;
 
-        // Formas de sacar distancia entre posiciones.//
 
-        //float dist = dir.magnitude;
-        // float dir2 = Vector3.Distance(target.position , root.position);
 
-        float dist = Vector3.SqrMagnitude(dir);//me lo dan al cuadrado... compara un cuadrado * radio
-
-        if (dist < _distMin * _distMin) // al cuadrado 
+        float dist = Vector3.SqrMagnitude(dir);
+        if (dist < _distMin * _distMin) 
         {
             print("Dist");
             Vector3 forward = root.forward;
             float angle = Vector3.Angle(forward, dir);
 
-            if (angle < _angleMin * 0.5f) // se multiplica por 0.5 o se divide por 2
+            if (angle < _angleMin * 0.5f) 
 
                 print("Angle");
             Ray ray = new Ray(root.position, dir);
 
             RaycastHit hit = new RaycastHit();
 
-            Physics.Raycast(ray, out hit, dist, toDetect); //out modifica variable real No la copia.
+            Physics.Raycast(ray, out hit, dist, toDetect); 
             { print("ray");
                 if ((toDetect & 1 << hit.collider.gameObject.layer) != 0)
                 {

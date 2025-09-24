@@ -18,9 +18,9 @@ namespace IA.GenericFSM
         { 
             for (int i = 0; i < current.transitions.Length; i++)
             {
-               // if (current.transitions[i].GetInput().Equals(input))
+
                 {
-               //     ChangeState(current.transitions[i].GetState());
+
                 }
             }
 

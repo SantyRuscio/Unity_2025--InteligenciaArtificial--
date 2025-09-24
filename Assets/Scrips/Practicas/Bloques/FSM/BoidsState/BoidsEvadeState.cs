@@ -9,7 +9,6 @@ public class BoidsEvadeState : BaseState
 {
     private Animator _animator;
 
-    // Steerings Valores
     Vector3 dir = Vector3.zero;
     [SerializeField] private float _movSpeed = 5f;
     [SerializeField] private float _steeringForce = 1f;
@@ -17,16 +16,14 @@ public class BoidsEvadeState : BaseState
     private float _distance = 0f;
     private float _distanceToRotate = 6f;
 
-    // Para Obtener Transforms
     private float _detectRadius = 7f;
     private Hunter _currentRivalHunter;
 
-    // Chequeos Para Cambios de Estado
+
     [SerializeField] float EscapeRangeToPatrol = 7f;
 
     private HunterlLife _rivalLife;
 
-    // Topes
     [SerializeField] private Vector3 minBounds = new Vector3(-11f, 0f, -11f);
     [SerializeField] private Vector3 maxBounds = new Vector3(11f, 0f, 11f);
     private float VerticalBounds = 1.3f;
@@ -68,7 +65,7 @@ public class BoidsEvadeState : BaseState
             _animator.SetBool("isWalking", false);
     }
 
-    private void EvadeCounts() // EVADE
+    private void EvadeCounts()
     {
         if (_currentRivalHunter == null) return;
 
@@ -98,7 +95,7 @@ public class BoidsEvadeState : BaseState
             Mathf.Clamp(_myRoot.position.z, minBounds.z, maxBounds.z)
         );
 
-        // --- ROTACIÓN SUAVE ---
+
         if (velocity.sqrMagnitude > 0.001f)
         {
             // Direcciones

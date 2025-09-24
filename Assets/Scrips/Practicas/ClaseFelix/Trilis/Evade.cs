@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Evade : MonoBehaviour
 {
-    Vector3 desired = Vector3.zero; //vector deseado que apunta el target
-    Vector3 velocity = Vector3.zero; //direccion y Magnitud del vector
-    Vector3 steering = Vector3.zero; // Vector de ajueste/steeroing
+    Vector3 desired = Vector3.zero; 
+    Vector3 velocity = Vector3.zero;
+    Vector3 steering = Vector3.zero;
 
     Vector3 dir = Vector3.zero;
     [SerializeField] float movSpeed = 5f;
@@ -18,7 +18,7 @@ public class Evade : MonoBehaviour
 
     private void Update()
     {
-     //   dir = transform.position - (Target.Position + Target.Velocity);
+
         distance = dir.magnitude;
 
 

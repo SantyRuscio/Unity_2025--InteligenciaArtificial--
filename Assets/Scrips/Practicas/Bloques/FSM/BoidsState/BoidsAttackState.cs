@@ -4,27 +4,23 @@ using UnityEngine;
 
 public class BoidsAttackState : BaseState
 {
-    //Asignaciones
     private Animator _animator;
     private HunterlLife _rivalLife;
     private BoidsLife _targetLife;
 
-    //Para Obtener Transforms
     private float detectRadius = 10f;
     private Hunter _currentRivalHunter;
 
-    //Chequeos Para Cambios de Estado
     public float _attackRange = 0.5f;
     [SerializeField] private float _chaseSpeed = 3f;
     [SerializeField] private float _chaseRange = 12f;
     private float _safeDamage = 50f;
 
-    //Variables del estado
     private float _dmg = 6f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 
-    private float _topVertical = 1.3f; // factor de rotación máxima
+    private float _topVertical = 1.3f; 
 
     public BoidsAttackState(HunterlLife rivalLife, BoidsLife _targetLife)
     {

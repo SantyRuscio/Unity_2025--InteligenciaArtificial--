@@ -6,7 +6,7 @@ public class FlockManager : MonoBehaviour
 {
     List<Flocker> collection = new List<Flocker>();
 
-    public static FlockManager instance; //singleton
+    public static FlockManager instance; 
 
     [SerializeField] Flocker leader;
     public static  Flocker Leader

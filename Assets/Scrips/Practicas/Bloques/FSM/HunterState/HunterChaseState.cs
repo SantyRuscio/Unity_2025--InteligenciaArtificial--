@@ -14,7 +14,7 @@ public class HunterChaseState : BaseState
     private Boids _currentRivalBoid;
 
     private float _atackRange = 2f;
-    private float _chaseRange = 5f; // lo aumenté para pruebas
+    private float _chaseRange = 5f; 
     private float distance = 0f;
 
     private Vector3 lastRivalPos;
@@ -43,7 +43,6 @@ public class HunterChaseState : BaseState
         DetectThing();
         PursuitCount();
 
-        // Volver a Patrol si target fuera de rango
         if (distance > _chaseRange)
         {
             Debug.Log("Target fuera de rango, volver a Patrol");
@@ -66,7 +65,6 @@ public class HunterChaseState : BaseState
         Vector3 dir = _currentRivalBoid.transform.position - _myRoot.position;
         distance = dir.magnitude;
 
-        // Seek + Steering
         Vector3 desired = dir.normalized * movSpeed;
         Vector3 steering = Vector3.ClampMagnitude(desired - velocity, steeringForce);
         velocity = Vector3.ClampMagnitude(velocity + steering, movSpeed);
@@ -83,7 +81,7 @@ public class HunterChaseState : BaseState
         if (_animator != null)
             _animator.SetBool("isWalking", false);
 
-        Debug.Log("Salí de Chase");
+        Debug.Log("Salï¿½ de Chase");
     }
 
     private void DetectThing()

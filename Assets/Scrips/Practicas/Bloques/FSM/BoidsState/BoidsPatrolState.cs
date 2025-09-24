@@ -6,36 +6,30 @@ using UnityEngine;
 
 public class BoidsPatrolState : BaseState
 {
-    // Asignaciones
     private Transform[] _wayPoints;
     private BoidsLife _targetLife;
     private Animator _animator;
 
-    // Para Obtener Transforms
     private float detectRadius = 2f;
     private float _attackRange = 4f;
     private Hunter _currentRivalHunter;
     private Transform _currentApple;
 
-    // Steerings Valores
     private float _movSpeed = 3f;
     private float _steeringForce = 2f;
     private float _arrivingDistance = 1.5f;
     private int _currentWaypoint = 0;
 
-    // Flocking
     private float _flockingRadius = 3f;       
     private float _flockingForce = 2f;
     private float _distanceToFlock = 2f;      
 
-    // Chequeos Para Cambios de Estado
+
     private float _safeDamage = 50f;
     private float _applePickUpRange = 5f;
 
-    // Variables internas
     private float _distance = 0f;
 
-    // Límites verticales
     [SerializeField] private float _minVertical = 0f;
     [SerializeField] private float _topVertical = 1.3f;
 
@@ -62,7 +56,6 @@ public class BoidsPatrolState : BaseState
     {
         DetectThings();
 
-        // Manzana
         if (_currentApple != null)
         {
             Debug.Log("Prey: Voy a la manzana");
@@ -70,7 +63,6 @@ public class BoidsPatrolState : BaseState
             return;
         }
 
-        // Cazador enemigo
         if (_currentRivalHunter != null)
         {
             float distToRival = Vector3.Distance(_myRoot.position, _currentRivalHunter.transform.position);
@@ -167,7 +159,6 @@ public class BoidsPatrolState : BaseState
 
     private void WayPointsLoop()
     {
-        // Esto queda como refuerzo (por si _distance es chico)
         if (_distance < _arrivingDistance)
         {
             _currentWaypoint = (_currentWaypoint + 1) % _wayPoints.Length;

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class HunterPatrolState : BaseState
 {
-    //Asiganciones
     public Transform[] _wayPoints;
     HunterlLife _rivalLife;
 
@@ -14,13 +13,11 @@ public class HunterPatrolState : BaseState
     private Animator _animator; 
     private int currentWaypoint = 0;
 
-    //Steerings Valores
     private float movSpeed = 3f;
     private float steeringForce = 0.01f;
     private float ArrivingDistance = 1f;
     private float CurveSpeed = 6f;
 
-    //Chequeos Para Cambios de Estado
     private float _safeDamage = 50f;
     private float _chaseRange = 5f;
 
@@ -45,7 +42,7 @@ public class HunterPatrolState : BaseState
             _animator.SetBool("isWalking", true);
     }
 
-    public override void OnUpdate() //// recorrido de waypoints mediante Seek + Arrive ///
+    public override void OnUpdate() 
     {
         if (_wayPoints.Length == 0) return;
         DetectThing();
@@ -55,12 +52,6 @@ public class HunterPatrolState : BaseState
 
         if (_currentRivalBoid != null)
         {
-            // if(_rivalLife._currentLife < _safeDamage)
-            // {
-            //    Debug.Log("No tengo vida, Cambio a Evade");
-            //    fsm.ChnageState(AgentStates.Evade);
-            //
-            // }
 
              Debug.Log("cambiando a chase");
              fsm.ChnageState(AgentStates.Chase);
@@ -79,13 +70,12 @@ public class HunterPatrolState : BaseState
             _animator.SetBool("isWalking", false); 
     }
 
-    private void SeekArriveCount()  // Seek + Arrive Cuentas // 
+    private void SeekArriveCount()  
     {
         Debug.Log("Entré a patrol");
         Vector3 dir = _wayPoints[currentWaypoint].position - _myRoot.position;
         distance = dir.magnitude;
 
-        // Seek + Arrive
         if (distance < ArrivingDistance)
         {
             desired = dir.normalized * movSpeed * (distance / ArrivingDistance);
@@ -108,7 +98,7 @@ public class HunterPatrolState : BaseState
         }
     }
 
-    private void wayPointsLoop() // WayLoops //
+    private void wayPointsLoop() 
     {
         Debug.Log("Entré a LoopWay");
         if (distance < ArrivingDistance)

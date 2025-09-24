@@ -20,7 +20,7 @@ public abstract class State : MonoBehaviour
     {
         for (int i = 0; i < transitions.Length; i++)
         {
-            if (transitions[i].input.Equals(input)) // el equales es como poner : == null
+            if (transitions[i].input.Equals(input)) 
             {
                 return transitions[i].state;    
             }
@@ -41,13 +41,12 @@ public abstract class State : MonoBehaviour
     }
 
 
-    //Obligatorios Por Intscia 
+
     protected abstract void OnBegin();
     protected abstract void OnEnd();
     protected abstract void OnUpdate();
 
 
-    //Opcionales
     protected virtual void Initialize()
     {
 

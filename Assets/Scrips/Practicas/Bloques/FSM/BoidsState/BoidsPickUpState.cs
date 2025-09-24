@@ -10,12 +10,10 @@ public class BoidsPickUpState : BaseState
     private float detectRadius = 10f;
     private Transform _currentApple;
 
-    // Steerings Valores
     private float movSpeed = 3f;
     private float steeringForce = 0.3f;
     private float ArrivingDistance = 1.2f;
 
-    // Chequeos Para Cambios de Estado
     private float _applePickUpRange = 5f;
 
     public BoidsPickUpState() { }
@@ -60,7 +58,6 @@ public class BoidsPickUpState : BaseState
             _animator.SetBool("isWalking", false);
     }
 
-    // Seek + Arrive usando la manzana detectada
     private void SeekArriveCount()
     {
         if (_currentApple == null) return;
@@ -68,7 +65,6 @@ public class BoidsPickUpState : BaseState
         Vector3 dir = _currentApple.position - _myRoot.position;
         float distance = dir.magnitude;
 
-        // Seek + Arrive
         Vector3 desired;
         if (distance < ArrivingDistance)
         {
@@ -85,7 +81,6 @@ public class BoidsPickUpState : BaseState
 
         _myRoot.position += velocity * Time.deltaTime;
 
-        // Rotaci�n solo si hay movimiento
         if (velocity.sqrMagnitude > 0.001f)
             _myRoot.forward = velocity.normalized;
     }
