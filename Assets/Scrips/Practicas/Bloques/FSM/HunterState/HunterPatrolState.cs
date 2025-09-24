@@ -9,8 +9,7 @@ public class HunterPatrolState : BaseState
     HunterlLife _rivalLife;
 
     private Boids _currentRivalBoid;
-
-    private Animator _animator; 
+    private Animator _animator;
     private int currentWaypoint = 0;
 
     private float movSpeed = 3f;
@@ -42,23 +41,18 @@ public class HunterPatrolState : BaseState
             _animator.SetBool("isWalking", true);
     }
 
-    public override void OnUpdate() 
+    public override void OnUpdate()
     {
         if (_wayPoints.Length == 0) return;
-        DetectThing();
 
+        DetectThing();
         SeekArriveCount();
         wayPointsLoop();
 
         if (_currentRivalBoid != null)
         {
-
-             Debug.Log("cambiando a chase");
-             fsm.ChnageState(AgentStates.Chase);
-            
-        }
-        else if (_rivalLife._currentLife < _safeDamage)
-        {
+            Debug.Log("cambiando a chase");
+            fsm.ChnageState(AgentStates.Chase);
         }
     }
 
@@ -67,10 +61,10 @@ public class HunterPatrolState : BaseState
         Debug.Log("Saliendo de Patrol");
 
         if (_animator != null)
-            _animator.SetBool("isWalking", false); 
+            _animator.SetBool("isWalking", false);
     }
 
-    private void SeekArriveCount()  
+    private void SeekArriveCount()
     {
         Debug.Log("Entré a patrol");
         Vector3 dir = _wayPoints[currentWaypoint].position - _myRoot.position;
@@ -117,13 +111,16 @@ public class HunterPatrolState : BaseState
 
             Debug.Log("Detecté un Boid");
 
-            if (distance >_chaseRange)
+            if (distance > _chaseRange)
             {
                 distance = Mathf.Infinity;
                 _currentRivalBoid = null;
             }
         }
         else
+        {
             distance = Mathf.Infinity;
+        }
     }
 }
+

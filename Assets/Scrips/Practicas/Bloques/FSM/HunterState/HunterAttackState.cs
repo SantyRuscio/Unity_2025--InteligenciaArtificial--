@@ -6,14 +6,21 @@ public class HunterAttackState : BaseState
     private Boids _currentRivalBoid;
     private Transform _currentRivalTransform;
 
+    HunterlLife _myLife;
+
+
     public float _attackRange = 2f;
     [SerializeField] private float _chaseRange = 5f;
 
     private float _dmg = 20f;
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
+    private float _riskiLife = 50f;
 
-    public HunterAttackState() { }
+    public HunterAttackState(HunterlLife _myLife) 
+    {
+        this._myLife = _myLife;
+    }
 
     public override void OnEnter()
     {
@@ -52,6 +59,10 @@ public class HunterAttackState : BaseState
             _currentRivalBoid = null;
             _currentRivalTransform = null;
 
+            fsm.ChnageState(AgentStates.Idle);
+        }
+        if (_myLife._currentLife <= _riskiLife)
+        {
             fsm.ChnageState(AgentStates.Idle);
         }
     }

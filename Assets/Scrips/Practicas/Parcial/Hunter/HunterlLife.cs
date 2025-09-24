@@ -1,20 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HunterlLife : MonoBehaviour
 {
     [SerializeField] private float _maxLife = 100f;
+
+    private BloquesFsm fsm;
+
     public float _currentLife { get; private set; }
 
-    [SerializeField] private Image fillImage; 
+    [SerializeField] private Image fillImage;
 
     private void Awake()
     {
-        _currentLife = _maxLife; 
-        UpdateHealthBar();       
+        _currentLife = _maxLife;
+        UpdateHealthBar();
     }
 
     public void DamageTaken(float damage)
@@ -22,7 +24,7 @@ public class HunterlLife : MonoBehaviour
         Debug.Log("DAMAGE");
         _currentLife = Mathf.Clamp(_currentLife - damage, 0, _maxLife);
 
-        UpdateHealthBar(); 
+        UpdateHealthBar();
 
         if (_currentLife <= 0)
         {
@@ -33,6 +35,13 @@ public class HunterlLife : MonoBehaviour
         {
             Debug.Log("Sigo vivo. Vida actual: " + _currentLife);
         }
+    }
+
+    public void Heal(float amount)
+    {
+        _currentLife = _currentLife + amount;
+        UpdateHealthBar();
+        Debug.Log("Cura  vida actual: " + _currentLife);
     }
 
     private void UpdateHealthBar()

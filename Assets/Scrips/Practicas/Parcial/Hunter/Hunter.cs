@@ -9,6 +9,7 @@ public class Hunter : MonoBehaviour
     [SerializeField] private Transform[] _wayPoints;
     [SerializeField] HunterlLife _myLife;
     [SerializeField] Animator _animator;
+    [SerializeField] LayerMask _layerMask;
 
     private BloquesFsm fsm;
 
@@ -22,9 +23,9 @@ public class Hunter : MonoBehaviour
         fsm = new BloquesFsm();
 
         // Crear estaDOS
-        var idle = new HunterIdleState().SetUp(fsm);
+        var idle = new HunterIdleState(_myLife, _wayPoints).SetUp(fsm).SetRoot(transform);
         var chase = new HunterChaseState(_animator).SetUp(fsm).SetRoot(transform);
-        var attack = new HunterAttackState().SetUp(fsm).SetRoot(transform);
+        var attack = new HunterAttackState(_myLife).SetUp(fsm).SetRoot(transform);
         var patrol = new HunterPatrolState(_wayPoints, _myLife, _animator).SetUp(fsm).SetRoot(transform);
         var evade = new HunterEvadeState().SetUp(fsm).SetRoot(transform);
 

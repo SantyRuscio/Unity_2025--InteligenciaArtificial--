@@ -5283,6 +5283,9 @@ MonoBehaviour:
   - {fileID: 1545238931}
   _myLife: {fileID: 410129931}
   _animator: {fileID: 410129930}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!136 &410129927
 CapsuleCollider:
   m_ObjectHideFlags: 0
