@@ -20,7 +20,7 @@ public class BoidsAttackState : BaseState
     private float _attackCooldown = 2f;
     private float _lastAttackTime = -999f;
 
-    private float _topVertical = 1.3f; 
+    private float _topVertical = 1.3f;
 
     public BoidsAttackState(HunterlLife rivalLife, BoidsLife _targetLife)
     {

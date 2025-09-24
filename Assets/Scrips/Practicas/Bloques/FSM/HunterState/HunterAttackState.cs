@@ -1,14 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class HunterAttackState : BaseState
 {
     private Animator _animator;
-    private Boids _currentRivalBoid; 
-    private Transform _currentRivalTransform; 
+    private Boids _currentRivalBoid;
+    private Transform _currentRivalTransform;
 
     public float _attackRange = 2f;
     [SerializeField] private float _chaseRange = 5f;

@@ -98,7 +98,7 @@ public class HunterPatrolState : BaseState
         }
     }
 
-    private void wayPointsLoop() 
+    private void wayPointsLoop()
     {
         Debug.Log("Entré a LoopWay");
         if (distance < ArrivingDistance)
