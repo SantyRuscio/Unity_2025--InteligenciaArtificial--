@@ -4,7 +4,7 @@ using UnityEngine;
 using IA.DecisionTreeNoUnity;
 public class EnemigoNoUnity : MonoBehaviour
 {
-    Node firstNode; 
+    IA.DecisionTreeNoUnity.Node firstNode; 
     // Start is called before the first frame update
     void Start()
     {
