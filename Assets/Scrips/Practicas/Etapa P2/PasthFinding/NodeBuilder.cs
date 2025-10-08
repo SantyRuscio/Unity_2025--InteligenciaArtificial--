@@ -9,8 +9,30 @@ public class NodeBuilder : MonoBehaviour
 {
     private Node[] nodes;
 
+    public static NodeBuilder Instance { get; private set; }
+
     [SerializeField] private bool update = false;
     [SerializeField] private bool bake = false;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); 
+        }
+        else
+        {
+            Destroy(gameObject); 
+        }
+    }
+    public Node[] Nodes
+    {
+        get
+        {
+            return nodes;
+        }
+    }
 
     private void OnEnable()
         => EditorApplication.playModeStateChanged += OnPlayModeStateChanged;

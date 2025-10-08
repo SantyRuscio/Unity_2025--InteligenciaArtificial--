@@ -10,6 +10,23 @@ namespace IA.pathFinding
         [SerializeField] float detectionRadius = 2f;
         [SerializeField] List<Node> neighbors;
 
+
+        public List<Node> Neighbors { get { return neighbors; } }
+
+        Node parent = null;
+        public Node Parent { get { return parent; } }
+
+        //para reconectar camino de regreso
+        public void SetParent(Node p)
+        {
+            parent = p;
+        }
+
+        public void Clean()
+        {
+            parent = null;
+        }
+
         [SerializeField] LayerMask nodeMask;
         [SerializeField] LayerMask maskView;
         [SerializeField] LayerMask floorAndObstacles;
