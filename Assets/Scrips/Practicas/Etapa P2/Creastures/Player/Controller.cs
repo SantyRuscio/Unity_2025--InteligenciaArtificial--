@@ -6,6 +6,7 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     public Action<float, float> OnMove;
+    public Action OnClick;
 
     void Update()
     {
@@ -15,6 +16,11 @@ public class Controller : MonoBehaviour
         if (OnMove != null)
         {
             OnMove(horizontal, vertical);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnClick?.Invoke();
         }
     }
 }

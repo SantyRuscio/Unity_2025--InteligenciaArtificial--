@@ -10,7 +10,7 @@ namespace IA.pathFinding
         [SerializeField] float detectionRadius = 2f;
         [SerializeField] List<Node> neighbors;
 
-
+        public float costo;
         public List<Node> Neighbors { get { return neighbors; } }
 
         Node parent = null;
@@ -25,6 +25,7 @@ namespace IA.pathFinding
         public void Clean()
         {
             parent = null;
+            costo = float.MaxValue;
         }
 
         [SerializeField] LayerMask nodeMask;
