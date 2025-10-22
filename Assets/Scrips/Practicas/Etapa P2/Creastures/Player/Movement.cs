@@ -6,6 +6,7 @@ public class Movement
 {
     private Rigidbody playerBody;
     private float _speed;
+    private float _rotationSpeed;
 
     public Movement SetPlayerBody(Rigidbody rb)
     {
@@ -19,16 +20,23 @@ public class Movement
         return this;
     }
 
-    public void Move(Vector3 input)
+    public Movement SetRotationSpeed(float rotSpeed)
     {
-        Vector3 moveVector = new Vector3(
-            input.x * _speed,             
-            playerBody.velocity.y,        
-            input.z * _speed              
-        );
+        _rotationSpeed = rotSpeed;
+        return this;
+    }
 
-        // Aplicar velocidad al Rigidbody
-        playerBody.velocity = moveVector;
+    public void MoveTank(Vector3 input, Transform playerTransform)
+    {
+        if (playerBody == null) return;
+
+        Vector3 moveDir = playerTransform.forward * input.z * _speed;
+        playerBody.velocity = new Vector3(moveDir.x, playerBody.velocity.y, moveDir.z);
+
+        if (Mathf.Abs(input.x) > 0.01f)
+        {
+            float rotation = input.x * _rotationSpeed * Time.deltaTime;
+            playerTransform.Rotate(Vector3.up, rotation);
+        }
     }
 }
-

@@ -10,7 +10,10 @@ namespace IA.pathFinding
         [SerializeField] float detectionRadius = 2f;
         [SerializeField] List<Node> neighbors;
 
-        public float costo;
+        public float costo;//con el que comparamos 
+        public float costoFinal; //se va a encolar
+
+
         public List<Node> Neighbors { get { return neighbors; } }
 
         Node parent = null;
@@ -26,6 +29,8 @@ namespace IA.pathFinding
         {
             parent = null;
             costo = float.MaxValue;
+            costoFinal = float.MaxValue;    
+
         }
 
         [SerializeField] LayerMask nodeMask;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -94,6 +95,52 @@ namespace IA.pathFinding
                     n.SetParent(current);
                     visited.Add(n);
                     open.Enqueue(n);
+                }
+            }
+
+            return null;
+        }
+
+        Dictionary<Tuple<Node, Node>, List<Node>> caminosCocinados;
+
+        List<Node> Astar(Node initial, Node final)
+        {
+            foreach (Node node in NodeBuilder.Instance.Nodes) { node.Clean(); }
+
+            List<Node> visited = new List<Node>();
+            PriorityQueue<Node> abiertos = new PriorityQueue<Node>();
+
+            initial.costo = 0;
+            initial.costoFinal = initial.costo + Vector3.Distance(initial.transform.position, final.transform.position);
+            abiertos.Enqueue(initial, initial.costoFinal);
+
+
+            while (abiertos.Count > 0)
+            {
+                Node current = abiertos.Dequeue();
+
+                if (current == final)
+                {
+                    return Reconstruct(initial, final);
+                }
+
+                visited.Add(current);
+
+                foreach (Node n in current.Neighbors)
+                {
+                    if (visited.Contains(n)) continue;
+
+                    float newCost = current.costo + Vector3.Distance(current.transform.position, n.transform.position);
+
+                    if (newCost > n.costo)
+                    {
+                        n.SetParent(current);
+                        n.costo = newCost;
+                        float H = Vector3.Distance(n.transform.position, final.transform.position);
+                        n.costoFinal = n.costo + H;
+                        abiertos.Enqueue(n, n.costoFinal);
+                    }
+
                 }
             }
 

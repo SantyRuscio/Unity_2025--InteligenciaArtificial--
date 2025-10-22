@@ -13,19 +13,23 @@ public class Player : MonoBehaviour
 
     [Header("Variables Player")]
     [SerializeField] private float _speed = 8f;
+    [SerializeField] private float _rotationSpeed = 120f;
     [SerializeField] private float _damage = 20f;
 
-
     [Header("Shooting Settings")]
-    [SerializeField] private Camera playerCamera;
+    [SerializeField] private Transform _shootPoint; 
     [SerializeField] private float shootRange = 50f;
     [SerializeField] private LayerMask hitLayers;
 
     private void Awake()
     {
+        if (!playerBody)
+            playerBody = GetComponent<Rigidbody>();
+
         movimiento = new Movement()
             .SetPlayerBody(playerBody)
-            .SetPlayerSpeed(_speed);
+            .SetPlayerSpeed(_speed)
+            .SetRotationSpeed(_rotationSpeed);
 
         view = new View().SetAnimator(animator);
 
@@ -48,34 +52,42 @@ public class Player : MonoBehaviour
     void Move(float dirHorizontal, float dirVertical)
     {
         playerMovementInput = new Vector3(dirHorizontal, 0f, dirVertical);
-        movimiento.Move(playerMovementInput);
+        movimiento.MoveTank(playerMovementInput, transform);
     }
 
     void Shoot()
     {
-        if (playerCamera == null)
+        if (_shootPoint == null)
         {
+            Debug.LogWarning("No hay un Shoot Point asignado!");
             return;
         }
 
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        Ray ray = new Ray(_shootPoint.position, _shootPoint.forward);
+        Debug.DrawRay(ray.origin, ray.direction * shootRange, Color.red, 1f);
 
         if (Physics.Raycast(ray, out RaycastHit hit, shootRange, hitLayers))
         {
             Debug.Log($"Disparo impactó en: {hit.collider.name}");
-
-            // Si el objeto tiene vida, le hacemos daño
-            var life = hit.collider.GetComponent<IDamageable>();
-
-            if (life != null)
-            {
-                life.TakeDamage(_damage);
-            }
-
+            hit.collider.GetComponent<IDamageable>()?.TakeDamage(_damage);
         }
         else
         {
             Debug.Log("No se golpeó ningún objeto");
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        if (_shootPoint == null)
+            return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(_shootPoint.position, _shootPoint.forward * shootRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(_shootPoint.position, 0.05f);
+    }
+
 }
+
