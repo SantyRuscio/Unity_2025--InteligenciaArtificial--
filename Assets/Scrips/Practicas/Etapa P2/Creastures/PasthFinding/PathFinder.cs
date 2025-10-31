@@ -22,6 +22,11 @@ namespace IA.pathFinding
 
         [SerializeField] Transform PlayerTR; // PUEDE SER UN INSTACE
 
+        Vector3 desired = Vector3.zero;
+        Vector3 steering = Vector3.zero;
+        Vector3 velocity = Vector3.zero;
+        [SerializeField] float steeringForce = 0.1f;
+
 
         void Start()
         {
@@ -48,9 +53,9 @@ namespace IA.pathFinding
         {
             if(walk)
             {
-                Vector3 direction = path[index].transform.position - transform.position;
+                desired = path[index].transform.position - transform.position;
 
-                if(direction.magnitude < closeDist)
+                if(desired.magnitude < closeDist)
                 {
                     index = index + 1;
                     if(index >= path.Count)
@@ -60,10 +65,42 @@ namespace IA.pathFinding
                     }
                     else
                     {
-                        transform.position = transform.position + direction * Speed * Time.deltaTime;
+                        desired = desired.normalized * Speed;
+
+                        desired += Avoid() * avoidForce;
+
+                        steering = desired - velocity;
+
+                        steering = Vector3.ClampMagnitude(steering, steeringForce);
+
+                        velocity += steering;
+
+                        velocity = Vector3.ClampMagnitude(velocity, Speed);
+
+                        transform.position += velocity * Time.deltaTime;
                     }
                 }
             }
+        }
+
+        [SerializeField] float avoidForce = 1.5f;
+        [SerializeField] float AvodiRadious = 3f;
+        [SerializeField] float AvodiCastRadious = 1f;
+        [SerializeField] LayerMask avoidObstacles;
+        [SerializeField] Vector3 avoidDir = Vector3.zero;
+
+        Vector3 Avoid()
+        {
+            if (Physics.SphereCast(transform.position, AvodiCastRadious, velocity, out RaycastHit hit , AvodiRadious, avoidObstacles))
+            {
+                avoidDir = Vector3.Reflect(velocity.normalized, hit.normal);
+
+                float magnitude = Math.Max(avoidDir.magnitude , 0.01f);
+
+                return avoidDir.normalized * (AvodiRadious - magnitude);
+            }
+
+            return avoidDir;
         }
 
         List <Node> BFS(Node initial, Node final)
@@ -197,6 +234,7 @@ namespace IA.pathFinding
             while (curretn != null && curretn != initial)
             {
                 list.Add(curretn);
+
                 curretn = curretn.Parent;
             }
             list.Add(initial);
@@ -204,6 +242,52 @@ namespace IA.pathFinding
             return list;
         }
 
+        List<Node> ReconstructTheta(Node initial, Node final)
+        {
+            List<Node> list = new List<Node>();
+
+            Node curretn = final;
+
+            while (curretn != null && curretn != initial)
+            {
+                list.Add(curretn);
+
+                //nodo a la vista
+                var prev = curretn.Parent;
+                var best = prev;
+
+                //itero preguntando si lo tengo a la vista y lo voy seteando como el mejor
+                while (best != null && OnSight(curretn, prev)) //lo tengo a la vista y repito
+                {
+                    best = prev; 
+                    prev = prev.Parent;
+                }
+
+                curretn = best;
+            }
+            list.Add(initial);
+            list.Reverse();
+            return list;
+        }
+
+        [SerializeField] LayerMask ThetaObstacleMask; //obstacle o wall
+        [SerializeField] float SphereCastRadio = 0.2f;
+
+        public bool OnSight(Node a, Node b)
+         {
+            Vector3 offset = Vector3.up * SphereCastRadio;
+
+            if (a == null) throw new System.Exception("Node a No Existe");
+            if (b == null) throw new System.Exception("Node b No Existe");
+
+            Vector3 dir = (b.transform.position + offset) - (a.transform.position + offset);
+            float magnitude = dir.magnitude;
+
+            Ray ray = new Ray(a.transform.position , dir);
+
+            return !Physics.SphereCast(ray, radius: SphereCastRadio, magnitude, ThetaObstacleMask);
+
+         }
 
         float mostClose;
         Node bestNode;

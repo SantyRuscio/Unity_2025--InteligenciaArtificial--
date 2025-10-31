@@ -293,9 +293,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27778a545d199084ab99ae9eee112520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputManager: {fileID: 0}
-  playerBody: {fileID: 0}
-  animator: {fileID: 0}
+  inputManager: {fileID: 460505852}
+  playerBody: {fileID: 460505851}
+  animator: {fileID: 460505857}
   _speed: 8
   _rotationSpeed: 120
   _damage: 20
