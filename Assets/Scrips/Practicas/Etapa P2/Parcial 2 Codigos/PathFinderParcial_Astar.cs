@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.IO;
 
 public class PathFinderParcial_Astar : MonoBehaviour
 {
@@ -13,17 +14,44 @@ public class PathFinderParcial_Astar : MonoBehaviour
     private int currentIndex = 0;
     private bool moving = false;
 
-    private void Update()
+    private Vector3 lastRequestedTarget = Vector3.positiveInfinity;
+    private float recalcDistanceThreshold = 0.5f;
+
+    private Vector3 directTarget = Vector3.positiveInfinity;
+    private bool hasDirectTarget = false;
+
+    public bool IsMoving => moving;
+
+    public void CancelPath()
     {
-        if (moving && currentPath != null && currentPath.Count > 0)
-            MoverPorCamino();
+        moving = false;
+        hasDirectTarget = false;
+        directTarget = Vector3.positiveInfinity;
+        currentPath.Clear();
+        currentIndex = 0;
     }
+
+    public void SetDirectTarget(Vector3 pos)
+    {
+        hasDirectTarget = true;
+        directTarget = pos;
+        currentPath.Clear();
+        currentIndex = 0;
+        moving = true;
+        lastRequestedTarget = pos;
+    }
+
+private void Update()
+{
+    if (moving)
+
+    MoverPorCamino();
+}
 
     // ============================================
     // MÉTODOS PÚBLICOS (usados por EnemyFSM)
     // ============================================
 
-    // Devuelve el nodo más cercano a una posición
     public NodeParcial_Astar GetClosestNode(Vector3 position)
     {
         if (NodeBuilderParcial_Astar.Instance == null) return null;
@@ -44,9 +72,14 @@ public class PathFinderParcial_Astar : MonoBehaviour
         return best;
     }
 
-    // Calcula un nuevo camino hacia un objetivo
     public void BuscarNuevoCamino(Vector3 objetivo)
     {
+        hasDirectTarget = false;
+        directTarget = Vector3.positiveInfinity;
+
+        if (Vector3.Distance(lastRequestedTarget, objetivo) < recalcDistanceThreshold) return;
+        lastRequestedTarget = objetivo;
+
         NodeParcial_Astar start = GetClosestNode(transform.position);
         NodeParcial_Astar goal = GetClosestNode(objetivo);
 
@@ -67,20 +100,59 @@ public class PathFinderParcial_Astar : MonoBehaviour
 
     void MoverPorCamino()
     {
+        if (!moving) return;
+
+        if (hasDirectTarget)
+        {
+            Vector3 dir = (directTarget - transform.position);
+            Vector3 dirNormalized = dir.normalized;
+
+            if (dirNormalized.sqrMagnitude > 0.001f)
+                transform.forward = Vector3.Lerp(
+                    transform.forward,
+                    dirNormalized,
+                    10f * Time.deltaTime
+                );
+
+            transform.position += dirNormalized * speed * Time.deltaTime;
+
+            if (Vector3.Distance(transform.position, directTarget) < stopDistance)
+            {
+                hasDirectTarget = false;
+                directTarget = Vector3.positiveInfinity;
+                moving = false;
+            }
+
+            return;
+        }
+
+        if (currentPath == null || currentPath.Count == 0)
+        {
+            moving = false;
+            return;
+        }
+
         if (currentIndex >= currentPath.Count)
         {
             moving = false;
             return;
         }
 
-        NodeParcial_Astar objetivo = currentPath[currentIndex];
-        Vector3 dir = (objetivo.transform.position - transform.position).normalized;
-        transform.position += dir * speed * Time.deltaTime;
+        NodeParcial_Astar nodoObjetivo = currentPath[currentIndex];
+        Vector3 dirNode = (nodoObjetivo.transform.position - transform.position);
+        Vector3 dirNodeNormalized = dirNode.normalized;
 
-        if (Vector3.Distance(transform.position, objetivo.transform.position) < stopDistance)
-        {
+        if (dirNodeNormalized.sqrMagnitude > 0.001f)
+            transform.forward = Vector3.Lerp(
+                transform.forward,
+                dirNodeNormalized,
+                10f * Time.deltaTime
+            );
+
+        transform.position += dirNodeNormalized * speed * Time.deltaTime;
+
+        if (Vector3.Distance(transform.position, nodoObjetivo.transform.position) < stopDistance)
             currentIndex++;
-        }
     }
 
     // ============================================
@@ -123,7 +195,7 @@ public class PathFinderParcial_Astar : MonoBehaviour
 
                 float newCost = current.costo + Vector3.Distance(current.transform.position, neighbor.transform.position);
 
-                if (neighbor.costo == 0f || newCost < neighbor.costo)
+                if (newCost < neighbor.costo)
                 {
                     neighbor.SetParent(current);
                     neighbor.costo = newCost;
@@ -153,7 +225,6 @@ public class PathFinderParcial_Astar : MonoBehaviour
     }
 }
 
-// ---- Cola de prioridad (A* necesita esto) ----
 public class PriorityQueue<T>
 {
     private List<PriorityPair> list = new List<PriorityPair>();

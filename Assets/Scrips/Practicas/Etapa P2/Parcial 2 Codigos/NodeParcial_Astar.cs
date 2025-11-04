@@ -11,8 +11,8 @@ public class NodeParcial_Astar : MonoBehaviour
     public void Clean()
     {
         Parent = null;
-        costo = 0;
-        costoFinal = 0;
+        costo = Mathf.Infinity;
+        costoFinal = Mathf.Infinity;
     }
 
     public void SetParent(NodeParcial_Astar p)
