@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("General PlayerSettings")]
@@ -20,6 +21,10 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform _shootPoint; 
     [SerializeField] private float shootRange = 50f;
     [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip shootSound;
+
+
 
     private void Awake()
     {
@@ -62,6 +67,8 @@ public class Player : MonoBehaviour
             Debug.LogWarning("No hay un Shoot Point asignado!");
             return;
         }
+
+        audioSource.PlayOneShot(shootSound);
 
         Ray ray = new Ray(_shootPoint.position, _shootPoint.forward);
         Debug.DrawRay(ray.origin, ray.direction * shootRange, Color.red, 1f);
