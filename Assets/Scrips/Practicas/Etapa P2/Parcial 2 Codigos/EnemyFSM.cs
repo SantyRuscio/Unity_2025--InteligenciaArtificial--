@@ -1,18 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
-
 public class EnemyFSM : MonoBehaviour
 {
-    public enum EnemyState { Patrol, Chase, Alert }
-    public EnemyState currentState = EnemyState.Patrol;
-
     [Header("Referencias")]
-    public Transform target; 
+    public Transform target;
     public PathFinderParcial_Astar pathFinder;
 
     [Header("Patrulla")]
     public Transform[] patrolPoints;
-    private int patrolIndex = 0;
 
     [Header("Parámetros de Visión")]
     public float visionRange = 10f;
@@ -21,12 +16,13 @@ public class EnemyFSM : MonoBehaviour
 
     [Header("Debug")]
     public bool playerVisible = false;
+    public Vector3 lastSeenPosition;
 
-    private Vector3 lastSeenPosition;
+    private EnemyFSMController fsm;
 
-    // ===============================================================
-    // EVENTOS DE ALERTA (suscribir / desuscribir)
-    // ===============================================================
+    // ============================================================
+    // EVENTOS
+    // ============================================================
     void OnEnable() => AlertManager.OnAlert += ReceiveAlert;
     void OnDisable() => AlertManager.OnAlert -= ReceiveAlert;
 
@@ -35,96 +31,29 @@ public class EnemyFSM : MonoBehaviour
         if (target == null)
             target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        GoToNextPatrolPoint();
+        // Crear la FSM
+        fsm = new EnemyFSMController();
+
+        // Crear y registrar estados
+        var patrol = new EnemyPatrolState().SetUp(fsm, this);
+        var chase = new EnemyChaseState().SetUp(fsm, this);
+        var alert = new EnemyAlertState().SetUp(fsm, this);
+
+        fsm.possibleStates.Add(EnemyStateType.Patrol, patrol);
+        fsm.possibleStates.Add(EnemyStateType.Chase, chase);
+        fsm.possibleStates.Add(EnemyStateType.Alert, alert);
+
+        // Estado inicial
+        fsm.currentState = patrol;
+        fsm.currentState.OnEnter();
     }
 
-    void Update()
-    {
-        switch (currentState)
-        {
-            case EnemyState.Patrol:
-                PatrolBehaviour();
-                break;
+    void Update() => fsm.OnUpdate();
 
-            case EnemyState.Chase:
-                ChaseBehaviour();
-                break;
-
-            case EnemyState.Alert:
-                AlertBehaviour();
-                break;
-        }
-    }
-
-    // ===============================================================
-    // MÉTODOS DE ESTADO
-    // ===============================================================
-
-    void PatrolBehaviour()
-    {
-        if (CanSeePlayer())
-        {
-            currentState = EnemyState.Chase;
-            pathFinder.BuscarNuevoCamino(target.position);
-            return;
-        }
-
-        if (!pathFinder.IsMoving)
-        {
-            patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
-            GoToNextPatrolPoint();
-        }
-    }
-
-    void ChaseBehaviour()
-    {
-        if (CanSeePlayer())
-        {
-            lastSeenPosition = target.position;
-            pathFinder.BuscarNuevoCamino(lastSeenPosition);
-        }
-        else
-        {
-
-            currentState = EnemyState.Alert;
-            pathFinder.BuscarNuevoCamino(lastSeenPosition);
-        }
-    }
-
-    void AlertBehaviour()
-    {
-        if (CanSeePlayer())
-        {
-            currentState = EnemyState.Chase;
-            return;
-        }
-
-        if (!pathFinder.IsMoving)
-        {
-            currentState = EnemyState.Patrol;
-            GoToNextPatrolPoint();
-        }
-    }
-
-    // ===============================================================
-    // ALERTA GLOBAL (EVENTO)
-    // ===============================================================
-
-    void ReceiveAlert(Vector3 position, EnemyFSM source)
-    {
-        if (source == this) return; 
-        if (currentState == EnemyState.Chase) return; 
-
-        lastSeenPosition = position;
-        currentState = EnemyState.Alert;
-        pathFinder.BuscarNuevoCamino(position);
-    }
-
-    // ===============================================================
-    // VISIÓN / LINE OF SIGHT
-    // ===============================================================
-
-    bool CanSeePlayer()
+    // ============================================================
+    // VISIÓN
+    // ============================================================
+    public bool CanSeePlayer()
     {
         Vector3 dirToTarget = (target.position - transform.position).normalized;
         float distToTarget = Vector3.Distance(transform.position, target.position);
@@ -145,25 +74,42 @@ public class EnemyFSM : MonoBehaviour
         return false;
     }
 
-    // ===============================================================
-    // PATRULLA INTELIGENTE: SOLO A* SI NO TENGO LOS AL WAYPOINT
-    // ===============================================================
-
-    void GoToNextPatrolPoint()
+    // ============================================================
+    // ALERTA GLOBAL
+    // ============================================================
+    void ReceiveAlert(Vector3 position, EnemyFSM source)
     {
-        if (patrolPoints.Length == 0) return;
+        if (source == this) return;
+        if (fsm.currentState == fsm.possibleStates[EnemyStateType.Chase]) return;
 
-        Transform next = patrolPoints[patrolIndex];
+        lastSeenPosition = position;
+        fsm.ChangeState(EnemyStateType.Alert);
+        pathFinder.BuscarNuevoCamino(position);
+    }
 
-        Vector3 dir = (next.position - transform.position);
-        if (!Physics.Raycast(transform.position, dir.normalized, dir.magnitude, obstacleMask))
+    // ============================================================
+    // GIZMOS: Dibuja el FOV
+    // ============================================================
+    void OnDrawGizmosSelected()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        Gizmos.color = playerVisible ? Color.red : Color.yellow;
+
+        Gizmos.DrawWireSphere(transform.position, visionRange);
+
+        Vector3 leftBoundary = Quaternion.Euler(0, -visionAngle, 0) * transform.forward;
+        Vector3 rightBoundary = Quaternion.Euler(0, visionAngle, 0) * transform.forward;
+
+        Gizmos.DrawLine(transform.position, transform.position + leftBoundary * visionRange);
+        Gizmos.DrawLine(transform.position, transform.position + rightBoundary * visionRange);
+
+        if (lastSeenPosition != Vector3.zero)
         {
-            pathFinder.CancelPath();
-            pathFinder.SetDirectTarget(next.position);
-        }
-        else
-        {
-            pathFinder.BuscarNuevoCamino(next.position);
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(lastSeenPosition, 0.2f);
+            Gizmos.DrawLine(transform.position, lastSeenPosition);
         }
     }
 }
