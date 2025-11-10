@@ -8,7 +8,14 @@ public class PathFinderParcial_Astar : MonoBehaviour
     [Header("Configuración General")]
     [SerializeField] private Transform player;
     [SerializeField] private float speed = 3f;
-    [SerializeField] private float stopDistance = 0.3f;
+    [SerializeField] private float stopDistance = 0.5f; 
+    [SerializeField] private float rotationSpeed = 360f;
+
+    [Header("Debug Visual")]
+    [SerializeField] private bool showDebug = true;
+    [SerializeField] private Color pathColor = Color.green;
+    [SerializeField] private Color directColor = Color.cyan;
+    [SerializeField] private Color nodeColor = Color.yellow;
 
     private List<NodeParcial_Astar> currentPath = new List<NodeParcial_Astar>();
     private int currentIndex = 0;
@@ -20,7 +27,15 @@ public class PathFinderParcial_Astar : MonoBehaviour
     private Vector3 directTarget = Vector3.positiveInfinity;
     private bool hasDirectTarget = false;
 
+    private Vector3 lastPosition;
+    private float stuckTimer = 0f;
+    private float stuckThreshold = 1f;
+
     public bool IsMoving => moving;
+
+    // ===============================
+    // MÉTODOS PÚBLICOS
+    // ===============================
 
     public void CancelPath()
     {
@@ -40,18 +55,6 @@ public class PathFinderParcial_Astar : MonoBehaviour
         moving = true;
         lastRequestedTarget = pos;
     }
-
-private void Update()
-{
-    if (moving)
-
-    MoverPorCamino();
-}
-
-    // ============================================
-    // MÉTODOS PÚBLICOS (usados por EnemyFSM)
-    // ============================================
-
     public NodeParcial_Astar GetClosestNode(Vector3 position)
     {
         if (NodeBuilderParcial_Astar.Instance == null) return null;
@@ -94,72 +97,140 @@ private void Update()
         moving = currentPath != null && currentPath.Count > 0;
     }
 
-    // ============================================
+    // ===============================
     // LÓGICA DE MOVIMIENTO
-    // ============================================
+    // ===============================
 
-    void MoverPorCamino()
+    private void Update()
     {
         if (!moving) return;
 
+        MoverPorCamino();
+
+        if (Vector3.Distance(transform.position, lastPosition) < 0.01f)
+        {
+            stuckTimer += Time.deltaTime;
+            if (stuckTimer > stuckThreshold)
+            {
+                if (hasDirectTarget)
+                    BuscarNuevoCamino(directTarget);
+                else if (currentPath != null && currentPath.Count > 0)
+                    BuscarNuevoCamino(currentPath[currentPath.Count - 1].transform.position);
+
+                stuckTimer = 0f;
+            }
+        }
+        else
+        {
+            stuckTimer = 0f;
+        }
+
+        lastPosition = transform.position;
+    }
+
+    private void MoverPorCamino()
+    {
+        if (!moving) return;
+
+        NodeParcial_Astar nodoObjetivo = null;
         if (hasDirectTarget)
         {
-            Vector3 dir = (directTarget - transform.position);
-            Vector3 dirNormalized = dir.normalized;
+            nodoObjetivo = null;
+        }
+        else
+        {
+            if (currentPath == null || currentPath.Count == 0 || currentIndex >= currentPath.Count)
+            {
+                moving = false;
+                return;
+            }
+            nodoObjetivo = currentPath[currentIndex];
+        }
 
-            if (dirNormalized.sqrMagnitude > 0.001f)
-                transform.forward = Vector3.Lerp(
-                    transform.forward,
-                    dirNormalized,
-                    10f * Time.deltaTime
-                );
+        Vector3 targetPos = hasDirectTarget ? directTarget : nodoObjetivo.transform.position;
+        Vector3 dir = targetPos - transform.position;
+        float dist = dir.magnitude;
 
-            transform.position += dirNormalized * speed * Time.deltaTime;
-
-            if (Vector3.Distance(transform.position, directTarget) < stopDistance)
+        if (dist < 0.01f)
+        {
+            if (hasDirectTarget)
             {
                 hasDirectTarget = false;
                 directTarget = Vector3.positiveInfinity;
                 moving = false;
             }
+            else
+            {
 
-            return;
+                if (currentIndex > 0)
+                {
+                    NodeParcial_Astar nodoPrevio = currentPath[currentIndex - 1];
+                    nodoPrevio.IsOccupied = false;
+                    nodoPrevio.OccupyingNPC = null;
+                }
+
+                if (!nodoObjetivo.IsOccupied)
+                {
+                    nodoObjetivo.IsOccupied = true;
+                    nodoObjetivo.OccupyingNPC = gameObject;
+                    currentIndex++;
+                }
+
+            }
+            return; 
         }
 
-        if (currentPath == null || currentPath.Count == 0)
+        if (!hasDirectTarget && nodoObjetivo.IsOccupied && nodoObjetivo.OccupyingNPC != gameObject)
         {
-            moving = false;
             return;
         }
 
-        if (currentIndex >= currentPath.Count)
+        Vector3 dirNormalized = dir.normalized;
+
+        if (dir.sqrMagnitude > 0.0001f)
         {
-            moving = false;
-            return;
+            Quaternion targetRotation = Quaternion.LookRotation(dirNormalized);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 720f * Time.deltaTime);
         }
 
-        NodeParcial_Astar nodoObjetivo = currentPath[currentIndex];
-        Vector3 dirNode = (nodoObjetivo.transform.position - transform.position);
-        Vector3 dirNodeNormalized = dirNode.normalized;
+        Vector3 move = dirNormalized * speed * Time.deltaTime;
+        if (move.magnitude > dist)
+            move = dir; 
+        transform.position += move;
 
-        if (dirNodeNormalized.sqrMagnitude > 0.001f)
-            transform.forward = Vector3.Lerp(
-                transform.forward,
-                dirNodeNormalized,
-                10f * Time.deltaTime
-            );
+        if (dist < stopDistance)
+        {
+            if (hasDirectTarget)
+            {
+                hasDirectTarget = false;
+                directTarget = Vector3.positiveInfinity;
+                moving = false;
+            }
+            else
+            {
+                if (currentIndex > 0)
+                {
+                    NodeParcial_Astar nodoPrevio = currentPath[currentIndex - 1];
+                    nodoPrevio.IsOccupied = false;
+                    nodoPrevio.OccupyingNPC = null;
+                }
 
-        transform.position += dirNodeNormalized * speed * Time.deltaTime;
-
-        if (Vector3.Distance(transform.position, nodoObjetivo.transform.position) < stopDistance)
-            currentIndex++;
+                if (!nodoObjetivo.IsOccupied)
+                {
+                    nodoObjetivo.IsOccupied = true;
+                    nodoObjetivo.OccupyingNPC = gameObject;
+                    currentIndex++;
+                }
+            }
+        }
     }
 
-    // ============================================
-    // A* IMPLEMENTACIÓN
-    // ============================================
 
-    List<NodeParcial_Astar> AStar(NodeParcial_Astar start, NodeParcial_Astar goal)
+    // ===============================
+    // A* IMPLEMENTACIÓN
+    // ===============================
+
+    private List<NodeParcial_Astar> AStar(NodeParcial_Astar start, NodeParcial_Astar goal)
     {
         if (NodeBuilderParcial_Astar.Instance == null) return null;
 
@@ -208,7 +279,7 @@ private void Update()
         return null;
     }
 
-    List<NodeParcial_Astar> Reconstruct(NodeParcial_Astar start, NodeParcial_Astar goal)
+    private List<NodeParcial_Astar> Reconstruct(NodeParcial_Astar start, NodeParcial_Astar goal)
     {
         List<NodeParcial_Astar> path = new List<NodeParcial_Astar>();
         NodeParcial_Astar current = goal;
@@ -223,12 +294,44 @@ private void Update()
         path.Reverse();
         return path;
     }
-}
 
+    // ===============================
+    // DEBUG VISUAL 
+    // ===============================
+
+    private void OnDrawGizmos()
+    {
+        if (!showDebug) return;
+
+        Gizmos.color = hasDirectTarget ? directColor : pathColor;
+
+        if (hasDirectTarget && directTarget != Vector3.positiveInfinity)
+        {
+            Gizmos.DrawLine(transform.position, directTarget);
+            Gizmos.DrawSphere(directTarget, 0.2f);
+        }
+
+        if (currentPath != null && currentPath.Count > 1)
+        {
+            for (int i = 0; i < currentPath.Count - 1; i++)
+            {
+                if (currentPath[i] == null || currentPath[i + 1] == null) continue;
+                Gizmos.color = pathColor;
+                Gizmos.DrawLine(currentPath[i].transform.position, currentPath[i + 1].transform.position);
+                Gizmos.DrawSphere(currentPath[i].transform.position, 0.1f);
+            }
+
+            if (currentIndex < currentPath.Count)
+            {
+                Gizmos.color = nodeColor;
+                Gizmos.DrawWireSphere(currentPath[currentIndex].transform.position, 0.25f);
+            }
+        }
+    }
+}
 public class PriorityQueue<T>
 {
     private List<PriorityPair> list = new List<PriorityPair>();
-
     public int Count => list.Count;
 
     public void Enqueue(T data, float priority)
@@ -249,11 +352,6 @@ public class PriorityQueue<T>
     {
         public T data;
         public float priority;
-        public PriorityPair(T d, float p)
-        {
-            data = d;
-            priority = p;
-        }
+        public PriorityPair(T d, float p) { data = d; priority = p; }
     }
 }
-

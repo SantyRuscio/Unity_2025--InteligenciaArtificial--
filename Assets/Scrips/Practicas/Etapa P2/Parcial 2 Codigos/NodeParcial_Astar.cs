@@ -8,11 +8,15 @@ public class NodeParcial_Astar : MonoBehaviour
     public float costo;
     public float costoFinal;
 
+    public bool IsOccupied = false;
+    public GameObject OccupyingNPC = null; 
     public void Clean()
     {
         Parent = null;
         costo = Mathf.Infinity;
         costoFinal = Mathf.Infinity;
+        IsOccupied = false;
+        OccupyingNPC = null;
     }
 
     public void SetParent(NodeParcial_Astar p)
@@ -22,7 +26,7 @@ public class NodeParcial_Astar : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = IsOccupied ? Color.red : Color.yellow;
         Gizmos.DrawSphere(transform.position, 0.15f);
 
         if (Neighbors != null)

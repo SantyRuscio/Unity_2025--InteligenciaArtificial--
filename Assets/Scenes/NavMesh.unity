@@ -154,54 +154,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 596658921}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &17757636
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 17757638}
-  - component: {fileID: 17757637}
-  m_Layer: 0
-  m_Name: Nodo (21)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &17757637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 17757636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42377329e8c258f45a76894d1260c6cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Neighbors: []
-  Parent: {fileID: 0}
-  costo: 0
-  costoFinal: 0
---- !u!4 &17757638
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 17757636}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: 0.99, z: 16.86}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1425793598}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &38747920
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +218,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &79895838
 Transform:
   m_ObjectHideFlags: 0
@@ -345,6 +299,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &103803134
 Transform:
   m_ObjectHideFlags: 0
@@ -393,6 +349,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &128119495
 Transform:
   m_ObjectHideFlags: 0
@@ -441,6 +399,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &139091627
 Transform:
   m_ObjectHideFlags: 0
@@ -551,6 +511,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &161591318
 Transform:
   m_ObjectHideFlags: 0
@@ -669,6 +631,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &212337595
 Transform:
   m_ObjectHideFlags: 0
@@ -717,6 +681,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &217018022
 Transform:
   m_ObjectHideFlags: 0
@@ -765,6 +731,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &249364513
 Transform:
   m_ObjectHideFlags: 0
@@ -797,7 +765,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &258273042
 BoxCollider:
@@ -933,7 +901,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &325726119
 BoxCollider:
@@ -1054,6 +1022,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &333405795
 Transform:
   m_ObjectHideFlags: 0
@@ -1102,6 +1072,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &333767414
 Transform:
   m_ObjectHideFlags: 0
@@ -1150,6 +1122,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &338132971
 Transform:
   m_ObjectHideFlags: 0
@@ -1198,6 +1172,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &341738106
 Transform:
   m_ObjectHideFlags: 0
@@ -1319,6 +1295,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &355177057
 Transform:
   m_ObjectHideFlags: 0
@@ -1351,7 +1329,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &360118918
 BoxCollider:
@@ -1472,6 +1450,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &383182685
 Transform:
   m_ObjectHideFlags: 0
@@ -1520,6 +1500,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &387421812
 Transform:
   m_ObjectHideFlags: 0
@@ -1552,7 +1534,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &393369080
 BoxCollider:
@@ -1688,7 +1670,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &402651645
 BoxCollider:
@@ -2235,6 +2217,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &498471603
 Transform:
   m_ObjectHideFlags: 0
@@ -2283,6 +2267,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &505358716
 Transform:
   m_ObjectHideFlags: 0
@@ -2315,7 +2301,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &507878132
 BoxCollider:
@@ -2436,6 +2422,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &510950155
 Transform:
   m_ObjectHideFlags: 0
@@ -2484,6 +2472,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &527336447
 Transform:
   m_ObjectHideFlags: 0
@@ -2637,6 +2627,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &535237630
 Transform:
   m_ObjectHideFlags: 0
@@ -2685,6 +2677,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &538335910
 Transform:
   m_ObjectHideFlags: 0
@@ -2733,6 +2727,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &566262260
 Transform:
   m_ObjectHideFlags: 0
@@ -2781,6 +2777,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &573911507
 Transform:
   m_ObjectHideFlags: 0
@@ -2829,6 +2827,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &577181461
 Transform:
   m_ObjectHideFlags: 0
@@ -2861,7 +2861,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &578729437
 BoxCollider:
@@ -2982,6 +2982,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &588292581
 Transform:
   m_ObjectHideFlags: 0
@@ -3103,6 +3105,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &609411192
 Transform:
   m_ObjectHideFlags: 0
@@ -3151,6 +3155,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &615657094
 Transform:
   m_ObjectHideFlags: 0
@@ -3199,6 +3205,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &636737362
 Transform:
   m_ObjectHideFlags: 0
@@ -3467,6 +3475,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &648843838
 GameObject:
   m_ObjectHideFlags: 0
@@ -3500,6 +3510,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &648843840
 Transform:
   m_ObjectHideFlags: 0
@@ -3563,7 +3575,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &677519693
 BoxCollider:
@@ -3684,6 +3696,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &688206360
 Transform:
   m_ObjectHideFlags: 0
@@ -3863,6 +3877,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &742264351
 Transform:
   m_ObjectHideFlags: 0
@@ -3911,6 +3927,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &758586754
 Transform:
   m_ObjectHideFlags: 0
@@ -3974,6 +3992,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &763864339
 GameObject:
   m_ObjectHideFlags: 0
@@ -4038,6 +4058,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &793559026
 Transform:
   m_ObjectHideFlags: 0
@@ -4086,6 +4108,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &827198722
 Transform:
   m_ObjectHideFlags: 0
@@ -4277,7 +4301,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &841475744
 BoxCollider:
@@ -4400,6 +4424,18 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 543450652363330296}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.g
+      value: 0.043137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2906354373796883411, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
       propertyPath: target
       value: 
@@ -4523,7 +4559,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &863343776
 BoxCollider:
@@ -4675,6 +4711,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &882604477
 Transform:
   m_ObjectHideFlags: 0
@@ -4738,6 +4776,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &925484482
 GameObject:
   m_ObjectHideFlags: 0
@@ -4771,6 +4811,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &925484484
 Transform:
   m_ObjectHideFlags: 0
@@ -4819,6 +4861,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &933421709
 Transform:
   m_ObjectHideFlags: 0
@@ -4898,6 +4942,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &987813216
 Transform:
   m_ObjectHideFlags: 0
@@ -5051,6 +5097,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1015933072
 Transform:
   m_ObjectHideFlags: 0
@@ -5083,7 +5131,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1033549689
 BoxCollider:
@@ -5188,7 +5236,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1046722592
 BoxCollider:
@@ -5293,7 +5341,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1055871489
 BoxCollider:
@@ -5414,6 +5462,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1059204041
 Transform:
   m_ObjectHideFlags: 0
@@ -5462,6 +5512,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1059545320
 Transform:
   m_ObjectHideFlags: 0
@@ -5510,6 +5562,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1068972967
 Transform:
   m_ObjectHideFlags: 0
@@ -5542,7 +5596,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1069045077
 BoxCollider:
@@ -5663,6 +5717,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1099585038
 Transform:
   m_ObjectHideFlags: 0
@@ -5726,6 +5782,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &1114024537
 GameObject:
   m_ObjectHideFlags: 0
@@ -5774,6 +5832,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &1116436974
 GameObject:
   m_ObjectHideFlags: 0
@@ -5822,6 +5882,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &1134212184
 GameObject:
   m_ObjectHideFlags: 0
@@ -5855,6 +5917,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1134212186
 Transform:
   m_ObjectHideFlags: 0
@@ -5918,6 +5982,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &1156938761
 GameObject:
   m_ObjectHideFlags: 0
@@ -6056,6 +6122,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1165415746
 Transform:
   m_ObjectHideFlags: 0
@@ -6119,7 +6187,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1232055297
 BoxCollider:
@@ -6240,6 +6308,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1266014019
 Transform:
   m_ObjectHideFlags: 0
@@ -6272,7 +6342,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1268892028
 BoxCollider:
@@ -6505,6 +6575,18 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 543450652363330296}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.g
+      value: 0.043137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2906354373796883411, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
       propertyPath: target
       value: 
@@ -7000,6 +7082,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1369059961
 Transform:
   m_ObjectHideFlags: 0
@@ -7048,6 +7132,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1375982523
 Transform:
   m_ObjectHideFlags: 0
@@ -7096,6 +7182,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1400653455
 Transform:
   m_ObjectHideFlags: 0
@@ -7144,6 +7232,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1403272922
 Transform:
   m_ObjectHideFlags: 0
@@ -7192,6 +7282,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1403365431
 Transform:
   m_ObjectHideFlags: 0
@@ -7240,6 +7332,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1413002025
 Transform:
   m_ObjectHideFlags: 0
@@ -7337,7 +7431,7 @@ MonoBehaviour:
   - {fileID: 1403365430}
   - {fileID: 987813215}
   - {fileID: 2023720210}
-  - {fileID: 17757637}
+  - {fileID: 0}
   - {fileID: 333405794}
   - {fileID: 648843839}
   - {fileID: 103803133}
@@ -7439,7 +7533,6 @@ Transform:
   - {fileID: 1403365431}
   - {fileID: 987813216}
   - {fileID: 2023720211}
-  - {fileID: 17757638}
   - {fileID: 333405795}
   - {fileID: 648843840}
   - {fileID: 103803134}
@@ -7608,6 +7701,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1469049671
 Transform:
   m_ObjectHideFlags: 0
@@ -7761,6 +7856,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1476246567
 Transform:
   m_ObjectHideFlags: 0
@@ -7809,6 +7906,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1482614610
 Transform:
   m_ObjectHideFlags: 0
@@ -7888,6 +7987,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1555624844
 Transform:
   m_ObjectHideFlags: 0
@@ -7936,6 +8037,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1566025592
 Transform:
   m_ObjectHideFlags: 0
@@ -8015,6 +8118,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1635325476
 Transform:
   m_ObjectHideFlags: 0
@@ -8078,6 +8183,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &1663890738
 GameObject:
   m_ObjectHideFlags: 0
@@ -8111,6 +8218,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1663890740
 Transform:
   m_ObjectHideFlags: 0
@@ -8159,6 +8268,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1672856685
 Transform:
   m_ObjectHideFlags: 0
@@ -8207,6 +8318,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1689983669
 Transform:
   m_ObjectHideFlags: 0
@@ -8286,6 +8399,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1711784269
 Transform:
   m_ObjectHideFlags: 0
@@ -8318,7 +8433,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1761549269
 BoxCollider:
@@ -8439,6 +8554,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1762927625
 Transform:
   m_ObjectHideFlags: 0
@@ -8471,7 +8588,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &1765065342
 BoxCollider:
@@ -8575,6 +8692,18 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 543450652363330296}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.g
+      value: 0.043137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2906354373796883411, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
       propertyPath: target
       value: 
@@ -8739,6 +8868,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1776892240
 Transform:
   m_ObjectHideFlags: 0
@@ -8802,7 +8933,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1840355514
 Transform:
@@ -8923,6 +9054,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1841878017
 Transform:
   m_ObjectHideFlags: 0
@@ -9002,6 +9135,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1849011096
 Transform:
   m_ObjectHideFlags: 0
@@ -9155,6 +9290,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1893692217
 Transform:
   m_ObjectHideFlags: 0
@@ -9203,6 +9340,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1910854886
 Transform:
   m_ObjectHideFlags: 0
@@ -9266,6 +9405,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!1 &1939310982
 GameObject:
   m_ObjectHideFlags: 0
@@ -9391,6 +9532,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &1979857756
 Transform:
   m_ObjectHideFlags: 0
@@ -9423,7 +9566,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &2023425390
 BoxCollider:
@@ -9544,6 +9687,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &2023720211
 Transform:
   m_ObjectHideFlags: 0
@@ -9592,6 +9737,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &2024018827
 Transform:
   m_ObjectHideFlags: 0
@@ -9640,6 +9787,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &2041627952
 Transform:
   m_ObjectHideFlags: 0
@@ -9688,6 +9837,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &2054359618
 Transform:
   m_ObjectHideFlags: 0
@@ -9767,6 +9918,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &2070374379
 Transform:
   m_ObjectHideFlags: 0
@@ -9836,6 +9989,8 @@ MonoBehaviour:
   Parent: {fileID: 0}
   costo: 0
   costoFinal: 0
+  IsOccupied: 0
+  OccupyingNPC: {fileID: 0}
 --- !u!4 &2092392407
 Transform:
   m_ObjectHideFlags: 0
@@ -11552,6 +11707,22 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 543450652363330296}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: stopDistance
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.g
+      value: 0.040395863
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: directColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2906354373796883411, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
       propertyPath: target
       value: 
@@ -12865,11 +13036,11 @@ SceneRoots:
   - {fileID: 841475747}
   - {fileID: 343100880}
   - {fileID: 638258254}
+  - {fileID: 460505855}
   - {fileID: 4820006088728590527}
   - {fileID: 1775420675}
   - {fileID: 844242009}
   - {fileID: 1324295422}
-  - {fileID: 460505855}
   - {fileID: 1425793598}
   - {fileID: 1457719289}
   - {fileID: 1286133194}
