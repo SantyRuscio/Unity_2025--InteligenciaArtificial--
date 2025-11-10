@@ -31,10 +31,8 @@ public class EnemyFSM : MonoBehaviour
         if (target == null)
             target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        // Crear la FSM
         fsm = new EnemyFSMController();
 
-        // Crear y registrar estados
         var patrol = new EnemyPatrolState().SetUp(fsm, this);
         var chase = new EnemyChaseState().SetUp(fsm, this);
         var alert = new EnemyAlertState().SetUp(fsm, this);
@@ -43,9 +41,10 @@ public class EnemyFSM : MonoBehaviour
         fsm.possibleStates.Add(EnemyStateType.Chase, chase);
         fsm.possibleStates.Add(EnemyStateType.Alert, alert);
 
-        // Estado inicial
         fsm.currentState = patrol;
         fsm.currentState.OnEnter();
+
+        Debug.Log($"{name} entró al estado inicial: {fsm.currentState.GetType().Name}");
     }
 
     void Update() => fsm.OnUpdate();
@@ -84,7 +83,13 @@ public class EnemyFSM : MonoBehaviour
 
         lastSeenPosition = position;
         fsm.ChangeState(EnemyStateType.Alert);
-        pathFinder.BuscarNuevoCamino(position);
+
+        Debug.Log($"{name} recibí alerta, cambio a  chase");
+
+        if (pathFinder != null)
+            pathFinder.BuscarNuevoCamino(position);
+        else
+            Debug.LogWarning($"{name}: PathFinder no asignado en EnemyFSM");
     }
 
     // ============================================================
