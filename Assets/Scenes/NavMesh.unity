@@ -2738,7 +2738,7 @@ Transform:
   m_GameObject: {fileID: 566262258}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.54, y: 0.99, z: 9.43}
+  m_LocalPosition: {x: -10.78, y: 0.99, z: 11.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7419,19 +7419,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Nodes:
   - {fileID: 1979857755}
-  - {fileID: 1711784268}
+  - {fileID: 0}
   - {fileID: 338132970}
   - {fileID: 1566025591}
-  - {fileID: 1849011095}
+  - {fileID: 0}
   - {fileID: 1403272921}
   - {fileID: 355177056}
-  - {fileID: 609411191}
+  - {fileID: 0}
   - {fileID: 510950154}
   - {fileID: 2092392406}
-  - {fileID: 1400653454}
+  - {fileID: 0}
   - {fileID: 1476246566}
   - {fileID: 2054359617}
-  - {fileID: 1482614609}
+  - {fileID: 0}
   - {fileID: 1663890739}
   - {fileID: 498471602}
   - {fileID: 566262259}
@@ -7478,20 +7478,20 @@ MonoBehaviour:
   - {fileID: 2024018826}
   - {fileID: 1762927624}
   - {fileID: 2041627951}
-  - {fileID: 249364512}
+  - {fileID: 0}
   - {fileID: 1413002024}
   - {fileID: 128119494}
   - {fileID: 217018021}
   - {fileID: 139091626}
   - {fileID: 1015933071}
-  - {fileID: 1893692216}
+  - {fileID: 0}
   - {fileID: 161591317}
   - {fileID: 333767413}
   - {fileID: 1375982522}
   - {fileID: 925484483}
-  - {fileID: 577181460}
-  - {fileID: 827198721}
-  - {fileID: 1266014018}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 758586753}
   - {fileID: 1099585037}
   - {fileID: 1114024539}
@@ -7503,7 +7503,7 @@ MonoBehaviour:
   - {fileID: 1104214353}
   - {fileID: 1663742554}
   - {fileID: 648284576}
-  connectionDistance: 12
+  connectionDistance: 10
   obstacleMask:
     serializedVersion: 2
     m_Bits: 2048
@@ -9710,7 +9710,7 @@ Transform:
   m_GameObject: {fileID: 2023720209}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.76, y: 0.99, z: 16.86}
+  m_LocalPosition: {x: -3.87, y: 0.99, z: 16.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11720,6 +11720,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 543450652363330296}
     - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262884936573704852, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
       propertyPath: stopDistance
       value: 0.3
       objectReference: {fileID: 0}
@@ -11739,6 +11743,14 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 460505855}
+    - target: {fileID: 2906354373796883411, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2906354373796883411, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
+      propertyPath: visionAngle
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 2906354373796883411, guid: f9316ac645d2d8c44a8755c2c83746ac, type: 3}
       propertyPath: visionRange
       value: 5

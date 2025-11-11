@@ -20,9 +20,7 @@ public class EnemyFSM : MonoBehaviour
 
     private EnemyFSMController fsm;
 
-    // ============================================================
     // EVENTOS
-    // ============================================================
     void OnEnable() => AlertManager.OnAlert += ReceiveAlert;
     void OnDisable() => AlertManager.OnAlert -= ReceiveAlert;
 
@@ -49,9 +47,6 @@ public class EnemyFSM : MonoBehaviour
 
     void Update() => fsm.OnUpdate();
 
-    // ============================================================
-    // VISIÓN
-    // ============================================================
     public bool CanSeePlayer()
     {
         Vector3 dirToTarget = (target.position - transform.position).normalized;
@@ -73,9 +68,6 @@ public class EnemyFSM : MonoBehaviour
         return false;
     }
 
-    // ============================================================
-    // ALERTA GLOBAL
-    // ============================================================
     void ReceiveAlert(Vector3 position, EnemyFSM source)
     {
         if (source == this) return;
@@ -92,9 +84,8 @@ public class EnemyFSM : MonoBehaviour
             Debug.LogWarning($"{name}: PathFinder no asignado en EnemyFSM");
     }
 
-    // ============================================================
-    // GIZMOS: Dibuja el FOV
-    // ============================================================
+
+
     void OnDrawGizmosSelected()
     {
         if (!Application.isPlaying)
