@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+
 public class EnemyFSM : MonoBehaviour
 {
     [Header("Referencias")]
@@ -19,8 +20,8 @@ public class EnemyFSM : MonoBehaviour
     public Vector3 lastSeenPosition;
 
     private EnemyFSMController fsm;
+    private bool hasSentAlert = false;
 
-    // EVENTOS
     void OnEnable() => AlertManager.OnAlert += ReceiveAlert;
     void OnDisable() => AlertManager.OnAlert -= ReceiveAlert;
 
@@ -47,6 +48,9 @@ public class EnemyFSM : MonoBehaviour
 
     void Update() => fsm.OnUpdate();
 
+    // ============================================================
+    // 🔹 VISIÓN DEL JUGADOR
+    // ============================================================
     public bool CanSeePlayer()
     {
         Vector3 dirToTarget = (target.position - transform.position).normalized;
@@ -54,29 +58,42 @@ public class EnemyFSM : MonoBehaviour
 
         playerVisible = false;
 
-        if (distToTarget > visionRange) return false;
-        if (Vector3.Angle(transform.forward, dirToTarget) > visionAngle) return false;
+        if (distToTarget > visionRange) { hasSentAlert = false; return false; }
+        if (Vector3.Angle(transform.forward, dirToTarget) > visionAngle) { hasSentAlert = false; return false; }
 
+        // si no hay obstáculo entre el enemigo y el jugador
         if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
         {
             playerVisible = true;
             lastSeenPosition = target.position;
-            AlertManager.SendAlert(lastSeenPosition, this);
+
+            // 🔸 enviar alerta solo una vez
+            if (!hasSentAlert)
+            {
+                hasSentAlert = true;
+                AlertManager.SendAlert(lastSeenPosition, this);
+                Debug.Log($"{name} vio al jugador y alertó a todos los enemigos.");
+            }
+
             return true;
         }
 
+        hasSentAlert = false;
         return false;
     }
 
+    // ============================================================
+    // 🔹 RECEPCIÓN DE ALERTAS
+    // ============================================================
     void ReceiveAlert(Vector3 position, EnemyFSM source)
     {
-        if (source == this) return;
-        if (fsm.currentState == fsm.possibleStates[EnemyStateType.Chase]) return;
+        if (source == this) return; // no me alerto a mí mismo
+        if (fsm.currentState == fsm.possibleStates[EnemyStateType.Chase]) return; // ya estoy persiguiendo
 
         lastSeenPosition = position;
-        fsm.ChangeState(EnemyStateType.Alert);
+        Debug.Log($"{name} recibió alerta de {source.name} -> cambiando a ALERT");
 
-        Debug.Log($"{name} recibí alerta, cambio a  chase");
+        fsm.ChangeState(EnemyStateType.Alert);
 
         if (pathFinder != null)
             pathFinder.BuscarNuevoCamino(position);
@@ -84,15 +101,15 @@ public class EnemyFSM : MonoBehaviour
             Debug.LogWarning($"{name}: PathFinder no asignado en EnemyFSM");
     }
 
-
-
+    // ============================================================
+    // DEBUG VISUAL
+    // ============================================================
     void OnDrawGizmosSelected()
     {
         if (!Application.isPlaying)
             return;
 
         Gizmos.color = playerVisible ? Color.red : Color.yellow;
-
         Gizmos.DrawWireSphere(transform.position, visionRange);
 
         Vector3 leftBoundary = Quaternion.Euler(0, -visionAngle, 0) * transform.forward;

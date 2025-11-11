@@ -16,6 +16,7 @@ public class AlertManager : MonoBehaviour
         }
         instance = this;
     }
+
     public static void SendAlert(Vector3 position, EnemyFSM source)
     {
         OnAlert?.Invoke(position, source);
