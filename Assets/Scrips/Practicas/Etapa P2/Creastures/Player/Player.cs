@@ -1,5 +1,8 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
+
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class Player : MonoBehaviour
 {
     [Header("General PlayerSettings")]

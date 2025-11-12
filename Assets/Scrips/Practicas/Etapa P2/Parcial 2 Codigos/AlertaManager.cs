@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class AlertManager : MonoBehaviour
 {
     public static event Action<Vector3, EnemyFSM> OnAlert;

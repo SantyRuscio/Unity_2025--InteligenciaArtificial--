@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
+
 [ExecuteInEditMode]
 public class NodeBuilder : MonoBehaviour
 {

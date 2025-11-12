@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
+
 public abstract class BaseEnemyState
 {
     protected EnemyFSMController fsm;

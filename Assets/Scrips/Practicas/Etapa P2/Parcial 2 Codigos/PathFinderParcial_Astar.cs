@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Linq;
 using System.IO;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class PathFinderParcial_Astar : MonoBehaviour
 {
     [Header("Configuración General")]
@@ -33,10 +36,8 @@ public class PathFinderParcial_Astar : MonoBehaviour
 
     public bool IsMoving => moving;
 
-    // ===============================
-    // MÉTODOS PÚBLICOS
-    // ===============================
 
+    // MÉTODOS PÚBLICOS
     public void CancelPath()
     {
         moving = false;
@@ -97,10 +98,7 @@ public class PathFinderParcial_Astar : MonoBehaviour
         moving = currentPath != null && currentPath.Count > 0;
     }
 
-    // ===============================
     // LÓGICA DE MOVIMIENTO
-    // ===============================
-
     private void Update()
     {
         if (!moving) return;
@@ -226,10 +224,7 @@ public class PathFinderParcial_Astar : MonoBehaviour
     }
 
 
-    // ===============================
-    // A* IMPLEMENTACIÓN
-    // ===============================
-
+    // A* 
     private List<NodeParcial_Astar> AStar(NodeParcial_Astar start, NodeParcial_Astar goal)
     {
         if (NodeBuilderParcial_Astar.Instance == null) return null;
@@ -295,10 +290,7 @@ public class PathFinderParcial_Astar : MonoBehaviour
         return path;
     }
 
-    // ===============================
     // DEBUG VISUAL 
-    // ===============================
-
     private void OnDrawGizmos()
     {
         if (!showDebug) return;

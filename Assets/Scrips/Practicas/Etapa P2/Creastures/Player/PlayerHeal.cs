@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class PlayerHeal : MonoBehaviour, IDamageable, IHeal
 {
     [Header("Life Settings")]

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
+
 public class EnemyFSMController
 {
     public BaseEnemyState currentState;
@@ -23,5 +27,4 @@ public class EnemyFSMController
     }
 }
 
-public enum EnemyStateType { Patrol, Chase, Alert }
-
+public enum EnemyStateType { Idle, Patrol, Chase, Alert, Attack }

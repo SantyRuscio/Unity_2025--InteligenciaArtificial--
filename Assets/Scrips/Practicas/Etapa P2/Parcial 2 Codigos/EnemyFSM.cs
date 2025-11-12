@@ -1,6 +1,10 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class EnemyFSM : MonoBehaviour
 {
     [Header("Referencias")]
@@ -32,13 +36,17 @@ public class EnemyFSM : MonoBehaviour
 
         fsm = new EnemyFSMController();
 
+        var idle = new EnemyIdleState().SetUp(fsm, this);
         var patrol = new EnemyPatrolState().SetUp(fsm, this);
         var chase = new EnemyChaseState().SetUp(fsm, this);
         var alert = new EnemyAlertState().SetUp(fsm, this);
+        var attack = new EnemyAttackState().SetUp(fsm, this);
 
+        fsm.possibleStates.Add(EnemyStateType.Idle, idle);
         fsm.possibleStates.Add(EnemyStateType.Patrol, patrol);
         fsm.possibleStates.Add(EnemyStateType.Chase, chase);
         fsm.possibleStates.Add(EnemyStateType.Alert, alert);
+        fsm.possibleStates.Add(EnemyStateType.Attack, attack);
 
         fsm.currentState = patrol;
         fsm.currentState.OnEnter();
@@ -48,9 +56,7 @@ public class EnemyFSM : MonoBehaviour
 
     void Update() => fsm.OnUpdate();
 
-    // ============================================================
-    // 🔹 VISIÓN DEL JUGADOR
-    // ============================================================
+    // VISIÓN DEL JUGADOR Y ENEMIGO
     public bool CanSeePlayer()
     {
         Vector3 dirToTarget = (target.position - transform.position).normalized;
@@ -58,6 +64,8 @@ public class EnemyFSM : MonoBehaviour
 
         playerVisible = false;
 
+
+        //FOV
         if (distToTarget > visionRange) { hasSentAlert = false; return false; }
         if (Vector3.Angle(transform.forward, dirToTarget) > visionAngle) { hasSentAlert = false; return false; }
 
@@ -67,7 +75,6 @@ public class EnemyFSM : MonoBehaviour
             playerVisible = true;
             lastSeenPosition = target.position;
 
-            // 🔸 enviar alerta solo una vez
             if (!hasSentAlert)
             {
                 hasSentAlert = true;
@@ -82,13 +89,11 @@ public class EnemyFSM : MonoBehaviour
         return false;
     }
 
-    // ============================================================
-    // 🔹 RECEPCIÓN DE ALERTAS
-    // ============================================================
+    // ALERTAS
     void ReceiveAlert(Vector3 position, EnemyFSM source)
     {
-        if (source == this) return; // no me alerto a mí mismo
-        if (fsm.currentState == fsm.possibleStates[EnemyStateType.Chase]) return; // ya estoy persiguiendo
+        if (source == this) return; 
+        if (fsm.currentState == fsm.possibleStates[EnemyStateType.Chase]) return;
 
         lastSeenPosition = position;
         Debug.Log($"{name} recibió alerta de {source.name} -> cambiando a ALERT");
@@ -101,9 +106,7 @@ public class EnemyFSM : MonoBehaviour
             Debug.LogWarning($"{name}: PathFinder no asignado en EnemyFSM");
     }
 
-    // ============================================================
     // DEBUG VISUAL
-    // ============================================================
     void OnDrawGizmosSelected()
     {
         if (!Application.isPlaying)

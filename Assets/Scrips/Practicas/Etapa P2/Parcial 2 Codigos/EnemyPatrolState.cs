@@ -1,7 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class EnemyPatrolState : BaseEnemyState
 {
     private int patrolIndex = 0;
@@ -43,6 +46,12 @@ public class EnemyPatrolState : BaseEnemyState
         {
             pathFinder.BuscarNuevoCamino(next.position);
         }
+    }
+
+    public override void OnExit()
+    {
+        base.OnExit();
+        Debug.Log("Salió de PATROL");
     }
 }
 
