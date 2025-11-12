@@ -1897,7 +1897,6 @@ MonoBehaviour:
   inputManager: {fileID: 460505852}
   playerBody: {fileID: 460505851}
   animator: {fileID: 460505857}
-  _speed: 3.5
   _rotationSpeed: 120
   _damage: 20
   _shootPoint: {fileID: 1314528056}
@@ -3259,7 +3258,6 @@ MonoBehaviour:
   inputManager: {fileID: 0}
   playerBody: {fileID: 0}
   animator: {fileID: 0}
-  _speed: 8
   _rotationSpeed: 120
   _damage: 20
   _shootPoint: {fileID: 0}

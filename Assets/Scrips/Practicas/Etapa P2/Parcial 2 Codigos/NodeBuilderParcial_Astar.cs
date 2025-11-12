@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class NodeBuilderParcial_Astar : MonoBehaviour
 {
     public static NodeBuilderParcial_Astar Instance;

@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class NodeParcial_Astar : MonoBehaviour
 {
     public List<NodeParcial_Astar> Neighbors = new List<NodeParcial_Astar>();
