@@ -7,7 +7,7 @@ using UnityEngine;
 // ===============================
 public class EnemyChaseState : BaseEnemyState
 {
-    private float attackRange = 2.5f;
+    private float attackRange = 2f;
     private float loseRange = 15f;
     private float directFollowRange = 5f;
     private float pathUpdateTimer = 0f;

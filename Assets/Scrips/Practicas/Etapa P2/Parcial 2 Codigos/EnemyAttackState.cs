@@ -7,8 +7,8 @@ using UnityEngine;
 // ===============================
 public class EnemyAttackState : BaseEnemyState
 {
-    [SerializeField] private float attackRange = 2f;
-    [SerializeField] private float chaseRange = 5f;
+    [SerializeField] private float attackRange = 0.5f;
+    [SerializeField] private float chaseRange = 4f;
     [SerializeField] private float attackCooldown = 1.5f;
     private float nextAttackTime;
 

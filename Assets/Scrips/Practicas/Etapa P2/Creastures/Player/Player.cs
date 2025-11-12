@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [Header("Variables Player")]
-    [SerializeField] private float _speed = 8f;
+    private float _speed = 3.5f;
     [SerializeField] private float _rotationSpeed = 120f;
     [SerializeField] private float _damage = 20f;
 
