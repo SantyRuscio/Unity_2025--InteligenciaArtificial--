@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Rival
   - Apple
+  - Enemy
+  - teamB
+  - teamA
   layers:
   - Default
   - TransparentFX
@@ -19,8 +22,8 @@ TagManager:
   - Hunter
   - Damageables
   - Obstacles
-  - 
-  - 
+  - Ground
+  - Ally
   - 
   - 
   - 

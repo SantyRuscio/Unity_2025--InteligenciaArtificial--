@@ -4,42 +4,48 @@ using System.Collections.Generic;
 // ===============================
 // Ruscio - Beghin
 // ===============================
+    
 public class NodeParcial_Astar : MonoBehaviour
 {
-    public List<NodeParcial_Astar> Neighbors = new List<NodeParcial_Astar>();
-    public NodeParcial_Astar Parent;
-    public float costo;
-    public float costoFinal;
+    public static List<NodeParcial_Astar> AllNodes = new List<NodeParcial_Astar>();
 
-    public bool IsOccupied = false;
-    public GameObject OccupyingNPC = null; 
-    public void Clean()
+    public List<NodeParcial_Astar> Connections = new List<NodeParcial_Astar>();
+
+    public Vector3 Position => transform.position;
+
+    void Awake()
     {
-        Parent = null;
-        costo = Mathf.Infinity;
-        costoFinal = Mathf.Infinity;
-        IsOccupied = false;
-        OccupyingNPC = null;
+        if (!AllNodes.Contains(this))
+            AllNodes.Add(this);
     }
 
-    public void SetParent(NodeParcial_Astar p)
+    public static NodeParcial_Astar GetClosestNode(Vector3 pos)
     {
-        Parent = p;
+        NodeParcial_Astar best = null;
+        float minDist = Mathf.Infinity;
+
+        foreach (var n in AllNodes)
+        {
+            float d = Vector3.Distance(pos, n.Position);
+            if (d < minDist)
+            {
+                minDist = d;
+                best = n;
+            }
+        }
+        return best;
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = IsOccupied ? Color.red : Color.yellow;
-        Gizmos.DrawSphere(transform.position, 0.15f);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, 0.2f);
 
-        if (Neighbors != null)
+        Gizmos.color = Color.cyan;
+        foreach (var c in Connections)
         {
-            Gizmos.color = Color.cyan;
-            foreach (var n in Neighbors)
-            {
-                if (n != null)
-                    Gizmos.DrawLine(transform.position, n.transform.position);
-            }
+            if (c != null)
+                Gizmos.DrawLine(transform.position, c.transform.position);
         }
     }
 }
