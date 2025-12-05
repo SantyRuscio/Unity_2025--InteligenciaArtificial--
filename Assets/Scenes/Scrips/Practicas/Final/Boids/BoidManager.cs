@@ -16,5 +16,9 @@ public class BoidManager : MonoBehaviour
     {
         if (!boids.Contains(b)) boids.Add(b);
     }
-}
 
+    public void Unregister(AllyBoidFSM b)
+    {
+        if (boids.Contains(b)) boids.Remove(b);
+    }
+}

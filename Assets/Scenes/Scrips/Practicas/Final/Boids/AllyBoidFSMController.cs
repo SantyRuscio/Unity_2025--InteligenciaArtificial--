@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class AllyBoidFSMController
 {
     public BaseBoidState currentState;
-    public Dictionary<BoidStateType, BaseBoidState> states = new();
+    public Dictionary<BoidStateType, BaseBoidState> possibleStates = new Dictionary<BoidStateType, BaseBoidState>();
 
     public void ChangeState(BoidStateType newState)
     {
-        if (states.ContainsKey(newState))
+        if (possibleStates.ContainsKey(newState))
         {
             currentState?.OnExit();
-            currentState = states[newState];
+            currentState = possibleStates[newState];
             currentState.OnEnter();
         }
     }
@@ -23,10 +22,12 @@ public class AllyBoidFSMController
     }
 }
 
+
 public enum BoidStateType
 {
     FollowLeader,
     Attack,
-    ReturnToFormation
+    ReturnToFormation  
 }
+
 

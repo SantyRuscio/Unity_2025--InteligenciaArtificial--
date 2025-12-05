@@ -6,24 +6,27 @@ using UnityEngine;
 
 public class AllyBoidFSM : MonoBehaviour
 {
-    [Header("Referencias")]
-    public Transform leader;
-    public LayerMask obstacleMask;
-
-    [Header("Flocking")]
-    public float separationDistance = 2f;
+    [Header("Pesos Flocking")]
+    public float separationWeight = 1.5f;
     public float alignmentWeight = 1f;
     public float cohesionWeight = 1f;
-    public float separationWeight = 2f;
-    public float maxSpeed = 5f;
 
-    [Header("Vision")]
-    public float detectionRange = 10f;
-    public float visionAngle = 120f;
+    [Header("Distancias")]
+    public float visionRange = 6f;
+    public float separationDistance = 1.5f;
+    public float neighborDistance = 6f;
+
+    [Header("Movimiento")]
+    public float maxSpeed = 4f;
+
+    [Header("Referencias")]
+    public Transform leader;
+    public string enemyTag = "TeamB"; // Cambiar según equipo
+    public LayerMask obstacleMask;
 
     private AllyBoidFSMController fsm;
 
-    void Start()
+    void Awake()
     {
         fsm = new AllyBoidFSMController();
 
@@ -31,12 +34,16 @@ public class AllyBoidFSM : MonoBehaviour
         var attack = new BoidAttackState().SetUp(fsm, this);
         var ret = new BoidReturnState().SetUp(fsm, this);
 
-        fsm.states.Add(BoidStateType.FollowLeader, follow);
-        fsm.states.Add(BoidStateType.Attack, attack);
-        fsm.states.Add(BoidStateType.ReturnToFormation, ret);
+        fsm.possibleStates.Add(BoidStateType.FollowLeader, follow);
+        fsm.possibleStates.Add(BoidStateType.Attack, attack);
+        fsm.possibleStates.Add(BoidStateType.ReturnToFormation, ret);
 
         fsm.currentState = follow;
-        fsm.currentState.OnEnter();
+    }
+
+    void Start()
+    {
+        BoidManager.Instance.Register(this);
     }
 
     void Update()
@@ -44,21 +51,21 @@ public class AllyBoidFSM : MonoBehaviour
         fsm.OnUpdate();
     }
 
+    // ---------------------------------------------------------
+    // VISIÓN DEL BOID
+    // ---------------------------------------------------------
     public bool CanSeeEnemy(out Transform enemy)
     {
         enemy = null;
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, detectionRange);
+        Collider[] hits = Physics.OverlapSphere(transform.position, visionRange);
+
         foreach (var col in hits)
         {
-            if (col.CompareTag(this.tag)) continue;
-            if (!(col.CompareTag("teamA") || col.CompareTag("teamB"))) continue;
+            if (!col.CompareTag(enemyTag)) continue;
 
             Vector3 dir = (col.transform.position - transform.position).normalized;
             float dist = Vector3.Distance(transform.position, col.transform.position);
-
-            if (Vector3.Angle(transform.forward, dir) > visionAngle / 2f)
-                continue;
 
             if (!Physics.Raycast(transform.position, dir, dist, obstacleMask))
             {
@@ -69,5 +76,8 @@ public class AllyBoidFSM : MonoBehaviour
 
         return false;
     }
+
 }
+
+
 
