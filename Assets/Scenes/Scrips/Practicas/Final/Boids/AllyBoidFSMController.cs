@@ -27,7 +27,8 @@ public enum BoidStateType
 {
     FollowLeader,
     Attack,
-    ReturnToFormation  
+    ReturnToFormation,  
+    Flee
 }
 
 

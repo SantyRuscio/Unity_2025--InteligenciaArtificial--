@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine;
-
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100;
-    private float currentHealth;
+   public float currentHealth;
 
     public bool IsDead => currentHealth <= 0;
+
+    public float CurrentHealth => currentHealth;
 
     void Awake()
     {

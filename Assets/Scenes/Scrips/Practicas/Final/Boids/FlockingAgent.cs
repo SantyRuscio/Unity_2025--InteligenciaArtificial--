@@ -49,7 +49,7 @@ public class FlockingAgent : MonoBehaviour
             {
                 neighborCount++;
 
-                // Separación
+                // Separaciï¿½n
                 if (dist <= separationRadius)
                 {
                     separation += (transform.position - agent.transform.position).normalized / dist;
@@ -69,14 +69,14 @@ public class FlockingAgent : MonoBehaviour
             alignment /= neighborCount;
         }
 
-        // Seguir al líder
+        // Seguir al lï¿½der
         Vector3 followLeader = Vector3.zero;
         if (leader != null)
         {
             followLeader = (leader.position - transform.position).normalized;
         }
 
-        // Fórmula final del movimiento
+        // Fï¿½rmula final del movimiento
         Vector3 direction =
               separation * separationWeight
             + cohesion * cohesionWeight

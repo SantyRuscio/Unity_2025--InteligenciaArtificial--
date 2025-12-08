@@ -7,7 +7,14 @@ public class BoidReturnState : BaseBoidState
 {
     public override void OnUpdate()
     {
-        Vector3 target = root.leader.position;
+        if (root.IsLowHealth())
+        {
+            fsm.ChangeState(BoidStateType.Flee);
+            return;
+        }
+
+        Vector3 target = root.leader.position - (root.leader.forward * 2f);
+
         root.transform.position = Vector3.MoveTowards(root.transform.position, target, 4f * Time.deltaTime);
 
         if (!root.CanSeeEnemy(out _))

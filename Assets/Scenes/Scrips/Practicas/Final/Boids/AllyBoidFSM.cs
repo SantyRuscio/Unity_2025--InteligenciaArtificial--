@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine;
-
 public class AllyBoidFSM : MonoBehaviour
 {
     [Header("Pesos Flocking")]
@@ -21,8 +19,10 @@ public class AllyBoidFSM : MonoBehaviour
 
     [Header("Referencias")]
     public Transform leader;
-    public string enemyTag = "TeamB"; // Cambiar según equipo
+    public string enemyTag = "TeamB"; // Cambiar segï¿½n equipo
     public LayerMask obstacleMask;
+    public float lowHealthThreshold = 30f;
+
 
     private AllyBoidFSMController fsm;
 
@@ -33,12 +33,20 @@ public class AllyBoidFSM : MonoBehaviour
         var follow = new BoidFollowLeaderState().SetUp(fsm, this);
         var attack = new BoidAttackState().SetUp(fsm, this);
         var ret = new BoidReturnState().SetUp(fsm, this);
-
+        var flee = new BoidFleeState().SetUp(fsm, this);
+        fsm.possibleStates.Add(BoidStateType.Flee, flee);
         fsm.possibleStates.Add(BoidStateType.FollowLeader, follow);
         fsm.possibleStates.Add(BoidStateType.Attack, attack);
         fsm.possibleStates.Add(BoidStateType.ReturnToFormation, ret);
 
         fsm.currentState = follow;
+    }
+
+    public bool IsLowHealth()
+    {
+        var health = GetComponent<Health>();
+        if (health == null) return false;
+        return health.CurrentHealth <= lowHealthThreshold;
     }
 
     void Start()
@@ -51,9 +59,7 @@ public class AllyBoidFSM : MonoBehaviour
         fsm.OnUpdate();
     }
 
-    // ---------------------------------------------------------
-    // VISIÓN DEL BOID
-    // ---------------------------------------------------------
+
     public bool CanSeeEnemy(out Transform enemy)
     {
         enemy = null;

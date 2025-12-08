@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using UnityEngine;
-
 public class LeaderAttackState : BaseLeaderState
 {
     [SerializeField] private float attackRange = 2f;
@@ -33,43 +30,34 @@ public class LeaderAttackState : BaseLeaderState
 
         currentTarget = enemy;
         float dist = Vector3.Distance(root.transform.position, currentTarget.position);
-
         Vector3 lookDir = (currentTarget.position - root.transform.position);
         lookDir.y = 0;
-
         if (lookDir != Vector3.zero)
         {
             root.transform.rotation = Quaternion.Slerp(
                 root.transform.rotation,
                 Quaternion.LookRotation(lookDir),
-                8f * Time.deltaTime
+                10f * Time.deltaTime
             );
         }
 
+
         if (dist <= attackRange)
         {
+
+            if (pathFinder != null) pathFinder.CancelPath(); 
+
             if (Time.time >= nextAttackTime)
             {
                 DoAttack();
                 nextAttackTime = Time.time + attackCooldown;
             }
-            return;
         }
-
-
-        if (pathFinder != null)
+        else
         {
-            Vector3 pos = currentTarget.position;
 
-            // Si hay línea de visión → movimiento directo
-            if (!Physics.Linecast(root.transform.position, pos, root.obstacleMask))
-                pathFinder.SetDirectTarget(pos);
-
-            // Si no hay visión → usar Theta*
-            else
-                pathFinder.BuscarNuevoCamino(pos);
-
-            fsm.ChangeState(LeaderStateType.MoveToPoint);
+            Vector3 moveDir = (currentTarget.position - root.transform.position).normalized;
+            root.transform.position += moveDir * 4f * Time.deltaTime; 
         }
     }
 
