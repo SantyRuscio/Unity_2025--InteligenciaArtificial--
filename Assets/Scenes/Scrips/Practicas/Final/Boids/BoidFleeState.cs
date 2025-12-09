@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine;
 
 public class BoidFleeState : BaseBoidState
 {
     public override void OnUpdate()
     {
-        // 1. CHEQUEO DE SALIDA: Si me curaron (o subí el umbral), vuelvo a pelear/seguir
+        // 1. SALIR SI YA NO ESTÁ HERIDO
         if (!root.IsLowHealth())
         {
             fsm.ChangeState(BoidStateType.FollowLeader);
@@ -15,44 +16,76 @@ public class BoidFleeState : BaseBoidState
 
         Vector3 fleeDirection = Vector3.zero;
 
-        // 2. CALCULAR DIRECCIÓN DE HUIDA
+        // 2. DIRECCIÓN DE HUIDA (enemigo o líder)
         if (root.CanSeeEnemy(out Transform enemy))
         {
-            // SI VEO ENEMIGO: Vector desde el enemigo hacia mí (Huida)
             fleeDirection = (root.transform.position - enemy.position).normalized;
         }
         else
         {
-            // SI NO VEO ENEMIGO PERO ESTOY HERIDO: Voy hacia el líder (Refugio)
             fleeDirection = (root.leader.position - root.transform.position).normalized;
         }
 
-        // 3. MEZCLAR CON OBSTÁCULOS (Para no chocarse paredes mientras huye)
+        // 3. EVITAR PAREDES (raycast múltiple)
         Vector3 avoidance = AvoidObstacles();
-        Vector3 finalDir = fleeDirection * 2f + avoidance * 5f;
+
+        // 4. MEZCLA FINAL
+        Vector3 finalDir = fleeDirection.normalized * 1.5f + avoidance.normalized * 8f;
         finalDir.y = 0;
 
-        // 4. MOVERSE
+        // 5. MOVIMIENTO
         if (finalDir != Vector3.zero)
         {
+            // rotación suave
             root.transform.rotation = Quaternion.Slerp(
                 root.transform.rotation,
                 Quaternion.LookRotation(finalDir),
                 15f * Time.deltaTime
             );
 
-            // Velocidad aumentada un poco por el pánico (1.2x)
-            root.transform.position += finalDir.normalized * (root.maxSpeed * 1.2f) * Time.deltaTime;
+            // movimiento con boost
+            root.transform.position += finalDir.normalized *
+                                       (root.maxSpeed * 1.2f) *
+                                       Time.deltaTime;
         }
     }
 
+    // -----------------------------
+    //   AVOID CON 3 RAYCASTS
+    // -----------------------------
     private Vector3 AvoidObstacles()
     {
-        if (Physics.Raycast(root.transform.position, root.transform.forward, out RaycastHit hit, 3f, root.obstacleMask))
+        Vector3 avoid = Vector3.zero;
+        Transform t = root.transform;
+
+        float rayDist = 3f;
+
+        Vector3[] dirs = new Vector3[]
         {
-            Debug.DrawLine(root.transform.position, hit.point, Color.red);
-            return Vector3.Reflect(root.transform.forward, hit.normal);
+            t.forward,                                            // centro
+            Quaternion.AngleAxis(30, Vector3.up) * t.forward,     // derecha
+            Quaternion.AngleAxis(-30, Vector3.up) * t.forward     // izquierda
+        };
+
+        foreach (var dir in dirs)
+        {
+            if (Physics.Raycast(t.position, dir, out RaycastHit hit, rayDist, root.obstacleMask))
+            {
+                Debug.DrawLine(t.position, hit.point, Color.red, 0.05f);
+
+                // Rebote
+                avoid += Vector3.Reflect(dir, hit.normal) * 1.5f;
+
+                // Empuje extra si está pegado
+                if (hit.distance < 1f)
+                {
+                    avoid += hit.normal * 3f;
+                }
+            }
         }
-        return Vector3.zero;
+
+        return avoid;
     }
 }
+
+
