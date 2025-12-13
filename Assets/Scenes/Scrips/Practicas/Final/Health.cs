@@ -11,6 +11,8 @@ public class Health : MonoBehaviour, IDamageable
 
     public float CurrentHealth => currentHealth;
 
+    public float MaxHealth => maxHealth;
+
     void Awake()
     {
         currentHealth = maxHealth;
