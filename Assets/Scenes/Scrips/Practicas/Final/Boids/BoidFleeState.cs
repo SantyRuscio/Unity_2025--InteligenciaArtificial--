@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine;
+
+
+// ===============================
+// Ruscio - Beghin
+// ===============================
 
 public class BoidFleeState : BaseBoidState
 {
@@ -50,9 +54,7 @@ public class BoidFleeState : BaseBoidState
         }
     }
 
-    // -----------------------------
-    //   AVOID CON 3 RAYCASTS
-    // -----------------------------
+
     private Vector3 AvoidObstacles()
     {
         Vector3 avoid = Vector3.zero;

@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class LeaderFSM : MonoBehaviour
 {
     [Header("Referencias")]
@@ -49,9 +53,6 @@ public class LeaderFSM : MonoBehaviour
         fsm.OnUpdate();
     }
 
-    // ===================================================
-    // MANEJO DE INPUT PARA MOVER AL LÍDER
-    // ===================================================
     private void HandleInput()
     {
         if (mainCamera == null) return;
@@ -81,9 +82,8 @@ public class LeaderFSM : MonoBehaviour
 
 
 
-    // ===================================================
-    // SISTEMA DE VISIÓN – TEAM A vs TEAM B
-    // ===================================================
+
+    //VISIÓN
     public bool CanSeeEnemy(out Transform enemyTransform)
     {
         enemyTransform = null;
@@ -121,11 +121,7 @@ public class LeaderFSM : MonoBehaviour
     }
 
 
-
-
-    // ===================================================
-    // DEBUG VISUAL DEL FOV
-    // ===================================================
+    // DEBUG
     private void OnDrawGizmosSelected()
     {
         if (!Application.isPlaying) return;

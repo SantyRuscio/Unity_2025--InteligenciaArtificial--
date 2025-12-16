@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ===============================
+// Ruscio - Beghin
+// ===============================
 public class PathFinderParcial_ThetaStar : MonoBehaviour
 {
     [Header("Movimiento")]
@@ -34,9 +37,6 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
 
     public bool IsMoving => moving || hasDirectTarget;
 
-    // ---------------------------------------------------------
-    // MOVIMIENTO DIRECTO (SIN PATH)
-    // ---------------------------------------------------------
     public void SetDirectTarget(Vector3 pos)
     {
         directTarget = pos;
@@ -58,9 +58,6 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
         transform.position += dir.normalized * movementSpeed * Time.deltaTime;
     }
 
-    // ---------------------------------------------------------
-    // PATHFINDING — THETA*
-    // ---------------------------------------------------------
     public void BuscarNuevoCamino(Vector3 objetivo)
     {
         hasDirectTarget = false;
@@ -127,9 +124,6 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
         return null;
     }
 
-    // ---------------------------------------------------------
-    // THETA* — RECONSTRUCTION
-    // ---------------------------------------------------------
     private List<NodeParcial_Astar> ReconstructThetaPath(
         Dictionary<NodeParcial_Astar, NodeParcial_Astar> cameFrom,
         NodeParcial_Astar start,
@@ -167,9 +161,6 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
         return !Physics.Raycast(from, dir.normalized, dir.magnitude, obstacleMask);
     }
 
-    // ---------------------------------------------------------
-    // MOVERSE SOBRE EL CAMINO
-    // ---------------------------------------------------------
     private void MoveAlongPath()
     {
         Vector3 target = finalPath[currentIndex].Position;
@@ -198,9 +189,6 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
         finalPath = null;
     }
 
-    // ---------------------------------------------------------
-    // DIRECCIÓN DEL OBJETIVO — PARA GIROS DEL LÍDER
-    // ---------------------------------------------------------
     public Vector3 TargetDirection
     {
         get
@@ -214,12 +202,40 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
             return Vector3.zero;
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        if (hasDirectTarget)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(directTarget, 0.3f);
+            Gizmos.DrawLine(transform.position, directTarget);
+        }
+
+        if (finalPath == null || finalPath.Count == 0)
+            return;
+
+        Gizmos.color = Color.green;
+        for (int i = 0; i < finalPath.Count - 1; i++)
+        {
+            Gizmos.DrawLine(finalPath[i].Position, finalPath[i + 1].Position);
+        }
+
+        if (currentIndex < finalPath.Count)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(finalPath[currentIndex].Position, 0.35f);
+
+            if (currentIndex + 1 < finalPath.Count)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(finalPath[currentIndex + 1].Position, 0.25f);
+            }
+        }
+    }
 }
 
 
-// =====================================================================
-// SIMPLE PRIORITY QUEUE (nombre único para evitar conflictos)
-// =====================================================================
 public class SimplePriorityQueue<T>
 {
     private List<KeyValuePair<T, float>> elements = new List<KeyValuePair<T, float>>();
@@ -251,6 +267,7 @@ public class SimplePriorityQueue<T>
         elements.RemoveAt(bestIndex);
         return bestItem;
     }
+
 }
 
 

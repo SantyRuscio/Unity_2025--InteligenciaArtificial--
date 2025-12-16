@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// ===============================
+// Ruscio - Beghin
+// ===============================
+
 public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100;
