@@ -29,7 +29,6 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
 
     void Update()
     {
-        // detección en tiempo real
         if (IsMoving && DetectObstacleAhead())
         {
             RecalculatePath();
@@ -124,7 +123,6 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
 
             foreach (var neighbor in current.Connections)
             {
-                // 🚫 BLOQUEO POR OBSTÁCULOS
                 if (!HasLineOfSight(current.Position, neighbor.Position))
                     continue;
 
