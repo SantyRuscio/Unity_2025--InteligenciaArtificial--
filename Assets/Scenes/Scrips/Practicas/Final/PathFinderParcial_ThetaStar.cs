@@ -1,15 +1,19 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // ===============================
 // Ruscio - Beghin
 // ===============================
+
 public class PathFinderParcial_ThetaStar : MonoBehaviour
 {
     [Header("Movimiento")]
     public float movementSpeed = 5f;
     public float stopDistance = 0.3f;
+
+    [Header("Detección")]
+    public float obstacleCheckDistance = 0.6f;
 
     [Header("Masks")]
     public LayerMask obstacleMask;
@@ -21,8 +25,17 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
     private Vector3 directTarget;
     private bool hasDirectTarget;
 
+    private Vector3 lastGoal;
+
     void Update()
     {
+        // detección en tiempo real
+        if (IsMoving && DetectObstacleAhead())
+        {
+            RecalculatePath();
+            return;
+        }
+
         if (hasDirectTarget)
         {
             MoveDirect();
@@ -61,6 +74,7 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
     public void BuscarNuevoCamino(Vector3 objetivo)
     {
         hasDirectTarget = false;
+        lastGoal = objetivo;
 
         NodeParcial_Astar start = NodeParcial_Astar.GetClosestNode(transform.position);
         NodeParcial_Astar goal = NodeParcial_Astar.GetClosestNode(objetivo);
@@ -76,16 +90,19 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
         moving = finalPath != null;
     }
 
+    private void RecalculatePath()
+    {
+        CancelPath();
+        BuscarNuevoCamino(lastGoal);
+    }
+
     private List<NodeParcial_Astar> ThetaStar(NodeParcial_Astar start, NodeParcial_Astar goal)
     {
-        // uso SimplePriorityQueue para evitar conflictos de nombres
         var open = new SimplePriorityQueue<NodeParcial_Astar>();
         var cameFrom = new Dictionary<NodeParcial_Astar, NodeParcial_Astar>();
-
         var gScore = new Dictionary<NodeParcial_Astar, float>();
         var fScore = new Dictionary<NodeParcial_Astar, float>();
 
-        // inicializar scores
         foreach (var n in NodeParcial_Astar.AllNodes)
         {
             gScore[n] = Mathf.Infinity;
@@ -105,15 +122,20 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
             if (current == goal)
                 return ReconstructThetaPath(cameFrom, start, goal);
 
-            // vecinos
             foreach (var neighbor in current.Connections)
             {
-                float tentativeCost = gScore[current] + Vector3.Distance(current.Position, neighbor.Position);
+                // 🚫 BLOQUEO POR OBSTÁCULOS
+                if (!HasLineOfSight(current.Position, neighbor.Position))
+                    continue;
+
+                float tentativeCost =
+                    gScore[current] + Vector3.Distance(current.Position, neighbor.Position);
 
                 if (tentativeCost < gScore[neighbor])
                 {
                     gScore[neighbor] = tentativeCost;
-                    fScore[neighbor] = tentativeCost + Vector3.Distance(neighbor.Position, goal.Position);
+                    fScore[neighbor] = tentativeCost +
+                        Vector3.Distance(neighbor.Position, goal.Position);
 
                     cameFrom[neighbor] = current;
                     open.Enqueue(neighbor, fScore[neighbor]);
@@ -137,14 +159,13 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
             path.Add(current);
 
             NodeParcial_Astar parent = cameFrom[current];
-            NodeParcial_Astar grandParent = cameFrom.ContainsKey(parent) ? cameFrom[parent] : null;
+            NodeParcial_Astar grandParent =
+                cameFrom.ContainsKey(parent) ? cameFrom[parent] : null;
 
-            if (grandParent != null)
+            if (grandParent != null &&
+                HasLineOfSight(grandParent.Position, current.Position))
             {
-                if (HasLineOfSight(grandParent.Position, current.Position))
-                {
-                    cameFrom[current] = grandParent;
-                }
+                cameFrom[current] = grandParent;
             }
 
             current = cameFrom[current];
@@ -159,6 +180,19 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
     {
         Vector3 dir = to - from;
         return !Physics.Raycast(from, dir.normalized, dir.magnitude, obstacleMask);
+    }
+
+    private bool DetectObstacleAhead()
+    {
+        Vector3 dir = TargetDirection;
+        if (dir == Vector3.zero) return false;
+
+        return Physics.Raycast(
+            transform.position + Vector3.up * 0.2f,
+            dir,
+            obstacleCheckDistance,
+            obstacleMask
+        );
     }
 
     private void MoveAlongPath()
@@ -205,11 +239,14 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (hasDirectTarget)
+        if (IsMoving)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(directTarget, 0.3f);
-            Gizmos.DrawLine(transform.position, directTarget);
+            Gizmos.DrawLine(
+                transform.position + Vector3.up * 0.2f,
+                transform.position + Vector3.up * 0.2f +
+                TargetDirection * obstacleCheckDistance
+            );
         }
 
         if (finalPath == null || finalPath.Count == 0)
@@ -217,9 +254,7 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
 
         Gizmos.color = Color.green;
         for (int i = 0; i < finalPath.Count - 1; i++)
-        {
             Gizmos.DrawLine(finalPath[i].Position, finalPath[i + 1].Position);
-        }
 
         if (currentIndex < finalPath.Count)
         {
@@ -234,6 +269,7 @@ public class PathFinderParcial_ThetaStar : MonoBehaviour
         }
     }
 }
+
 
 
 public class SimplePriorityQueue<T>
